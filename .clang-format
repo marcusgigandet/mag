@@ -1,0 +1,72 @@
+# Base style
+BasedOnStyle: LLVM
+Language: Cpp
+Standard: Latest
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Always
+ColumnLimit: 100
+NamespaceIndentation: All
+AccessModifierOffset: -4
+
+# Braces & init lists
+BreakBeforeBraces: Allman
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: true
+  BeforeWhile: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+
+Cpp11BracedListStyle: true
+
+# Short constructs — always expanded
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortCaseExpressionOnASingleLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+AlignAfterOpenBracket: true
+
+# Constructor initializer lists
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
+# Function calls & chaining
+PenaltyBreakBeforeFirstCallParameter: 40
+BreakBeforeBinaryOperators: None
+BreakAfterReturnType: None
+ContinuationIndentWidth: 8
+
+# Other formatting
+AlignTrailingComments: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+PointerAlignment: Left
+DerivePointerAlignment: false
+SpaceInEmptyParentheses: false
+SpacesInParentheses: false
+InsertNewlineAtEOF: true
+SortIncludes: true
+ReflowComments: Always
+MaxEmptyLinesToKeep: 2
+EmptyLineBeforeAccessModifier: Always
+FixNamespaceComments: true

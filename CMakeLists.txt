@@ -1,0 +1,95 @@
+cmake_minimum_required(VERSION 3.28.3 FATAL_ERROR)
+project(mag LANGUAGES CXX)
+
+#####################
+# Compiler settings #
+#####################
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# We only support clang for now
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(FATAL_ERROR
+            "This project requires Clang. "
+            "Detected: ${CMAKE_CXX_COMPILER_ID}"
+    )
+endif ()
+
+if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
+    message(FATAL_ERROR
+            "Clang >= 18 is required. "
+            "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
+    )
+endif ()
+
+if(NOT CMAKE_GENERATOR)
+    set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "")
+endif()
+
+###########
+# Options #
+###########
+option(MAG_BUILD_TESTS "Build tests" OFF)
+
+#################################
+# Set constants for the project #
+#################################
+file(GLOB_RECURSE MODULES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+)
+
+###################
+# Target: library #
+###################
+add_library(${PROJECT_NAME} SHARED)
+target_sources(${PROJECT_NAME}
+        PUBLIC
+        FILE_SET allModules
+        TYPE CXX_MODULES
+        FILES ${MODULES}
+)
+
+target_include_directories(${PROJECT_NAME}
+        PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor
+)
+
+###############################
+# Compile commands for clangd #
+###############################
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_SOURCE_DIR}/compile_commands.json
+    )
+endif ()
+
+###############
+# Build tests #
+###############
+if (MAG_BUILD_TESTS)
+    message(STATUS "Building with tests")
+    add_compile_definitions(CATCH_CONFIG_NO_FORMAT)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/Catch2)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+endif ()
+
+###############################
+# Run metadata update targets #
+###############################
+# Todo: add this as a submodule so that each repo can use it
+add_custom_target(copyright
+        COMMAND "python3"
+        "${CMAKE_CURRENT_SOURCE_DIR}/scripts/copyright.py"
+        --author "Marcus Gigandet"
+        --directory "src"
+        --fix
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Syncing copyright headers with Git history"
+        VERBATIM
+)
+
+add_dependencies(${PROJECT_NAME} copyright)

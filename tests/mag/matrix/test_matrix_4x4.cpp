@@ -1,0 +1,275 @@
+// clang-format off
+
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
+
+import mag;
+using namespace mag;
+
+TEST_CASE("Mat4x4 construction and access", "[Mat4x4]")
+{
+	SECTION("Default constructor")
+	{
+		for (Mat4f m ; const auto v : m)
+			REQUIRE(v == Catch::Approx(0.0f));
+	}
+
+	SECTION("Scalar constructor")
+	{
+		for (Mat4f m{1.0f} ; const auto v : m)
+			REQUIRE(v == Catch::Approx(1.0f));
+	}
+
+	SECTION("Element-wise constructor")
+	{
+		Mat4f m(1, 2, 3, 4,
+				5, 6, 7, 8,
+				9, 10, 11, 12,
+				13, 14, 15, 16);
+		REQUIRE(m[0][0] == 1.0f);
+		REQUIRE(m[1][0] == 2.0f);
+		REQUIRE(m[2][0] == 3.0f);
+		REQUIRE(m[3][0] == 4.0f);
+		REQUIRE(m[0][1] == 5.0f);
+		REQUIRE(m[1][1] == 6.0f);
+		REQUIRE(m[3][3] == 16.0f);
+	}
+
+	SECTION("Named element access")
+	{
+		Mat4f m(1, 2, 3, 4,
+				5, 6, 7, 8,
+				9, 10, 11, 12,
+				13, 14, 15, 16);
+		REQUIRE(m.m00 == 1.0f);
+		REQUIRE(m.m10 == 2.0f);
+		REQUIRE(m.m33 == 16.0f);
+	}
+
+	SECTION("data() method")
+	{
+		Mat4f m(1, 2, 3, 4,
+				5, 6, 7, 8,
+				9, 10, 11, 12,
+				13, 14, 15, 16);
+		const float* data = m.data();
+		REQUIRE(data[0] == 1.0f);
+		REQUIRE(data[1] == 5.0f);
+		REQUIRE(data[15] == 16.0f);
+	}
+}
+
+TEST_CASE("Mat4x4 arithmetic operations", "[Mat4x4]")
+{
+	Mat4f a(1, 2, 3, 4,
+			5, 6, 7, 8,
+			9, 10, 11, 12,
+			13, 14, 15, 16);
+	Mat4f b(16, 15, 14, 13,
+			12, 11, 10, 9,
+			8, 7, 6, 5,
+			4, 3, 2, 1);
+
+	SECTION("Addition")
+	{
+		auto c = a + b;
+		for (int i = 0; i < 4; ++i)
+			for (int j = 0; j < 4; ++j)
+				REQUIRE(c[i][j] == Catch::Approx(17.0f));
+	}
+
+	SECTION("Subtraction")
+	{
+		auto c = a - b;
+		Mat4f expected{-15, -13, -11, -9,
+					   -7, -5, -3, -1,
+					   1, 3, 5, 7,
+					   9, 11, 13, 15};
+
+		REQUIRE(c == expected);
+	}
+
+	SECTION("Scalar multiplication")
+	{
+		auto c = a * 2.0f;
+		REQUIRE(c[0][0] == Catch::Approx(2.0f));
+		REQUIRE(c[1][1] == Catch::Approx(12.0f));
+		REQUIRE(c[3][3] == Catch::Approx(32.0f));
+	}
+
+	SECTION("Scalar division")
+	{
+		auto c = b / 2.0f;
+		REQUIRE(c[0][0] == Catch::Approx(8.0f));
+		REQUIRE(c[1][1] == Catch::Approx(5.5f));
+		REQUIRE(c[3][3] == Catch::Approx(0.5f));
+	}
+
+	SECTION("Matrix multiplication")
+	{
+		Mat4f identity = Mat4f::identity();
+		auto c = a * identity;
+		REQUIRE(c == a);
+	}
+
+	SECTION("Vector multiplication")
+	{
+		Vec<float, 4> v(1, 2, 3, 4);
+		auto r = a * v;
+		REQUIRE(r.x == Catch::Approx(30.0f));
+		REQUIRE(r.y == Catch::Approx(70.0f));
+		REQUIRE(r.z == Catch::Approx(110.0f));
+		REQUIRE(r.w == Catch::Approx(150.0f));
+	}
+
+	SECTION("Compound assignment")
+	{
+		Mat4f c = a;
+		c += b;
+		REQUIRE(c[0][0] == Catch::Approx(17.0f));
+		REQUIRE(c[3][3] == Catch::Approx(17.0f));
+
+		c -= a;
+		REQUIRE(c == b);
+
+		c *= 2.0f;
+		REQUIRE(c[0][0] == Catch::Approx(32.0f));
+		REQUIRE(c[3][3] == Catch::Approx(2.0f));
+
+		c /= 2.0f;
+		REQUIRE(c == b);
+	}
+}
+
+TEST_CASE("Mat4x4 transformations", "[Mat4x4]")
+{
+	SECTION("Identity")
+	{
+		Mat4f identity = Mat4f::identity();
+		REQUIRE(identity[0][0] == 1.0f);
+		REQUIRE(identity[1][1] == 1.0f);
+		REQUIRE(identity[2][2] == 1.0f);
+		REQUIRE(identity[3][3] == 1.0f);
+	}
+
+	SECTION("Transpose")
+	{
+		Mat4f m(1, 2, 3, 4,
+				5, 6, 7, 8,
+				9, 10, 11, 12,
+				13, 14, 15, 16);
+
+		auto t = m.transpose();
+		REQUIRE(t[0][0] == 1.0f);
+		REQUIRE(t[0][1] == 2.0f);
+		REQUIRE(t[1][0] == 5.0f);
+		REQUIRE(t[3][3] == 16.0f);
+	}
+
+	SECTION("Translation")
+	{
+		auto t = Mat4f::translate(1.0f, 2.0f, 3.0f);
+		REQUIRE(t[3][0] == 1.0f);
+		REQUIRE(t[3][1] == 2.0f);
+		REQUIRE(t[3][2] == 3.0f);
+		REQUIRE(t[3][3] == 1.0f);
+
+		Vec<float, 4> v(1, 1, 1, 1);
+		auto r = t * v;
+		REQUIRE(r.x == Catch::Approx(2.0f));
+		REQUIRE(r.y == Catch::Approx(3.0f));
+		REQUIRE(r.z == Catch::Approx(4.0f));
+		REQUIRE(r.w == Catch::Approx(1.0f));
+	}
+
+	SECTION("Scaling")
+	{
+		auto s = Mat4f::scale(2.0f, 3.0f, 4.0f);
+		REQUIRE(s[0][0] == 2.0f);
+		REQUIRE(s[1][1] == 3.0f);
+		REQUIRE(s[2][2] == 4.0f);
+		REQUIRE(s[3][3] == 1.0f);
+
+		Vec<float, 4> v(1, 1, 1, 1);
+		auto r = s * v;
+		REQUIRE(r.x == Catch::Approx(2.0f));
+		REQUIRE(r.y == Catch::Approx(3.0f));
+		REQUIRE(r.z == Catch::Approx(4.0f));
+		REQUIRE(r.w == Catch::Approx(1.0f));
+	}
+
+	SECTION("Rotation")
+	{
+		// Test X rotation
+		auto rx = Mat4f::rotateX(PI / 2.0f); // 90 degrees
+		Vec<float, 4> v(0, 1, 0, 1);
+		auto r = rx * v;
+		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.y == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.z == Catch::Approx(1.0f).margin(1e-5f));
+		REQUIRE(r.w == Catch::Approx(1.0f).margin(1e-5f));
+
+		// Test Y rotation
+		auto ry = Mat4f::rotateY(PI / 2.0f); // 90 degrees
+		v = Vec<float, 4>(1, 0, 0, 1);
+		r = ry * v;
+		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.y == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.z == Catch::Approx(-1.0f).margin(1e-5f));
+		REQUIRE(r.w == Catch::Approx(1.0f).margin(1e-5f));
+
+		// Test Z rotation
+		auto rz = Mat4f::rotateZ(PI / 2.0f); // 90 degrees
+		v = Vec<float, 4>(1, 0, 0, 1);
+		r = rz * v;
+		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.y == Catch::Approx(1.0f).margin(1e-5f));
+		REQUIRE(r.z == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.w == Catch::Approx(1.0f).margin(1e-5f));
+	}
+
+	SECTION("Perspective projection")
+	{
+		auto p = Mat4f::perspective(70.0f, 1.0f, 0.1f, 100.0f);
+		REQUIRE(p[0][0] == Catch::Approx(1.428148031f));
+		REQUIRE(p[1][1] == Catch::Approx(1.428148031f));
+		REQUIRE(p[2][2] == Catch::Approx(-1.001001f));
+		REQUIRE(p[2][3] == Catch::Approx(-1.0f));
+		REQUIRE(p[3][2] == Catch::Approx(-0.1001001f));
+		REQUIRE(p[3][3] == Catch::Approx(0.0f));
+	}
+
+	SECTION("LookAt")
+	{
+		// Camera at (0,0,1) looking at origin.
+		Vec<float, 3> eye(0, 0, 1);
+		Vec<float, 3> center(0, 0, 0);
+		Vec<float, 3> up(0, 1, 0);
+
+		auto view{Mat4f::lookAt(eye, center, up)};
+		Mat4f expected{1, 0, 0, 0,
+					   0, 1, 0, 0,
+					   0, 0, 1, -1,
+					   0, 0, 0, 1};
+		REQUIRE(view == expected);
+	}
+}
+
+TEST_CASE("Mat4x4 comparison", "[Mat4x4]")
+{
+	Mat4f a(1, 2, 3, 4,
+			5, 6, 7, 8,
+			9, 10, 11, 12,
+			13, 14, 15, 16);
+	Mat4f b(1, 2, 3, 4,
+			5, 6, 7, 8,
+			9, 10, 11, 12,
+			13, 14, 15, 16);
+	Mat4f c(16, 15, 14, 13,
+			12, 11, 10, 9,
+			8, 7, 6, 5,
+			4, 3, 2, 1);
+
+	REQUIRE(a == b);
+	REQUIRE(a != c);
+}

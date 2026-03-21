@@ -1,0 +1,333 @@
+/*
+ * Copyright 2026 Marcus Gigandet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+module;
+#include <iomanip>
+#include <span>
+#include <sstream>
+export module mag:matrix;
+
+import :concepts;
+import :vector;
+
+
+namespace mag
+{
+	export template <Numeric T, size_t C, size_t R>
+	struct Mat;
+
+	template <typename Derived, Numeric T, size_t C, size_t R>
+	struct IMat
+	{
+	private:
+		constexpr Derived& derived() noexcept
+		{
+			return static_cast<Derived&>(*this);
+		}
+
+		constexpr const Derived& derived() const noexcept
+		{
+			return static_cast<const Derived&>(*this);
+		}
+
+	public:
+		/********************/
+		/* Iterator support */
+		/********************/
+
+		constexpr T* begin() noexcept
+		{
+			return &derived().m[0][0];
+		}
+
+		constexpr const T* begin() const noexcept
+		{
+			return &derived().m[0][0];
+		}
+
+		constexpr T* end() noexcept
+		{
+			return &derived().m[0][0] + C * R;
+		}
+
+		constexpr const T* end() const noexcept
+		{
+			return &derived().m[0][0] + C * R;
+		}
+
+		/****************************/
+		/* Reverse iterator support */
+		/****************************/
+
+		constexpr std::reverse_iterator<T*> rbegin() noexcept
+		{
+			return std::reverse_iterator<T*>(end());
+		}
+
+		constexpr std::reverse_iterator<const T*> rbegin() const noexcept
+		{
+			return std::reverse_iterator<const T*>(end());
+		}
+
+		constexpr std::reverse_iterator<T*> rend() noexcept
+		{
+			return std::reverse_iterator<T*>(begin());
+		}
+
+		constexpr std::reverse_iterator<const T*> rend() const noexcept
+		{
+			return std::reverse_iterator<const T*>(begin());
+		}
+
+		/**************************/
+		/* Const iterator support */
+		/**************************/
+
+		constexpr const T* cbegin() const noexcept
+		{
+			return begin();
+		}
+
+		constexpr const T* cend() const noexcept
+		{
+			return end();
+		}
+
+		constexpr std::reverse_iterator<const T*> crbegin() const noexcept
+		{
+			return rbegin();
+		}
+
+		constexpr std::reverse_iterator<const T*> crend() const noexcept
+		{
+			return rend();
+		}
+
+		constexpr std::span<T, R> operator[](size_t i) noexcept
+		{
+			return std::span<T, R>(derived().m[i]);
+		}
+
+		constexpr std::span<const T, R> operator[](size_t i) const noexcept
+		{
+			return std::span<const T, R>(derived().m[i]);
+		}
+
+		constexpr T* data() noexcept
+		{
+			return &derived().m[0][0];
+		}
+		constexpr const T* data() const noexcept
+		{
+			return &derived().m[0][0];
+		}
+
+		template <Numeric U>
+		constexpr Derived& operator+=(U val) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()[c][r] += val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Derived& operator-=(U val) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()[c][r] -= val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Derived& operator*=(U val) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()[c][r] *= val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Derived& operator/=(U val) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()[c][r] /= val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Derived& operator+=(Mat<U, C, R> o) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()[c][r] += o[c][r];
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Derived& operator-=(Mat<U, C, R> o) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()[c][r] -= o[c][r];
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Derived& operator*=(Mat<U, C, R> o) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()[c][r] *= o[c][r];
+			return derived();
+		}
+
+		[[nodiscard]] std::string toString() const noexcept
+		{
+			std::ostringstream oss;
+			const auto m{derived()};
+
+			oss << std::fixed << std::setprecision(6);
+			oss << "Mat" << R << "x" << C << "(\n";
+			for (size_t r = 0; r < R; ++r)
+			{
+				oss << "\t[";
+				for (size_t c = 0; c < C; ++c)
+				{
+					oss << m[c][r];
+					if (c != C - 1)
+						oss << ", ";
+				}
+				oss << "]";
+				if (r < R - 1)
+					oss << ", ";
+				oss << "\n";
+			}
+			oss << ")";
+			return oss.str();
+		}
+	};
+
+	export template <Numeric T, size_t C, size_t R>
+	struct Mat : IMat<Mat<T, C, R>, T, C, R>
+	{
+		T v[C][R];
+
+		constexpr Mat() noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					v[c][r] = static_cast<T>(0);
+		}
+
+		template <Numeric U>
+		constexpr explicit Mat(U val) noexcept
+		{
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					v[c][r] = static_cast<T>(val);
+		}
+	};
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr bool operator==(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
+	{
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				if (a[c][r] != b[c][r])
+					return false;
+		return true;
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr bool operator!=(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
+	{
+		return !(a == b);
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr auto operator+(const Mat<T, C, R>& a, U val) noexcept
+	{
+		Mat<std::common_type_t<T, U>, R, C> ret;
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				ret[c][r] = a[c][r] + static_cast<T>(val);
+		return ret;
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr auto operator-(const Mat<T, C, R>& a, U val) noexcept
+	{
+		Mat<std::common_type_t<T, U>, R, C> ret;
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				ret[c][r] = a[c][r] - static_cast<T>(val);
+		return ret;
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr auto operator*(const Mat<T, C, R>& a, U val) noexcept
+	{
+		Mat<std::common_type_t<T, U>, R, C> ret;
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				ret[c][r] = a[c][r] * static_cast<T>(val);
+		return ret;
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr auto operator/(const Mat<T, C, R>& a, U val) noexcept
+	{
+		Mat<std::common_type_t<T, U>, R, C> ret;
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				ret[c][r] = a[c][r] / static_cast<T>(val);
+		return ret;
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr auto operator+(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
+	{
+		Mat<std::common_type_t<T, U>, R, C> ret;
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				ret[c][r] = a[c][r] + static_cast<T>(b[c][r]);
+		return ret;
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C>
+	constexpr auto operator-(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
+	{
+		Mat<std::common_type_t<T, U>, R, C> ret;
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				ret[c][r] = a[c][r] - static_cast<T>(b[c][r]);
+		return ret;
+	}
+
+	export template <Numeric T, Numeric U, size_t R, size_t C, size_t K>
+	constexpr auto operator*(const Mat<T, R, K>& a, const Mat<U, K, C>& b) noexcept
+	{
+		Mat<std::common_type_t<T, U>, R, C> result{};
+		for (size_t c = 0; c < C; ++c)
+			for (size_t r = 0; r < R; ++r)
+				for (size_t k = 0; k < K; ++k)
+					result[c][r] += a[c][k] * b[k][r];
+		return result;
+	}
+} // namespace mag
