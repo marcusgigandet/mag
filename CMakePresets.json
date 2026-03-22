@@ -1,0 +1,63 @@
+{
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "abstract",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "inherits": "abstract",
+      "name": "generic-debug",
+      "binaryDir": "${sourceDir}/build/generic-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "MAG_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "inherits": "abstract",
+      "name": "generic-release",
+      "binaryDir": "${sourceDir}/build/generic-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "MAG_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "inherits": "generic-debug",
+      "name": "macos-debug",
+      "hidden": false,
+      "binaryDir": "${sourceDir}/build/macos-debug",
+      "cacheVariables": {
+      }
+    },
+    {
+      "inherits": "generic-release",
+      "name": "macos-release",
+      "hidden": false,
+      "binaryDir": "${sourceDir}/build/macos-release",
+      "cacheVariables": {
+      }
+    },
+    {
+      "inherits": "generic-debug",
+      "name": "linux-debug",
+      "hidden": false,
+      "binaryDir": "${sourceDir}/build/linux-debug",
+      "cacheVariables": {
+      }
+    },
+    {
+      "inherits": "generic-release",
+      "name": "linux-release",
+      "hidden": false,
+      "binaryDir": "${sourceDir}/build/linux-release",
+      "cacheVariables": {
+      }
+    }
+  ]
+}

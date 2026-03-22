@@ -15,7 +15,6 @@ out/
 build/
 Makefile
 compile_commands.json
-CMakePresets.json
 Testing/
 CTestTestfile.cmake
 
