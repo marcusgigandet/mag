@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.28.3 FATAL_ERROR)
 project(mag LANGUAGES CXX)
 
+include(FetchContent)
+
 #####################
 # Compiler settings #
 #####################
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # We only support clang for now
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -21,10 +24,6 @@ if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
             "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
     )
 endif ()
-
-if(NOT CMAKE_GENERATOR)
-    set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "")
-endif()
 
 ###########
 # Options #
@@ -55,10 +54,16 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor
 )
 
-target_compile_features(${PROJECT_NAME} 
-        PUBLIC 
-        cxx_std_20
-)
+###############################
+# Compile commands for clangd #
+###############################
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_SOURCE_DIR}/compile_commands.json
+    )
+endif ()
 
 ###############
 # Build tests #
@@ -92,12 +97,3 @@ add_custom_target(mag_copyright
 )
 
 add_dependencies(${PROJECT_NAME} mag_copyright)
-
-###############################
-# Compile commands for clangd #
-###############################
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_BINARY_DIR}/compile_commands.json
-        ${CMAKE_SOURCE_DIR}/compile_commands.json
-)
