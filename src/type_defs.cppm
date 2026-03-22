@@ -17,9 +17,8 @@ module;
 #include <cstdint>
 export module mag:type_defs;
 
+import :matrix;
 import :vector;
-import :matrix_4x4;
-import :matrix_3x3;
 
 export namespace mag
 {

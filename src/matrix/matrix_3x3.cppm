@@ -18,6 +18,7 @@ module;
 export module mag:matrix_3x3;
 
 import :concepts;
+import :matrix;
 import :matrix_nxn;
 import :vector_3;
 

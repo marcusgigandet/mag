@@ -17,6 +17,7 @@ module;
 #include <concepts>
 export module mag:vector_3;
 
+import :concepts;
 import :vector;
 
 namespace mag
