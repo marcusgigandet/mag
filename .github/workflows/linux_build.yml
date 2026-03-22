@@ -2,8 +2,8 @@ name: Linux Build and Test
 
 on:
   push:
-    branches:
-      - '**'
+    branches-ignore:
+      - main
   pull_request:
     branches:
       - '**'
@@ -44,7 +44,8 @@ jobs:
       - name: Build
         run: |
           cmake --build build --config Release
-          cd build && ninja
 
       - name: Run tests
-        run: ctest --output-on-failure -C Release --test-dir tests
+        run: |
+          cd build
+          ctest --output-on-failure -C Release --test-dir tests
