@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 module;
-#include <cstdint>
+#include <cstddef>
 export module mag:simd_traits;
 
-import :type_defs;
+import :concepts;
 
 namespace mag
 {

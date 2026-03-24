@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 module;
+#include <cstddef>
 #include <type_traits>
 export module mag:vector_ops;
 

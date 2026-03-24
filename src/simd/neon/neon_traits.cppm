@@ -24,110 +24,110 @@ namespace mag
 	template <>
 	struct simd_traits<int8_t, 16>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for int8_t, size 16.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = true;	///< Multiplication is supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = int8x16_t;					///< NEON intrinsic type for 16x8-bit integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = false;
+		using simd_t = int8x16_t;
 	};
 
 	template <>
 	struct simd_traits<int16_t, 8>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for int16_t, size 8.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = true;	///< Multiplication is supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = int16x8_t;					///< NEON intrinsic type for 8x16-bit integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = false;
+		using simd_t = int16x8_t;
 	};
 
 	template <>
 	struct simd_traits<int32_t, 4>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for int32_t, size 4.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = true;	///< Multiplication is supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = int32x4_t;					///< NEON intrinsic type for 4x32-bit integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = false;
+		using simd_t = int32x4_t;
 	};
 
 	template <>
 	struct simd_traits<int64_t, 2>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for int32_t, size 4.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = false; ///< Multiplication is not supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = int64x2_t;					///< NEON intrinsic type for 2x64-bit integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = false;
+		static constexpr bool supports_div = false;
+		using simd_t = int64x2_t;
 	};
 
 	template <>
 	struct simd_traits<uint8_t, 16>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for uint8_t, size 16.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = true;	///< Multiplication is supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = uint8x16_t; ///< NEON intrinsic type for 16x8-bit unsigned integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = false;
+		using simd_t = uint8x16_t;
 	};
 
 	template <>
 	struct simd_traits<uint16_t, 8>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for uint16_t, size 8.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = true;	///< Multiplication is supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = uint16x8_t; ///< NEON intrinsic type for 8x16-bit unsigned integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = false;
+		using simd_t = uint16x8_t;
 	};
 
 	template <>
 	struct simd_traits<uint32_t, 4>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for uint32_t, size 4.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = true;	///< Multiplication is supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = uint32x4_t; ///< NEON intrinsic type for 4x32-bit unsigned integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = false;
+		using simd_t = uint32x4_t;
 	};
 
 	template <>
 	struct simd_traits<uint64_t, 2>
 	{
-		static constexpr bool supported = true;		///< SIMD is supported for uint32_t, size 4.
-		static constexpr bool supports_add = true;	///< Addition is supported.
-		static constexpr bool supports_sub = true;	///< Subtraction is supported.
-		static constexpr bool supports_mul = false; ///< Multiplication is not supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = uint64x2_t; ///< NEON intrinsic type for 2x64-bit unsigned integers.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = false;
+		static constexpr bool supports_div = false;
+		using simd_t = uint64x2_t;
 	};
 
 	template <>
 	struct simd_traits<float, 4>
 	{
-		static constexpr bool supported = true;	   ///< SIMD is supported for float, size 4.
-		static constexpr bool supports_add = true; ///< Addition is supported.
-		static constexpr bool supports_sub = true; ///< Subtraction is supported.
-		static constexpr bool supports_mul = true; ///< Multiplication is supported.
-		static constexpr bool supports_div = true; ///< Division is supported.
-		using simd_t = float32x4_t;				   ///< NEON intrinsic type for 4x32-bit floats.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = true;
+		using simd_t = float32x4_t;
 	};
 
 	template <>
 	struct simd_traits<double, 2>
 	{
-		static constexpr bool supported = true;	   ///< SIMD is supported for double, size 2.
-		static constexpr bool supports_add = true; ///< Addition is supported.
-		static constexpr bool supports_sub = true; ///< Subtraction is supported.
-		static constexpr bool supports_mul = true; ///< Multiplication is supported.
-		static constexpr bool supports_div = true; ///< Division is supported.
-		using simd_t = float64x2_t;				   ///< NEON intrinsic type for 2x64-bit doubles.
+		static constexpr bool supported = true;
+		static constexpr bool supports_add = true;
+		static constexpr bool supports_sub = true;
+		static constexpr bool supports_mul = true;
+		static constexpr bool supports_div = true;
+		using simd_t = float64x2_t;
 	};
 } // namespace mag
