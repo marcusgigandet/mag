@@ -21,13 +21,6 @@ import :concepts;
 
 namespace mag
 {
-	// clang-format off
-	struct add_op {};
-	struct sub_op {};
-	struct mul_op {};
-	struct div_op {};
-	// clang-format on
-
 	template <Numeric T, size_t N>
 	struct simd_ops;
 } // namespace mag

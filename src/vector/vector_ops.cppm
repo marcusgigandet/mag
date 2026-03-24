@@ -51,7 +51,7 @@ namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::op(va, vb, add_op{});
+			auto vr = ops::add(va, vb);
 			ops::store(r.v, vr);
 			return r;
 		}
@@ -76,7 +76,7 @@ namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::op(va, vb, sub_op{});
+			auto vr = ops::sub(va, vb);
 			ops::store(r.v, vr);
 			return r;
 		}
@@ -105,7 +105,7 @@ namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::op(va, vb, mul_op{});
+			auto vr = ops::mul(va, vb);
 			ops::store(r.v, vr);
 			return r;
 		}
@@ -128,7 +128,7 @@ namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::op(va, vb, div_op{});
+			auto vr = ops::div(va, vb);
 			ops::store(r.v, vr);
 			return r;
 		}
