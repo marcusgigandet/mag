@@ -7,3 +7,8 @@ Pour construire MAG, vous avez besoin des outils suivants :
 - **Python 3.11+**
 - **Ninja**
 - **CMake**
+
+### Option de compilation CMake
+
+- MAG_ENABLE_SIMD
+- MAG_BUILD_TESTS

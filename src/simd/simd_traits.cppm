@@ -1,0 +1,36 @@
+/*
+ * Copyright 2026 Marcus Gigandet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+module;
+#include <cstddef>
+export module mag:simd_traits;
+
+import :concepts;
+
+namespace mag
+{
+	template <Numeric T, size_t N>
+	struct simd_traits
+	{
+		// clang-format off
+		static constexpr bool supports_set1 = false; ///< Indicates if creating SIMD set is supported.
+		static constexpr bool supports_add = false;  ///< Indicates if addition is supported.
+		static constexpr bool supports_sub = false;  ///< Indicates if subtraction is supported.
+		static constexpr bool supports_mul = false;  ///< Indicates if multiplication is not supported.
+		static constexpr bool supports_div = false;  ///< Indicates if division is not supported.
+		using simd_t = void;						 ///< Placeholder for backend intrinsic type.
+		// clang-format on
+	};
+} // namespace mag

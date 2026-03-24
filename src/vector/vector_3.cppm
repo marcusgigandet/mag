@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 module;
-#include <concepts>
+#include <type_traits>
 export module mag:vector_3;
 
 import :concepts;
@@ -47,8 +47,9 @@ namespace mag
 		template <Numeric U>
 		explicit constexpr Vec(U val)
 		{
-			for (auto& i : v)
-				i = val;
+			x = val;
+			y = val;
+			z = val;
 		}
 
 		template <Numeric U0, Numeric U1, Numeric U2>

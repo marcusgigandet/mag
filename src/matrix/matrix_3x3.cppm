@@ -19,7 +19,6 @@ export module mag:matrix_3x3;
 
 import :concepts;
 import :matrix;
-import :matrix_nxn;
 import :vector_3;
 
 namespace mag
@@ -69,7 +68,7 @@ namespace mag
 
 		// clang-format off
 		template <Numeric U>
-		constexpr Mat(const Mat<U, 4, 4>& o) noexcept :
+		constexpr explicit Mat(const Mat<U, 4, 4>& o) noexcept :
 			m00(static_cast<T>(o[0][0])), m01(o[0][1]), m02(o[0][2]),
 			m10(static_cast<T>(o[1][0])), m11(o[1][1]), m12(o[1][2]),
 			m20(static_cast<T>(o[2][0])), m21(o[2][1]), m22(o[2][2])
@@ -83,15 +82,6 @@ namespace mag
 			return {m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z,
 					m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z,
 					m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z};
-		}
-
-		constexpr Mat transpose() const noexcept
-		{
-			// clang-format off
-			return {m00, m01, m02,
-					m10, m11, m12,
-					m20, m21, m22};
-			// clang-format on
 		}
 
 		constexpr Mat inverse() const noexcept
@@ -129,7 +119,7 @@ namespace mag
 
 		constexpr static Mat identity() noexcept
 		{
-			return mag::identity<T, 3>();
+			return Mat::diagonal();
 		}
 
 		template <Numeric U>

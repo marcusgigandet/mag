@@ -15,19 +15,12 @@
  */
 module;
 #include <cstddef>
-export module mag:matrix_nxn;
+export module mag:simd_ops;
 
 import :concepts;
-import :matrix;
 
 namespace mag
 {
-	export template <Numeric T, size_t N>
-	constexpr Mat<T, N, N> identity() noexcept
-	{
-		Mat<T, N, N> result{};
-		for (size_t i = 0; i < N; ++i)
-			result[i][i] = static_cast<T>(1);
-		return result;
-	}
+	template <Numeric T, size_t N>
+	struct simd_ops;
 } // namespace mag
