@@ -41,8 +41,8 @@ namespace mag
 		template <Numeric U>
 		explicit constexpr Vec(U val)
 		{
-			for (auto& i : v)
-				i = val;
+			x = val;
+			y = val;
 		}
 
 		template <Numeric U0, Numeric U1>

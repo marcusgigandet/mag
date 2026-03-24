@@ -24,11 +24,13 @@ namespace mag
 	template <Numeric T, size_t N>
 	struct simd_traits
 	{
-		static constexpr bool supported = false; ///< Indicates if SIMD is supported for this trait.
-		static constexpr bool supports_add = false; ///< Addition is not supported.
-		static constexpr bool supports_sub = false; ///< Subtraction is not supported.
-		static constexpr bool supports_mul = false; ///< Multiplication is not supported.
-		static constexpr bool supports_div = false; ///< Division is not supported.
-		using simd_t = void;						///< Placeholder for backend intrinsic type.
+		// clang-format off
+		static constexpr bool supports_set1 = false; ///< Indicates if creating SIMD set is supported.
+		static constexpr bool supports_add = false;  ///< Indicates if addition is supported.
+		static constexpr bool supports_sub = false;  ///< Indicates if subtraction is supported.
+		static constexpr bool supports_mul = false;  ///< Indicates if multiplication is not supported.
+		static constexpr bool supports_div = false;  ///< Indicates if division is not supported.
+		using simd_t = void;						 ///< Placeholder for backend intrinsic type.
+		// clang-format on
 	};
 } // namespace mag

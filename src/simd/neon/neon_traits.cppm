@@ -24,7 +24,7 @@ namespace mag
 	template <>
 	struct simd_traits<int8_t, 16>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;
@@ -35,7 +35,7 @@ namespace mag
 	template <>
 	struct simd_traits<int16_t, 8>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;
@@ -46,7 +46,7 @@ namespace mag
 	template <>
 	struct simd_traits<int32_t, 4>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;
@@ -57,7 +57,7 @@ namespace mag
 	template <>
 	struct simd_traits<int64_t, 2>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = false;
@@ -68,7 +68,7 @@ namespace mag
 	template <>
 	struct simd_traits<uint8_t, 16>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;
@@ -79,7 +79,7 @@ namespace mag
 	template <>
 	struct simd_traits<uint16_t, 8>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;
@@ -90,7 +90,7 @@ namespace mag
 	template <>
 	struct simd_traits<uint32_t, 4>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;
@@ -101,7 +101,7 @@ namespace mag
 	template <>
 	struct simd_traits<uint64_t, 2>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = false;
@@ -112,7 +112,7 @@ namespace mag
 	template <>
 	struct simd_traits<float, 4>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;
@@ -123,7 +123,7 @@ namespace mag
 	template <>
 	struct simd_traits<double, 2>
 	{
-		static constexpr bool supported = true;
+		static constexpr bool supports_set1 = true;
 		static constexpr bool supports_add = true;
 		static constexpr bool supports_sub = true;
 		static constexpr bool supports_mul = true;

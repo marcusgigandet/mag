@@ -15,9 +15,7 @@
  */
 module;
 #include <algorithm>
-#include <cassert>
 #include <cmath>
-#include <concepts>
 #include <sstream>
 #include <string>
 export module mag:vector;
@@ -56,10 +54,7 @@ namespace mag
 		 *
 		 * @return Reference to the derived vector instance.
 		 */
-		constexpr Derived& derived() noexcept
-		{
-			return static_cast<Derived&>(*this);
-		}
+		constexpr Derived& derived() noexcept { return static_cast<Derived&>(*this); }
 
 		/**
 		 * @brief Returns a const reference to the derived vector type.
@@ -79,22 +74,10 @@ namespace mag
 		/* Iterator support */
 		/********************/
 
-		constexpr T* begin() noexcept
-		{
-			return &derived()[0];
-		}
-		constexpr const T* begin() const noexcept
-		{
-			return &derived()[0];
-		}
-		constexpr T* end() noexcept
-		{
-			return &derived()[0] + N;
-		}
-		constexpr const T* end() const noexcept
-		{
-			return &derived()[0] + N;
-		}
+		constexpr T* begin() noexcept { return &derived()[0]; }
+		constexpr const T* begin() const noexcept { return &derived()[0]; }
+		constexpr T* end() noexcept { return &derived()[0] + N; }
+		constexpr const T* end() const noexcept { return &derived()[0] + N; }
 
 		/****************************/
 		/* Reverse iterator support */
@@ -104,17 +87,14 @@ namespace mag
 		{
 			return std::reverse_iterator<T*>(end());
 		}
-
 		constexpr std::reverse_iterator<const T*> rbegin() const noexcept
 		{
 			return std::reverse_iterator<const T*>(end());
 		}
-
 		constexpr std::reverse_iterator<T*> rend() noexcept
 		{
 			return std::reverse_iterator<T*>(begin());
 		}
-
 		constexpr std::reverse_iterator<const T*> rend() const noexcept
 		{
 			return std::reverse_iterator<const T*>(begin());
@@ -124,46 +104,20 @@ namespace mag
 		/* Const iterator support */
 		/**************************/
 
-		constexpr const T* cbegin() const noexcept
-		{
-			return begin();
-		}
+		constexpr const T* cbegin() const noexcept { return begin(); }
+		constexpr const T* cend() const noexcept { return end(); }
+		constexpr std::reverse_iterator<const T*> crbegin() const noexcept { return rbegin(); }
+		constexpr std::reverse_iterator<const T*> crend() const noexcept { return rend(); }
 
-		constexpr const T* cend() const noexcept
-		{
-			return end();
-		}
-
-		constexpr std::reverse_iterator<const T*> crbegin() const noexcept
-		{
-			return rbegin();
-		}
-
-		constexpr std::reverse_iterator<const T*> crend() const noexcept
-		{
-			return rend();
-		}
-
-		constexpr T& operator[](size_t i) noexcept
-		{
-			return derived().v[i];
-		}
-
-		constexpr const T& operator[](size_t i) const noexcept
-		{
-			return derived().v[i];
-		}
+		constexpr T& operator[](size_t i) noexcept { return derived().v[i]; }
+		constexpr const T& operator[](size_t i) const noexcept { return derived().v[i]; }
 
 		template <Numeric U>
 		constexpr auto operator<=>(const Vec<U, N>& o) const noexcept
 		{
 			for (size_t i = 0; i < N; ++i)
-			{
 				if (auto cmp = (*this)[i] <=> o[i]; cmp != 0)
-				{
 					return cmp;
-				}
-			}
 			return std::strong_ordering::equal;
 		}
 
@@ -171,12 +125,8 @@ namespace mag
 		constexpr bool operator==(const Vec<U, N>& o) const noexcept
 		{
 			for (size_t i = 0; i < N; ++i)
-			{
 				if (derived()[i] != o[i])
-				{
 					return false;
-				}
-			}
 			return true;
 		}
 
@@ -184,69 +134,6 @@ namespace mag
 		constexpr bool operator!=(const Vec<U, N>& o) const noexcept
 		{
 			return !(*this == o);
-		}
-
-		template <Numeric U>
-			requires std::convertible_to<U, T>
-		constexpr Derived& operator-=(const Vec<U, N>& o) noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-				derived()[i] -= o[i];
-			return derived();
-		}
-
-		template <Numeric U>
-			requires std::convertible_to<U, T>
-		constexpr Derived& operator*=(const Vec<U, N>& o) noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-				derived()[i] *= o[i];
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator/=(const Vec<U, N>& o) noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-			{
-				assert(o[i] != U{0} && "Element-wise division by zero!");
-				derived()[i] /= o[i];
-			}
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr auto operator+=(const U& o) noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-				derived()[i] = derived()[i] + o;
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator-=(const U& o) noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-				derived()[i] = derived()[i] - o;
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator*=(const U& o) noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-				derived()[i] = derived()[i] * o;
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator/=(const U& o) noexcept
-		{
-			assert(o != U{0} && "Division by zero in vector operation!");
-
-			for (size_t i = 0; i < N; ++i)
-				derived()[i] = derived()[i] / o;
-			return derived();
 		}
 
 		template <Numeric U>
