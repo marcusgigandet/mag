@@ -36,3 +36,5 @@ target_link_libraries(run_all_tests
 )
 
 add_test(NAME mag_all_tests COMMAND run_all_tests)
+target_compile_options(run_all_tests PRIVATE -fprofile-instr-generate -fcoverage-mapping)
+target_link_options(run_all_tests PRIVATE -fprofile-instr-generate)

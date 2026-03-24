@@ -29,6 +29,7 @@ endif ()
 # Options #
 ###########
 option(MAG_BUILD_TESTS "Build tests" OFF)
+option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
 
 #################################
 # Set constants for the project #
@@ -37,6 +38,18 @@ file(GLOB_RECURSE MODULES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
+
+if (NOT MAG_ENABLE_SIMD)
+    list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
+else ()
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm|aarch64|ARM64")
+        set(MAG_PLATFORM_ARM TRUE)
+    endif ()
+
+    if (NOT MAG_PLATFORM_ARM)
+        list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
+    endif ()
+endif ()
 
 ###################
 # Target: library #
@@ -50,14 +63,21 @@ target_sources(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME}
-        PRIVATE 
+        PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor
 )
 
-target_compile_features(${PROJECT_NAME} 
-        PUBLIC 
+target_compile_features(${PROJECT_NAME}
+        PUBLIC
         cxx_std_20
 )
+
+if (MAG_ENABLE_SIMD)
+    target_compile_definitions(${PROJECT_NAME}
+            PRIVATE
+            MAG_ENABLE_SIMD
+    )
+endif ()
 
 ###############
 # Build tests #
@@ -73,21 +93,21 @@ endif ()
 # Run metadata update targets #
 ###############################
 FetchContent_Declare(
-    toolbox
-    GIT_REPOSITORY https://github.com/SlyFryFrog/toolbox.git
-    GIT_TAG        main
+        toolbox
+        GIT_REPOSITORY https://github.com/SlyFryFrog/toolbox.git
+        GIT_TAG main
 )
 FetchContent_MakeAvailable(toolbox)
 
 add_custom_target(mag_copyright
-    COMMAND "python3"
-    "${toolbox_SOURCE_DIR}/scripts/copyright.py"
-    --author "Marcus Gigandet"
-    --directory "src"
-    --fix
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Syncing copyright headers with Git history"
-    VERBATIM
+        COMMAND "python3"
+        "${toolbox_SOURCE_DIR}/scripts/copyright.py"
+        --author "Marcus Gigandet"
+        --directory "src"
+        --fix
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Syncing copyright headers with Git history"
+        VERBATIM
 )
 
 add_dependencies(${PROJECT_NAME} mag_copyright)

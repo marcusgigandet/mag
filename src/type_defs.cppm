@@ -25,21 +25,48 @@ export namespace mag
 	using Vec2 = Vec<double, 2>;
 	using Vec2f = Vec<float, 2>;
 	using Vec2i = Vec<int32_t, 2>;
-	using Vec2u = Vec<std::uint32_t, 2>;
+	using Vec2u = Vec<uint32_t, 2>;
+	using Vec2l = Vec<uint64_t, 2>;
+	using Vec2ul = Vec<uint64_t, 2>;
 
 	using Vec3 = Vec<double, 3>;
 	using Vec3f = Vec<float, 3>;
 	using Vec3i = Vec<int32_t, 3>;
 	using Vec3u = Vec<uint32_t, 3>;
+	using Vec3l = Vec<uint64_t, 3>;
+	using Vec3ul = Vec<uint64_t, 3>;
 
 	using Vec4 = Vec<double, 4>;
 	using Vec4f = Vec<float, 4>;
 	using Vec4i = Vec<int32_t, 4>;
 	using Vec4u = Vec<uint32_t, 4>;
+	using Vec4l = Vec<uint64_t, 4>;
+	using Vec4ul = Vec<uint64_t, 4>;
+
+	using Mat2  = Mat<double, 2, 2>;
+	using Mat2f = Mat<float, 2, 2>;
 
 	using Mat3 = Mat<double, 3, 3>;
 	using Mat3f = Mat<float, 3, 3>;
 
 	using Mat4 = Mat<double, 4, 4>;
 	using Mat4f = Mat<float, 4, 4>;
+
+	using Mat2x3  = Mat<double, 2, 3>;
+	using Mat2x3f = Mat<float, 2, 3>;
+
+	using Mat3x2  = Mat<double, 3, 2>;
+	using Mat3x2f = Mat<float, 3, 2>;
+
+	using Mat3x4  = Mat<double, 3, 4>;
+	using Mat3x4f = Mat<float, 3, 4>;
+
+	using Mat4x3  = Mat<double, 4, 3>;
+	using Mat4x3f = Mat<float, 4, 3>;
+
+	using Mat2x4  = Mat<double, 2, 4>;
+	using Mat2x4f = Mat<float, 2, 4>;
+
+	using Mat4x2  = Mat<double, 4, 2>;
+	using Mat4x2f = Mat<float, 4, 2>;
 } // namespace lys

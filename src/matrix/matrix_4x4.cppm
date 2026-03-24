@@ -20,7 +20,6 @@ export module mag:matrix_4x4;
 import :concepts;
 import :constants;
 import :matrix;
-import :matrix_nxn;
 import :vector_3;
 import :vector_4;
 
@@ -110,16 +109,6 @@ namespace mag
 					m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z + m[3][3] * v.w};
 		}
 
-		constexpr Mat transpose() const noexcept
-		{
-			// clang-format off
-			return {m00, m01, m02, m03,
-					m10, m11, m12, m13,
-					m20, m21, m22, m23,
-					m30, m31, m32, m33};
-			// clang-format on
-		}
-
 		constexpr Mat inverse() const noexcept
 		{
 			return inverse(*this);
@@ -180,7 +169,7 @@ namespace mag
 
 		constexpr static Mat identity() noexcept
 		{
-			return mag::identity<T, 4>();
+			return Mat::diagonal();
 		}
 
 		template <Numeric U>

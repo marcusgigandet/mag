@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export module mag;
+module;
+#include <cstdint>
+export module mag:simd_ops;
 
-export import :concepts;
-export import :constants;
-export import :matrix;
-export import :matrix_3x3;
-export import :matrix_4x4;
-export import :type_defs;
-export import :vector;
-export import :vector_2;
-export import :vector_3;
-export import :vector_4;
-export import :vector_ops;
+import :type_defs;
 
-#ifdef MAG_ENABLE_SIMD
+namespace mag
+{
+	// clang-format off
+	struct add_op {};
+	struct sub_op {};
+	struct mul_op {};
+	struct div_op {};
+	// clang-format on
 
-#ifdef __ARM_NEON
-export import :neon_ops;
-export import :neon_traits;
-#endif
-
-export import :simd_ops;
-export import :simd_traits;
-#endif
+	template <Numeric T, size_t N>
+	struct simd_ops;
+} // namespace mag

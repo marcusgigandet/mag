@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 module;
-#include <cstddef>
-export module mag:matrix_nxn;
+#include <cstdint>
+export module mag:simd_traits;
 
-import :concepts;
-import :matrix;
+import :type_defs;
 
 namespace mag
 {
-	export template <Numeric T, size_t N>
-	constexpr Mat<T, N, N> identity() noexcept
+	template <Numeric T, size_t N>
+	struct simd_traits
 	{
-		Mat<T, N, N> result{};
-		for (size_t i = 0; i < N; ++i)
-			result[i][i] = static_cast<T>(1);
-		return result;
-	}
+		static constexpr bool supported = false; ///< Indicates if SIMD is supported for this trait.
+		static constexpr bool supports_add = false; ///< Addition is not supported.
+		static constexpr bool supports_sub = false; ///< Subtraction is not supported.
+		static constexpr bool supports_mul = false; ///< Multiplication is not supported.
+		static constexpr bool supports_div = false; ///< Division is not supported.
+		using simd_t = void;						///< Placeholder for backend intrinsic type.
+	};
 } // namespace mag

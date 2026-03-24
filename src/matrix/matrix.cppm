@@ -32,10 +32,7 @@ namespace mag
 	struct IMat
 	{
 	private:
-		constexpr Derived& derived() noexcept
-		{
-			return static_cast<Derived&>(*this);
-		}
+		constexpr Derived& derived() noexcept { return static_cast<Derived&>(*this); }
 
 		constexpr const Derived& derived() const noexcept
 		{
@@ -47,25 +44,13 @@ namespace mag
 		/* Iterator support */
 		/********************/
 
-		constexpr T* begin() noexcept
-		{
-			return &derived().m[0][0];
-		}
+		constexpr T* begin() noexcept { return &derived().m[0][0]; }
 
-		constexpr const T* begin() const noexcept
-		{
-			return &derived().m[0][0];
-		}
+		constexpr const T* begin() const noexcept { return &derived().m[0][0]; }
 
-		constexpr T* end() noexcept
-		{
-			return &derived().m[0][0] + C * R;
-		}
+		constexpr T* end() noexcept { return &derived().m[0][0] + C * R; }
 
-		constexpr const T* end() const noexcept
-		{
-			return &derived().m[0][0] + C * R;
-		}
+		constexpr const T* end() const noexcept { return &derived().m[0][0] + C * R; }
 
 		/****************************/
 		/* Reverse iterator support */
@@ -95,25 +80,13 @@ namespace mag
 		/* Const iterator support */
 		/**************************/
 
-		constexpr const T* cbegin() const noexcept
-		{
-			return begin();
-		}
+		constexpr const T* cbegin() const noexcept { return begin(); }
 
-		constexpr const T* cend() const noexcept
-		{
-			return end();
-		}
+		constexpr const T* cend() const noexcept { return end(); }
 
-		constexpr std::reverse_iterator<const T*> crbegin() const noexcept
-		{
-			return rbegin();
-		}
+		constexpr std::reverse_iterator<const T*> crbegin() const noexcept { return rbegin(); }
 
-		constexpr std::reverse_iterator<const T*> crend() const noexcept
-		{
-			return rend();
-		}
+		constexpr std::reverse_iterator<const T*> crend() const noexcept { return rend(); }
 
 		constexpr std::span<T, R> operator[](size_t i) noexcept
 		{
@@ -122,24 +95,25 @@ namespace mag
 
 		constexpr std::span<const T, R> operator[](size_t i) const noexcept
 		{
-			return std::span<const T, R>(derived().m[i]);
+			return derived().m[i];
 		}
 
-		constexpr T* data() noexcept
+		constexpr T& operator()(size_t c, size_t r) noexcept { return derived().m[c][r]; }
+
+		constexpr const T& operator()(size_t c, size_t r) const noexcept
 		{
-			return &derived().m[0][0];
+			return derived().m[c][r];
 		}
-		constexpr const T* data() const noexcept
-		{
-			return &derived().m[0][0];
-		}
+
+		constexpr T* data() noexcept { return &derived().m[0][0]; }
+		constexpr const T* data() const noexcept { return &derived().m[0][0]; }
 
 		template <Numeric U>
 		constexpr Derived& operator+=(U val) noexcept
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					derived()[c][r] += val;
+					derived()(c, r) += val;
 			return derived();
 		}
 
@@ -148,7 +122,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					derived()[c][r] -= val;
+					derived()(c, r) -= val;
 			return derived();
 		}
 
@@ -157,7 +131,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					derived()[c][r] *= val;
+					derived()(c, r) *= val;
 			return derived();
 		}
 
@@ -166,7 +140,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					derived()[c][r] /= val;
+					derived()(c, r) /= val;
 			return derived();
 		}
 
@@ -175,7 +149,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					derived()[c][r] += o[c][r];
+					derived()(c, r) += o[c][r];
 			return derived();
 		}
 
@@ -184,7 +158,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					derived()[c][r] -= o[c][r];
+					derived()(c, r) -= o[c][r];
 			return derived();
 		}
 
@@ -193,8 +167,26 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					derived()[c][r] *= o[c][r];
+					derived()(c, r) *= o[c][r];
 			return derived();
+		}
+
+		constexpr Mat<T, R, C> transpose() const noexcept
+		{
+			Mat<T, R, C> result{};
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					result(r, c) = derived()[c][r];
+			return result;
+		}
+
+		static constexpr Derived diagonal() noexcept
+		{
+			Derived result{};
+			const size_t limit = (R < C ? R : C);
+			for (size_t i = 0; i < limit; ++i)
+				result(i, i) = T(1);
+			return result;
 		}
 
 		[[nodiscard]] std::string toString() const noexcept
@@ -232,7 +224,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					v[c][r] = static_cast<T>(0);
+					v(c, r) = static_cast<T>(0);
 		}
 
 		template <Numeric U>
@@ -240,7 +232,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					v[c][r] = static_cast<T>(val);
+					v(c, r) = static_cast<T>(val);
 		}
 	};
 
@@ -249,7 +241,7 @@ namespace mag
 	{
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
-				if (a[c][r] != b[c][r])
+				if (a(c, r) != b(c, r))
 					return false;
 		return true;
 	}
@@ -266,7 +258,7 @@ namespace mag
 		Mat<std::common_type_t<T, U>, R, C> ret;
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
-				ret[c][r] = a[c][r] + static_cast<T>(val);
+				ret(c, r) = a(c, r) + static_cast<T>(val);
 		return ret;
 	}
 
@@ -276,7 +268,7 @@ namespace mag
 		Mat<std::common_type_t<T, U>, R, C> ret;
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
-				ret[c][r] = a[c][r] - static_cast<T>(val);
+				ret(c, r) = a(c, r) - static_cast<T>(val);
 		return ret;
 	}
 
@@ -286,7 +278,7 @@ namespace mag
 		Mat<std::common_type_t<T, U>, R, C> ret;
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
-				ret[c][r] = a[c][r] * static_cast<T>(val);
+				ret(c, r) = a(c, r) * static_cast<T>(val);
 		return ret;
 	}
 
@@ -296,7 +288,7 @@ namespace mag
 		Mat<std::common_type_t<T, U>, R, C> ret;
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
-				ret[c][r] = a[c][r] / static_cast<T>(val);
+				ret(c, r) = a(c, r) / static_cast<T>(val);
 		return ret;
 	}
 
@@ -306,7 +298,7 @@ namespace mag
 		Mat<std::common_type_t<T, U>, R, C> ret;
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
-				ret[c][r] = a[c][r] + static_cast<T>(b[c][r]);
+				ret(c, r) = a(c, r) + static_cast<T>(b(c, r));
 		return ret;
 	}
 
@@ -316,7 +308,7 @@ namespace mag
 		Mat<std::common_type_t<T, U>, R, C> ret;
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
-				ret[c][r] = a[c][r] - static_cast<T>(b[c][r]);
+				ret(c, r) = a(c, r) - static_cast<T>(b(c, r));
 		return ret;
 	}
 
@@ -327,7 +319,7 @@ namespace mag
 		for (size_t c = 0; c < C; ++c)
 			for (size_t r = 0; r < R; ++r)
 				for (size_t k = 0; k < K; ++k)
-					result[c][r] += a[c][k] * b[k][r];
+					result(c, r) += a(c, k) * b(k, r);
 		return result;
 	}
 } // namespace mag
