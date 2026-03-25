@@ -21,16 +21,30 @@ import :concepts;
 
 namespace mag
 {
-	template <Numeric T, size_t N>
-	struct simd_traits
+	template <typename T,
+			  bool SupportsSet1,
+			  bool SupportsAdd,
+			  bool SupportsSub,
+			  bool SupportsMul,
+			  bool SupportsDiv>
+	struct simd_traits_impl
 	{
-		// clang-format off
-		static constexpr bool supports_set1 = false; ///< Indicates if creating SIMD set is supported.
-		static constexpr bool supports_add = false;  ///< Indicates if addition is supported.
-		static constexpr bool supports_sub = false;  ///< Indicates if subtraction is supported.
-		static constexpr bool supports_mul = false;  ///< Indicates if multiplication is not supported.
-		static constexpr bool supports_div = false;  ///< Indicates if division is not supported.
-		using simd_t = void;						 ///< Placeholder for backend intrinsic type.
-		// clang-format on
+		/// Backend intrinsic type.
+		using simd_t = T;
+		/// Indicates if creating SIMD set is supported.
+		static constexpr bool supports_set1 = SupportsSet1;
+		/// Indicates if addition is supported.
+		static constexpr bool supports_add = SupportsAdd;
+		/// Indicates if subtraction is supported.
+		static constexpr bool supports_sub = SupportsSub;
+		/// Indicates if multiplication is not supported.
+		static constexpr bool supports_mul = SupportsMul;
+		/// Indicates if division is not supported.
+		static constexpr bool supports_div = SupportsDiv;
+	};
+
+	template <Numeric T, size_t N>
+	struct simd_traits : simd_traits_impl<void, false, false, false, false, false>
+	{
 	};
 } // namespace mag
