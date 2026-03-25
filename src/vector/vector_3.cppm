@@ -38,10 +38,6 @@ namespace mag
 			};
 		};
 
-	private:
-		T _pad{}; ///< Unused var, specified for 16-byte alignment
-
-	public:
 		constexpr Vec() = default;
 
 		template <Numeric U>

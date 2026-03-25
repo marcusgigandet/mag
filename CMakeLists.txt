@@ -30,6 +30,7 @@ endif ()
 ###########
 option(MAG_BUILD_TESTS "Build tests" OFF)
 option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
+option(MAG_ENABLE_SIMD_EXTENDED "Enable simd for signed/unsigned integers" ON)
 
 #################################
 # Set constants for the project #

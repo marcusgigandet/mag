@@ -20,165 +20,92 @@ export module mag:neon_ops;
 import :simd_ops;
 import :neon_traits;
 
+/**
+ * @brief This namespace provides SIMD operations for ARM NEON.
+ *
+ * It uses macros to generate repetitive code for signed/unsigned integers and floating-point types.
+ */
 namespace mag
 {
-	template <>
-	struct simd_ops<int8_t, 16>
-	{
-		using simd_t = simd_traits<int8_t, 16>::simd_t;
+#ifdef MAG_ENABLE_SIMD_EXTENDED
 
-		static simd_t load(const int8_t* p) noexcept { return vld1q_s8(p); }
-		static void store(int8_t* p, const simd_t v) noexcept { vst1q_s8(p, v); }
-
-		static simd_t set1(const int8_t s) noexcept { return vdupq_n_s8(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_s8(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_s8(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_s8(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_s8(v); }
+#define DEFINE_SIMD_OPS_INT(T, N, SUFFIX)                                                          \
+	template <>                                                                                    \
+	struct simd_ops<T, N>                                                                          \
+	{                                                                                              \
+		using simd_t = simd_traits<T, N>::simd_t;                                                  \
+		static simd_t load(const T* p) noexcept { return vld1q_##SUFFIX(p); }                      \
+		static void store(T* p, const simd_t v) noexcept { vst1q_##SUFFIX(p, v); }                 \
+		static simd_t set1(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                     \
+		static simd_t add(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vaddq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static simd_t sub(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vsubq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static T horizontal_sum(const simd_t v) noexcept { return vaddvq_##SUFFIX(v); }            \
 	};
 
-	template <>
-	struct simd_ops<int16_t, 8>
-	{
-		using simd_t = simd_traits<int16_t, 8>::simd_t;
+	DEFINE_SIMD_OPS_INT(int8_t, 16, s8)
+	DEFINE_SIMD_OPS_INT(int16_t, 8, s16)
+	DEFINE_SIMD_OPS_INT(int32_t, 4, s32)
+	DEFINE_SIMD_OPS_INT(uint8_t, 16, u8)
+	DEFINE_SIMD_OPS_INT(uint16_t, 8, u16)
+	DEFINE_SIMD_OPS_INT(uint32_t, 4, u32)
 
-		static simd_t load(const int16_t* p) noexcept { return vld1q_s16(p); }
-		static void store(int16_t* p, const simd_t v) noexcept { vst1q_s16(p, v); }
-
-		static simd_t set1(const int16_t s) noexcept { return vdupq_n_s16(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_s16(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_s16(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_s16(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_s16(v); }
+#define DEFINE_SIMD_OPS_INT_NO_MUL(T, N, SUFFIX)                                                   \
+	template <>                                                                                    \
+	struct simd_ops<T, N>                                                                          \
+	{                                                                                              \
+		using simd_t = simd_traits<T, N>::simd_t;                                                  \
+		static simd_t load(const T* p) noexcept { return vld1q_##SUFFIX(p); }                      \
+		static void store(T* p, const simd_t v) noexcept { vst1q_##SUFFIX(p, v); }                 \
+		static simd_t set1(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                     \
+		static simd_t add(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vaddq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static simd_t sub(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vsubq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static T horizontal_sum(const simd_t v) noexcept { return vaddvq_##SUFFIX(v); }            \
 	};
 
-	template <>
-	struct simd_ops<int32_t, 4>
-	{
-		using simd_t = simd_traits<int32_t, 4>::simd_t;
+	DEFINE_SIMD_OPS_INT_NO_MUL(int64_t, 2, s64)
+	DEFINE_SIMD_OPS_INT_NO_MUL(uint64_t, 2, u64)
 
-		static simd_t load(const int32_t* p) noexcept { return vld1q_s32(p); }
-		static void store(int32_t* p, const simd_t v) noexcept { vst1q_s32(p, v); }
+#endif
 
-		static simd_t set1(const int32_t s) noexcept { return vdupq_n_s32(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_s32(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_s32(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_s32(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_s32(v); }
+#define DEFINE_SIMD_OPS_FLOAT(T, N, SUFFIX)                                                        \
+	template <>                                                                                    \
+	struct simd_ops<T, N>                                                                          \
+	{                                                                                              \
+		using simd_t = simd_traits<T, N>::simd_t;                                                  \
+		static simd_t load(const T* p) noexcept { return vld1q_##SUFFIX(p); }                      \
+		static void store(T* p, const simd_t v) noexcept { vst1q_##SUFFIX(p, v); }                 \
+		static simd_t set1(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                     \
+		static simd_t add(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vaddq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static simd_t sub(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vsubq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static simd_t mul(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vmulq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static simd_t div(const simd_t a, const simd_t b) noexcept                                 \
+		{                                                                                          \
+			return vdivq_##SUFFIX(a, b);                                                           \
+		}                                                                                          \
+		static T horizontal_sum(const simd_t v) noexcept { return vaddvq_##SUFFIX(v); }            \
 	};
 
-	template <>
-	struct simd_ops<int64_t, 2>
-	{
-		using simd_t = simd_traits<int64_t, 2>::simd_t;
-
-		static simd_t load(const int64_t* p) noexcept { return vld1q_s64(p); }
-		static void store(int64_t* p, const simd_t v) noexcept { vst1q_s64(p, v); }
-
-		static simd_t set1(const int64_t s) noexcept { return vdupq_n_s64(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_s64(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_s64(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_s64(v); }
-	};
-
-	template <>
-	struct simd_ops<uint8_t, 16>
-	{
-		using simd_t = simd_traits<uint8_t, 16>::simd_t;
-
-		static simd_t load(const uint8_t* p) noexcept { return vld1q_u8(p); }
-		static void store(uint8_t* p, const simd_t v) noexcept { vst1q_u8(p, v); }
-
-		static simd_t set1(const uint8_t s) noexcept { return vdupq_n_u8(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_u8(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_u8(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_u8(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_u8(v); }
-	};
-
-	template <>
-	struct simd_ops<uint16_t, 8>
-	{
-		using simd_t = simd_traits<uint16_t, 8>::simd_t;
-
-		static simd_t load(const uint16_t* p) noexcept { return vld1q_u16(p); }
-		static void store(uint16_t* p, const simd_t v) noexcept { vst1q_u16(p, v); }
-
-		static simd_t set1(const uint16_t s) noexcept { return vdupq_n_u16(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_u16(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_u16(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_u16(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_u16(v); }
-	};
-
-	template <>
-	struct simd_ops<uint32_t, 4>
-	{
-		using simd_t = simd_traits<uint32_t, 4>::simd_t;
-
-		static simd_t load(const uint32_t* p) noexcept { return vld1q_u32(p); }
-		static void store(uint32_t* p, const simd_t v) noexcept { vst1q_u32(p, v); }
-
-		static simd_t set1(const uint32_t s) noexcept { return vdupq_n_u32(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_u32(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_u32(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_u32(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_u32(v); }
-	};
-
-	template <>
-	struct simd_ops<uint64_t, 2>
-	{
-		using simd_t = simd_traits<uint64_t, 2>::simd_t;
-
-		static simd_t load(const uint64_t* p) noexcept { return vld1q_u64(p); }
-		static void store(uint64_t* p, const simd_t v) noexcept { vst1q_u64(p, v); }
-
-		static simd_t set1(const uint64_t s) noexcept { return vdupq_n_u64(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_u64(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_u64(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_u64(v); }
-	};
-
-	template <>
-	struct simd_ops<float, 4>
-	{
-		using simd_t = simd_traits<float, 4>::simd_t;
-
-		static simd_t load(const float* p) noexcept { return vld1q_f32(p); }
-		static void store(float* p, const simd_t v) noexcept { vst1q_f32(p, v); }
-
-		static simd_t set1(const float s) noexcept { return vdupq_n_f32(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_f32(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_f32(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_f32(a, b); }
-		static simd_t div(const simd_t a, const simd_t b) noexcept { return vdivq_f32(a, b); }
-		static float horizontal_sum(const simd_t v) noexcept { return vaddvq_f32(v); }
-	};
-
-	template <>
-	struct simd_ops<double, 2>
-	{
-		using simd_t = simd_traits<double, 2>::simd_t;
-
-		static simd_t load(const double* p) noexcept { return vld1q_f64(p); }
-		static void store(double* p, const simd_t v) noexcept { vst1q_f64(p, v); }
-
-		static simd_t set1(const double s) noexcept { return vdupq_n_f64(s); }
-
-		static simd_t add(const simd_t a, const simd_t b) noexcept { return vaddq_f64(a, b); }
-		static simd_t sub(const simd_t a, const simd_t b) noexcept { return vsubq_f64(a, b); }
-		static simd_t mul(const simd_t a, const simd_t b) noexcept { return vmulq_f64(a, b); }
-		static simd_t div(const simd_t a, const simd_t b) noexcept { return vdivq_f64(a, b); }
-		static double horizontal_sum(const simd_t v) noexcept { return vaddvq_f64(v); }
-	};
+	DEFINE_SIMD_OPS_FLOAT(float, 4, f32);
+	DEFINE_SIMD_OPS_FLOAT(double, 2, f64);
 } // namespace mag
