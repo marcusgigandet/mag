@@ -136,16 +136,6 @@ namespace mag
 			return !(*this == o);
 		}
 
-		template <Numeric U>
-		constexpr auto dot(const Vec<U, N>& o) const noexcept
-		{
-			using R = std::common_type_t<T, U>;
-			R res = 0;
-			for (size_t i = 0; i < N; ++i)
-				res += derived()[i] * o[i];
-			return res;
-		}
-
 		constexpr T length() const noexcept
 		{
 			T ret = 0;
@@ -173,6 +163,9 @@ namespace mag
 				ret[i] = std::clamp(derived()[i], min, max);
 			return ret;
 		}
+
+		template <Numeric U>
+		constexpr auto dot(const Vec<U, N>& o) const noexcept;
 
 		[[nodiscard]] std::string toString() const noexcept
 		{

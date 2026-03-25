@@ -34,7 +34,7 @@ namespace mag
 {
 	export template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
-	constexpr Vec<T, N>& operator+=(Vec<U, N>& a, const Vec<U, N>& b) noexcept
+	constexpr Vec<T, N>& operator+=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_add)
@@ -57,7 +57,7 @@ namespace mag
 
 	export template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
-	constexpr Vec<T, N>& operator-=(Vec<U, N>& a, const Vec<U, N>& b) noexcept
+	constexpr Vec<T, N>& operator-=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_sub)
@@ -80,7 +80,7 @@ namespace mag
 
 	export template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
-	constexpr Vec<T, N>& operator*=(Vec<U, N>& a, const Vec<U, N>& b) noexcept
+	constexpr Vec<T, N>& operator*=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_mul)
@@ -103,7 +103,7 @@ namespace mag
 
 	export template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
-	constexpr Vec<T, N>& operator/=(Vec<U, N>& a, const Vec<U, N>& b) noexcept
+	constexpr Vec<T, N>& operator/=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_div)
@@ -475,6 +475,13 @@ namespace mag
 		for (size_t i = 0; i < N; ++i)
 			ret += a[i] * b[i];
 		return ret;
+	}
+
+	template <typename Derived, Numeric T, size_t N>
+	template <Numeric U>
+	constexpr auto IVec<Derived, T, N>::dot(const Vec<U, N>& o) const noexcept
+	{
+		return mag::dot(derived(), o);
 	}
 
 	export template <Numeric T, size_t N>
