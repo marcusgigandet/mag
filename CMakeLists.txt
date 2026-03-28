@@ -3,6 +3,10 @@ project(mag LANGUAGES CXX)
 
 include(FetchContent)
 
+if (MAG_BUILD_TESTS)
+	enable_testing()
+endif ()
+
 #####################
 # Compiler settings #
 #####################
@@ -10,19 +14,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# We only support clang for now
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(FATAL_ERROR
-            "This project requires Clang. "
-            "Detected: ${CMAKE_CXX_COMPILER_ID}"
-    )
-endif ()
-
-if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
-    message(FATAL_ERROR
-            "Clang >= 18 is required. "
-            "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
-    )
+	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
+		message(FATAL_ERROR
+				"Clang >= 18 is required. "
+				"Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
+		)
+	endif ()
 endif ()
 
 ###########

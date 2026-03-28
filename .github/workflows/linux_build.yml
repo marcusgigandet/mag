@@ -31,18 +31,10 @@ jobs:
           update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
 
       - name: Configure CMake
-        run: |
-          cmake -B build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_CXX_COMPILER=clang++ \
-            -DMAG_BUILD_TESTS=ON \
-            -G Ninja
+        run: cmake --preset clang-release
 
       - name: Build
-        run: |
-          cmake --build build --config Release
+        run: cmake --build --preset clang-release
 
       - name: Run tests
-        run: |
-          cd build
-          ctest --output-on-failure -C Release --test-dir tests
+        run: ctest --preset clang-release --output-on-failure

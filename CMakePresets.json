@@ -4,10 +4,7 @@
     {
       "name": "abstract",
       "hidden": true,
-      "generator": "Ninja",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "clang++"
-      }
+      "generator": "Ninja"
     },
     {
       "inherits": "abstract",
@@ -24,39 +21,51 @@
       "binaryDir": "${sourceDir}/build/generic-release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "MAG_BUILD_TESTS": "OFF"
+        "MAG_BUILD_TESTS": "ON"
       }
     },
     {
       "inherits": "generic-debug",
-      "name": "macos-debug",
+      "name": "clang-debug",
       "hidden": false,
-      "binaryDir": "${sourceDir}/build/macos-debug",
+      "binaryDir": "${sourceDir}/build/clang-debug",
       "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++"
       }
     },
     {
       "inherits": "generic-release",
-      "name": "macos-release",
+      "name": "clang-release",
       "hidden": false,
-      "binaryDir": "${sourceDir}/build/macos-release",
+      "binaryDir": "${sourceDir}/build/clang-release",
       "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "clang-release",
+      "configurePreset": "clang-release"
+    },
+    {
+      "name": "clang-debug",
+      "configurePreset": "clang-debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "clang-debug",
+      "configurePreset": "clang-debug",
+      "output": {
+        "outputOnFailure": true
       }
     },
     {
-      "inherits": "generic-debug",
-      "name": "linux-debug",
-      "hidden": false,
-      "binaryDir": "${sourceDir}/build/linux-debug",
-      "cacheVariables": {
-      }
-    },
-    {
-      "inherits": "generic-release",
-      "name": "linux-release",
-      "hidden": false,
-      "binaryDir": "${sourceDir}/build/linux-release",
-      "cacheVariables": {
+      "name": "clang-release",
+      "configurePreset": "clang-release",
+      "output": {
+        "outputOnFailure": true
       }
     }
   ]
