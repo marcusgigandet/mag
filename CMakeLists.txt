@@ -1,26 +1,25 @@
 cmake_minimum_required(VERSION 3.28.3 FATAL_ERROR)
-project(mag LANGUAGES CXX)
+project(mag VERSION 1.0.0 LANGUAGES CXX)
 
 include(FetchContent)
-
-if (MAG_BUILD_TESTS)
-	enable_testing()
-endif ()
 
 #####################
 # Compiler settings #
 #####################
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if (PROJECT_IS_TOP_LEVEL)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif ()
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
-		message(FATAL_ERROR
-				"Clang >= 18 is required. "
-				"Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
-		)
-	endif ()
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
+        message(FATAL_ERROR
+                "Clang >= 18 is required. "
+                "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
+        )
+    endif ()
 endif ()
 
 ###########
@@ -29,15 +28,17 @@ endif ()
 option(MAG_BUILD_TESTS "Build tests" OFF)
 option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
 option(MAG_ENABLE_SIMD_EXTENDED "Enable simd for signed/unsigned integers" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
-#################################
-# Set constants for the project #
-#################################
+#################
+# Set constants #
+#################
 file(GLOB_RECURSE MODULES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
+# Remove unused code
 if (NOT MAG_ENABLE_SIMD)
     list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
 else ()
@@ -53,69 +54,99 @@ endif ()
 ###################
 # Target: library #
 ###################
-add_library(${PROJECT_NAME} SHARED)
-target_sources(${PROJECT_NAME}
+add_library(mag)
+add_library(mag::mag ALIAS mag)
+
+target_sources(mag
         PUBLIC
-        FILE_SET allModules
+        FILE_SET cxx_modules
         TYPE CXX_MODULES
         FILES ${MODULES}
 )
 
-target_include_directories(${PROJECT_NAME}
+target_include_directories(mag
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor
 )
 
-target_compile_features(${PROJECT_NAME}
+target_compile_features(mag
         PUBLIC
         cxx_std_20
 )
 
 if (MAG_ENABLE_SIMD)
-    target_compile_definitions(${PROJECT_NAME}
-            PRIVATE
-            MAG_ENABLE_SIMD
-    )
+    target_compile_definitions(mag PRIVATE MAG_ENABLE_SIMD)
 endif ()
+
+#####################
+# Build-tree export #
+#####################
+export(TARGETS mag FILE "${CMAKE_CURRENT_BINARY_DIR}/mag_targets.cmake")
 
 ###############
 # Build tests #
 ###############
 if (MAG_BUILD_TESTS)
-    message(STATUS "Building with tests")
-    add_compile_definitions(CATCH_CONFIG_NO_FORMAT)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/Catch2)
+    enable_testing()
+
+    FetchContent_Declare(
+            Catch2
+            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+            GIT_TAG v3.13.0
+    )
+    FetchContent_MakeAvailable(Catch2)
+
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif ()
 
-###############################
-# Run metadata update targets #
-###############################
-FetchContent_Declare(
-        toolbox
-        GIT_REPOSITORY https://github.com/SlyFryFrog/toolbox.git
-        GIT_TAG main
-)
-FetchContent_MakeAvailable(toolbox)
+#############
+# Dev tools #
+#############
+if (PROJECT_IS_TOP_LEVEL)
+    FetchContent_Declare(
+            toolbox
+            GIT_REPOSITORY https://github.com/SlyFryFrog/toolbox.git
+            GIT_TAG main
+    )
+    FetchContent_MakeAvailable(toolbox)
 
-add_custom_target(mag_copyright
-        COMMAND "python3"
-        "${toolbox_SOURCE_DIR}/scripts/copyright.py"
-        --author "Marcus Gigandet"
-        --directory "src"
-        --fix
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Syncing copyright headers with Git history"
-        VERBATIM
-)
+    add_custom_target(mag_copyright
+            COMMAND python3
+            "${toolbox_SOURCE_DIR}/scripts/copyright.py"
+            --author "Marcus Gigandet"
+            --directory "src"
+            --fix
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "Syncing copyright headers with Git history"
+            VERBATIM
+    )
 
-add_dependencies(${PROJECT_NAME} mag_copyright)
+    add_dependencies(mag mag_copyright)
+endif ()
 
-###############################
-# Compile commands for clangd #
-###############################
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+#########################
+# Compile commands copy #
+#########################
+if (PROJECT_IS_TOP_LEVEL)
+add_custom_command(TARGET mag POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${CMAKE_BINARY_DIR}/compile_commands.json
         ${CMAKE_SOURCE_DIR}/compile_commands.json
+)
+endif ()
+
+###################
+# Install targets #
+###################
+install(TARGETS mag
+        EXPORT mag_targets
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+        FILE_SET cxx_modules DESTINATION modules
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/
+        DESTINATION modules
+        FILES_MATCHING PATTERN "*.cppm"
 )
