@@ -42,15 +42,16 @@ file(GLOB_RECURSE MODULES
 if (NOT MAG_ENABLE_SIMD)
     list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
 else ()
+    # Filter based on x86 and arm
+    # Add more architectures if we add future support for something like RISC-V
     if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm|aarch64|ARM64")
         set(MAG_PLATFORM_ARM TRUE)
-    endif ()
-
-    if (NOT MAG_PLATFORM_ARM)
+        list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
+    else()
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
+        add_compile_options(-msse2 -msse3)
     endif ()
 endif ()
-
 ###################
 # Target: library #
 ###################
