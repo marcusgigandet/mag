@@ -25,15 +25,49 @@ import :vector;
 
 namespace mag
 {
+	/**
+	 * @brief Generic CxR-dimensional matrix for numerical computations.
+	 *
+	 * @tparam T Numeric type of the matrix elements.
+	 * @tparam C Number of columns in the matrix.
+	 * @tparam R Number of rows in the matrix.
+	 */
 	export template <Numeric T, size_t C, size_t R>
 	struct Mat;
 
+	/**
+	 * @brief Base class for CxR-dimensional matrices using the Curiously Recurring Template
+	 * Pattern (CRTP). Provides common matrix operations for derived matrix classes.
+	 *
+	 * @tparam Derived The derived matrix class (e.g., `Mat<T, N>`).
+	 * @tparam T Numeric type of the vector elements.
+	 * @tparam C Number of columns in the matrix.
+	 * @tparam R Number of rows in the matrix.
+	 */
 	template <typename Derived, Numeric T, size_t C, size_t R>
 	struct IMat
 	{
 	private:
+		/**
+		 * @brief Returns a reference to the derived matrix type.
+		 *
+		 * Provides access to the concrete matrix implementation using CRTP.
+		 * This allows the base class to call functions or access data defined
+		 * in the derived class without virtual dispatch.
+		 *
+		 * @return Reference to the derived matrix instance.
+		 */
 		constexpr Derived& derived() noexcept { return static_cast<Derived&>(*this); }
 
+		/**
+		 * @brief Returns a reference to the derived matrix type.
+		 *
+		 * Provides access to the concrete matrix implementation using CRTP.
+		 * This allows the base class to call functions or access data defined
+		 * in the derived class without virtual dispatch.
+		 *
+		 * @return Const reference to the derived matrix instance.
+		 */
 		constexpr const Derived& derived() const noexcept
 		{
 			return static_cast<const Derived&>(*this);
