@@ -18,6 +18,7 @@ module;
 #include <type_traits>
 export module mag:matrix_ops;
 
+import :concepts;
 import :matrix;
 
 export namespace mag
