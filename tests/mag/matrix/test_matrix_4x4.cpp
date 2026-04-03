@@ -184,7 +184,7 @@ TEST_CASE("Mat4x4 transformations", "[Mat4x4]")
 
 	SECTION("Scaling")
 	{
-		auto s = Mat4f::scale(2.0f, 3.0f, 4.0f);
+		auto s = Mat4f::diagonal({2.0f, 3.0f, 4.0f, 1.0f});
 		REQUIRE(s[0][0] == 2.0f);
 		REQUIRE(s[1][1] == 3.0f);
 		REQUIRE(s[2][2] == 4.0f);

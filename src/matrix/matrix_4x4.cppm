@@ -109,10 +109,9 @@ namespace mag
 					m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z + m[3][3] * v.w};
 		}
 
-		constexpr Mat inverse() const noexcept
-		{
-			return inverse(*this);
-		}
+		constexpr static Mat identity() noexcept { return Mat::diagonal(1); }
+
+		constexpr Mat inverse() const noexcept { return inverse(*this); }
 
 		constexpr static Mat inverse(const Mat& m) noexcept
 		{
@@ -155,7 +154,6 @@ namespace mag
 			// clang-format on
 		}
 
-
 		template <Numeric U>
 		constexpr static Mat inverse(U x, U y, U z) noexcept
 		{
@@ -167,19 +165,14 @@ namespace mag
 			// clang-format on
 		}
 
-		constexpr static Mat identity() noexcept
-		{
-			return Mat::diagonal();
-		}
-
 		template <Numeric U>
 		constexpr static Mat translate(U x, U y, U z) noexcept
 		{
 			// clang-format off
-			return {Vec<T, 4>{1, 0, 0, 0},
-					Vec<T, 4>{0, 1, 0, 0},
-					Vec<T, 4>{0, 0, 1, 0},
-					Vec<T, 4>{static_cast<T>(x), static_cast<T>(y), static_cast<T>(z), 1}};
+			return {1, 0, 0, static_cast<T>(x),
+					0, 1, 0, static_cast<T>(y),
+					0, 0, 1, static_cast<T>(z),
+					0, 0, 0, 1};
 			// clang-format on
 		}
 
@@ -190,32 +183,15 @@ namespace mag
 		}
 
 		template <Numeric U>
-		constexpr static Mat scale(U x, U y, U z) noexcept
-		{
-			// clang-format off
-			return {static_cast<T>(x), 0, 0, 0,
-					0, static_cast<T>(y), 0, 0,
-					0, 0, static_cast<T>(z), 0,
-					0, 0, 0, 1};
-			// clang-format on
-		}
-
-		template <Numeric U>
-		constexpr static Mat scale(const Vec<U, 3>& v) noexcept
-		{
-			return scale(v.x, v.y, v.z);
-		}
-
-		template <Numeric U>
 		constexpr static Mat rotateX(U radians) noexcept
 		{
 			const T c = static_cast<T>(std::cos(radians));
 			const T s = static_cast<T>(std::sin(radians));
 			// clang-format off
-			return {1, 0, 0, 0,
+			return {1, 0,  0, 0,
 					0, c, -s, 0,
-					0, s, c, 0,
-					0, 0, 0, 1};
+					0, s,  c, 0,
+					0, 0,  0, 1};
 			// clang-format on
 		}
 
@@ -227,7 +203,7 @@ namespace mag
 			// clang-format off
 			return {c, 0, s, 0,
 					0, 1, 0, 0,
-					-s, 0, c, 0,
+				   -s, 0, c, 0,
 					0, 0, 0, 1};
 			// clang-format on
 		}
@@ -239,9 +215,9 @@ namespace mag
 			const T s = static_cast<T>(std::sin(radians));
 			// clang-format off
 			return {c, -s, 0, 0,
-					s, c, 0, 0,
-					0, 0, 1, 0,
-					0, 0, 0, 1};
+					s,  c, 0, 0,
+					0,  0, 1, 0,
+					0,  0, 0, 1};
 			// clang-format on
 		}
 
@@ -254,10 +230,10 @@ namespace mag
 			const Vec<U, 3> u = s.cross(f);
 
 			// clang-format off
-			return Mat{s.x, s.y, s.z, -s.dot(eye),
-					   u.x, u.y, u.z, -u.dot(eye),
-					   -f.x, -f.y, -f.z, f.dot(eye),
-					   0, 0, 0, 1};
+			return Mat{s.x,   s.y,  s.z, -s.dot(eye),
+					   u.x,   u.y,  u.z, -u.dot(eye),
+				      -f.x,  -f.y, -f.z,  f.dot(eye),
+					   0,     0,    0,    1};
 			// clang-format on
 		}
 

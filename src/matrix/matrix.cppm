@@ -25,15 +25,49 @@ import :vector;
 
 namespace mag
 {
+	/**
+	 * @brief Generic CxR-dimensional matrix for numerical computations.
+	 *
+	 * @tparam T Numeric type of the matrix elements.
+	 * @tparam C Number of columns in the matrix.
+	 * @tparam R Number of rows in the matrix.
+	 */
 	export template <Numeric T, size_t C, size_t R>
 	struct Mat;
 
+	/**
+	 * @brief Base class for CxR-dimensional matrices using the Curiously Recurring Template
+	 * Pattern (CRTP). Provides common matrix operations for derived matrix classes.
+	 *
+	 * @tparam Derived The derived matrix class (e.g., `Mat<T, N>`).
+	 * @tparam T Numeric type of the vector elements.
+	 * @tparam C Number of columns in the matrix.
+	 * @tparam R Number of rows in the matrix.
+	 */
 	template <typename Derived, Numeric T, size_t C, size_t R>
 	struct IMat
 	{
 	private:
+		/**
+		 * @brief Returns a reference to the derived matrix type.
+		 *
+		 * Provides access to the concrete matrix implementation using CRTP.
+		 * This allows the base class to call functions or access data defined
+		 * in the derived class without virtual dispatch.
+		 *
+		 * @return Reference to the derived matrix instance.
+		 */
 		constexpr Derived& derived() noexcept { return static_cast<Derived&>(*this); }
 
+		/**
+		 * @brief Returns a reference to the derived matrix type.
+		 *
+		 * Provides access to the concrete matrix implementation using CRTP.
+		 * This allows the base class to call functions or access data defined
+		 * in the derived class without virtual dispatch.
+		 *
+		 * @return Const reference to the derived matrix instance.
+		 */
 		constexpr const Derived& derived() const noexcept
 		{
 			return static_cast<const Derived&>(*this);
@@ -180,12 +214,21 @@ namespace mag
 			return result;
 		}
 
-		static constexpr Derived diagonal() noexcept
+		static constexpr Derived diagonal(const T val) noexcept
 		{
 			Derived result{};
 			const size_t limit = (R < C ? R : C);
 			for (size_t i = 0; i < limit; ++i)
-				result(i, i) = T(1);
+				result(i, i) = val;
+			return result;
+		}
+
+		static constexpr Derived diagonal(const Vec<T, R> diagVals) noexcept
+		{
+			Derived result{};
+			const size_t limit = (R < C) ? R : C;
+			for (size_t i = 0; i < limit; ++i)
+				result(i, i) = diagVals[i];
 			return result;
 		}
 
@@ -235,91 +278,4 @@ namespace mag
 					v(c, r) = static_cast<T>(val);
 		}
 	};
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr bool operator==(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				if (a(c, r) != b(c, r))
-					return false;
-		return true;
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr bool operator!=(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
-	{
-		return !(a == b);
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator+(const Mat<T, C, R>& a, U val) noexcept
-	{
-		Mat<std::common_type_t<T, U>, R, C> ret;
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				ret(c, r) = a(c, r) + static_cast<T>(val);
-		return ret;
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator-(const Mat<T, C, R>& a, U val) noexcept
-	{
-		Mat<std::common_type_t<T, U>, R, C> ret;
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				ret(c, r) = a(c, r) - static_cast<T>(val);
-		return ret;
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator*(const Mat<T, C, R>& a, U val) noexcept
-	{
-		Mat<std::common_type_t<T, U>, R, C> ret;
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				ret(c, r) = a(c, r) * static_cast<T>(val);
-		return ret;
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator/(const Mat<T, C, R>& a, U val) noexcept
-	{
-		Mat<std::common_type_t<T, U>, R, C> ret;
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				ret(c, r) = a(c, r) / static_cast<T>(val);
-		return ret;
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator+(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
-	{
-		Mat<std::common_type_t<T, U>, R, C> ret;
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				ret(c, r) = a(c, r) + static_cast<T>(b(c, r));
-		return ret;
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator-(const Mat<T, C, R>& a, const Mat<U, C, R>& b) noexcept
-	{
-		Mat<std::common_type_t<T, U>, R, C> ret;
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				ret(c, r) = a(c, r) - static_cast<T>(b(c, r));
-		return ret;
-	}
-
-	export template <Numeric T, Numeric U, size_t R, size_t C, size_t K>
-	constexpr auto operator*(const Mat<T, R, K>& a, const Mat<U, K, C>& b) noexcept
-	{
-		Mat<std::common_type_t<T, U>, R, C> result{};
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				for (size_t k = 0; k < K; ++k)
-					result(c, r) += a(c, k) * b(k, r);
-		return result;
-	}
 } // namespace mag

@@ -25,7 +25,6 @@ cmake --build --preset clang-release
 
 ```cmake
 cmake_minimum_required(VERSION 3.28.3) # Minimum cmake for mag
-
 include(FetchContent)
 
 FetchContent_Declare(
@@ -33,10 +32,25 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/SlyFryFrog/mag.git
         GIT_TAG main
 )
-
 FetchContent_MakeAvailable(mag)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE mag)
+target_link_libraries(${PROJECT_NAME} PRIVATE mag::mag)
 target_compile_features(mag PRIVATE cxx_std_<cxx-version>) # You may need to set the target version
 ```
 
+ou
+
+```cmake
+cmake_minimum_required(VERSION 3.28.3) # Minimum cmake for mag
+
+add_subdirectory(<path-to-mag>)
+target_link_libraries(${PROJECT_NAME} PRIVATE mag::mag)
+target_compile_features(mag PRIVATE cxx_std_<cxx-version>) # You may need to set the target version
+```
+
+```c++
+import mag;
+
+mag::Vec4f vecA;
+mag::Vec<double, 4> vecB;
+```

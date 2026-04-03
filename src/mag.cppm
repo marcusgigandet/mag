@@ -20,6 +20,7 @@ export import :constants;
 export import :matrix;
 export import :matrix_3x3;
 export import :matrix_4x4;
+export import :matrix_ops;
 export import :type_defs;
 export import :vector;
 export import :vector_2;
@@ -28,12 +29,6 @@ export import :vector_4;
 export import :vector_ops;
 
 #ifdef MAG_ENABLE_SIMD
-
-#ifdef __ARM_NEON
-export import :neon_ops;
-export import :neon_traits;
-#endif
-
 export import :simd_ops;
 export import :simd_traits;
 #endif
