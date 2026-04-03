@@ -22,17 +22,13 @@ export module mag:vector_ops;
 import :concepts;
 import :vector;
 #if defined(MAG_ENABLE_SIMD)
-#ifdef __ARM_NEON
-import :neon_ops;
-import :neon_traits;
-#endif
 import :simd_ops;
 import :simd_traits;
 #endif
 
-namespace mag
+export namespace mag
 {
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
 	constexpr Vec<T, N>& operator+=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
@@ -55,7 +51,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
 	constexpr Vec<T, N>& operator-=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
@@ -78,7 +74,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
 	constexpr Vec<T, N>& operator*=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
@@ -101,7 +97,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
 	constexpr Vec<T, N>& operator/=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
@@ -124,7 +120,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator+=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -144,7 +140,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator-=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -164,7 +160,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator*=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -184,7 +180,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator/=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -204,7 +200,7 @@ namespace mag
 		return a;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator+(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -228,7 +224,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator-(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -250,7 +246,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator*(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -272,7 +268,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator/(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -294,7 +290,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator+(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -317,7 +313,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator+(U s, const Vec<T, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -340,7 +336,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator-(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -363,7 +359,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator-(U s, const Vec<T, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -386,7 +382,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator*(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -409,7 +405,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator*(U s, const Vec<T, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -432,7 +428,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator/(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -455,7 +451,7 @@ namespace mag
 		return ret;
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -484,13 +480,13 @@ namespace mag
 		return mag::dot(derived(), o);
 	}
 
-	export template <Numeric T, size_t N>
+	template <Numeric T, size_t N>
 	constexpr T distance(const Vec<T, N>& a, const Vec<T, N>& b) noexcept
 	{
 		return (a - b).length();
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, size_t N>
 	constexpr auto lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD

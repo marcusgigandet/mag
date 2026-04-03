@@ -84,10 +84,9 @@ namespace mag
 					m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z};
 		}
 
-		constexpr Mat inverse() const noexcept
-		{
-			return inverse(*this);
-		}
+		constexpr static Mat identity() noexcept { return Mat::diagonal(1); }
+
+		constexpr Mat inverse() const noexcept { return inverse(*this); }
 
 		constexpr static Mat inverse(const Mat& m) noexcept
 		{
@@ -115,27 +114,6 @@ namespace mag
 					0, static_cast<T>(1) / static_cast<T>(y), 0,
 					0, 0, static_cast<T>(1) / static_cast<T>(z)};
 			// clang-format on
-		}
-
-		constexpr static Mat identity() noexcept
-		{
-			return Mat::diagonal();
-		}
-
-		template <Numeric U>
-		constexpr static Mat scale(U x, U y, U z) noexcept
-		{
-			// clang-format off
-			return {static_cast<T>(x), 0, 0,
-					0, static_cast<T>(y), 0,
-					0, 0, static_cast<T>(z)};
-			// clang-format on
-		}
-
-		template <Numeric U>
-		constexpr static Mat scale(const Vec<U, 3>& v) noexcept
-		{
-			return scale(v.x, v.y, v.z);
 		}
 
 		template <Numeric U>
