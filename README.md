@@ -11,6 +11,7 @@ Pour construire MAG, vous avez besoin des outils suivants :
 ### Option de compilation CMake
 
 - MAG_ENABLE_SIMD
+- MAG_ENABLE_SIMD_EXTENDED
 - MAG_BUILD_TESTS
 - BUILD_SHARED_LIBS
 
