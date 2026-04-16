@@ -113,10 +113,9 @@ if (PROJECT_IS_TOP_LEVEL)
 
     add_custom_target(mag_copyright
             COMMAND python3
-            "${toolbox_SOURCE_DIR}/scripts/copyright.py"
-            --author "Marcus Gigandet"
-            --directory "src"
-            --fix
+            "${toolbox_SOURCE_DIR}/scripts/copyright/copyright.py"
+            --config "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
+            --directory "${CMAKE_CURRENT_SOURCE_DIR}/src"
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             COMMENT "Syncing copyright headers with Git history"
             VERBATIM

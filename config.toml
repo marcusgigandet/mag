@@ -1,0 +1,14 @@
+[tool]
+fix = true
+default_year = "2026"
+author = "Marcus Gigandet"
+license = "apache_2_0"
+
+[licenses.apache_2_0]
+file = "LICENSE.txt"
+
+[languages.cpp]
+extensions = [".cpp", ".cppm", ".hpp"]
+block_start = "/*"
+line_prefix = " * "
+block_end = " */"

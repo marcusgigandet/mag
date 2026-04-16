@@ -1,8 +1,6 @@
 name: Verify Copyright Headers
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -10,5 +8,5 @@ jobs:
   call-verify-copyright:
     uses: SlyFryFrog/toolbox/.github/workflows/verify_copyright.yml@main
     with:
-      author: "Marcus Gigandet"
-      directories: "src"
+      config: "config.toml"
+      directory: "src"
