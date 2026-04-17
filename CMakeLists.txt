@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.28.3 FATAL_ERROR)
 project(mag VERSION 1.0.0 LANGUAGES CXX)
 
-include(FetchContent)
-
 #####################
 # Compiler settings #
 #####################
@@ -89,14 +87,7 @@ export(TARGETS mag FILE "${CMAKE_CURRENT_BINARY_DIR}/mag_targets.cmake")
 ###############
 if (MAG_BUILD_TESTS)
     enable_testing()
-
-    FetchContent_Declare(
-            Catch2
-            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-            GIT_TAG v3.13.0
-    )
-    FetchContent_MakeAvailable(Catch2)
-
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/Catch2)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
 endif ()
 
@@ -104,16 +95,9 @@ endif ()
 # Dev tools #
 #############
 if (PROJECT_IS_TOP_LEVEL)
-    FetchContent_Declare(
-            toolbox
-            GIT_REPOSITORY https://github.com/SlyFryFrog/toolbox.git
-            GIT_TAG main
-    )
-    FetchContent_MakeAvailable(toolbox)
-
     add_custom_target(mag_copyright
             COMMAND python3
-            "${toolbox_SOURCE_DIR}/scripts/copyright/copyright.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/scripts/copyright/copyright.py"
             --config "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
             --directory "${CMAKE_CURRENT_SOURCE_DIR}/src"
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

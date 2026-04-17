@@ -1,0 +1,6 @@
+[submodule "vendor/Catch2"]
+	path = vendor/Catch2
+	url = git@github.com:catchorg/Catch2.git
+[submodule "vendor/toolbox"]
+	path = vendor/toolbox
+	url = git@github.com:SlyFryFrog/toolbox.git
