@@ -11,13 +11,22 @@ if (PROJECT_IS_TOP_LEVEL)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif ()
 
-if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
         message(FATAL_ERROR
                 "Clang >= 18 is required. "
                 "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
         )
     endif ()
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GCC")
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 15)
+        message(FATAL_ERROR
+                "GCC >= 16 is required. "
+                "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
+        )
+    endif ()
+else ()
+    message("WARNING: Using unsupported compiler - functionality may not work as expected.")
 endif ()
 
 ###########
@@ -45,7 +54,7 @@ else ()
     if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm|aarch64|ARM64")
         set(MAG_PLATFORM_ARM TRUE)
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
-    else()
+    else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
         add_compile_options(-msse2 -msse3)
     endif ()
@@ -112,11 +121,23 @@ endif ()
 # Compile commands copy #
 #########################
 if (PROJECT_IS_TOP_LEVEL)
-add_custom_command(TARGET mag POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_BINARY_DIR}/compile_commands.json
-        ${CMAKE_SOURCE_DIR}/compile_commands.json
-)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
+
+    file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+
+    enforce_clang_format(
+            TARGET ${PROJECT_NAME}
+            FILES ${MODULES} ${TEST_SOURCES}
+    )
+    enforce_copyright(
+            TARGET ${PROJECT_NAME}
+            CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
+            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    )
+    generate_clangd_compdb(
+            TARGET ${PROJECT_NAME}
+            DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
 endif ()
 
 ###################

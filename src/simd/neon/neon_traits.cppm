@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 module;
 #include <arm_neon.h>
 export module mag:neon_traits;

@@ -76,10 +76,7 @@ TEST_CASE("Vec4 length, dot, normalize", "[Vec4]")
 {
 	Vec<float, 4> a{1.0f, 2.0f, 3.0f, 4.0f};
 
-	SECTION("Length")
-	{
-		REQUIRE(a.length() == Catch::Approx(std::sqrt(30.0f)));
-	}
+	SECTION("Length") { REQUIRE(a.length() == Catch::Approx(std::sqrt(30.0f))); }
 
 	SECTION("Dot product")
 	{
