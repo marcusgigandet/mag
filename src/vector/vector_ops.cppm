@@ -16,8 +16,8 @@
 
 module;
 #include <concepts>
-#include <cstddef>
 #include <type_traits>
+#include <valarray>
 export module mag:vector_ops;
 
 import :concepts;
@@ -507,5 +507,12 @@ export namespace mag
 		}
 #endif
 		return a + t * (b - a);
+	}
+
+	template <Numeric T, size_t N>
+	constexpr Vec<T, N> normalize(Vec<T, N> v)
+	{
+		float length = std::sqrt(v.x * v.x + v.y * v.y);
+		return (length > 0.0f) ? Vec<T, N>{v.x / length, v.y / length} : Vec<T, N>{0.0f, 0.0f};
 	}
 } // namespace mag
