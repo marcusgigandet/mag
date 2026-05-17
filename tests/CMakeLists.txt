@@ -1,7 +1,7 @@
 #################################
 # Set constants for the project #
 #################################
-file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/mag/*.cpp")
 
 ###############
 # Build tests #

@@ -26,18 +26,18 @@ import :neon_traits;
  *
  * It uses macros to generate repetitive code for signed/unsigned integers and floating-point types.
  */
-namespace mag
+export namespace mag::simd
 {
 #ifdef MAG_ENABLE_SIMD_EXTENDED
 
 #define DEFINE_SIMD_OPS_INT(T, N, SUFFIX)                                                          \
 	template <>                                                                                    \
-	struct simd_ops<T, N>                                                                          \
+	struct ops<T, N>                                                                               \
 	{                                                                                              \
-		using simd_t = simd_traits<T, N>::simd_t;                                                  \
+		using simd_t = traits<T, N>::simd_t;                                                       \
 		static simd_t load(const T* p) noexcept { return vld1q_##SUFFIX(p); }                      \
 		static void store(T* p, const simd_t v) noexcept { vst1q_##SUFFIX(p, v); }                 \
-		static simd_t set1(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                     \
+		static simd_t splat(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                    \
 		static simd_t add(const simd_t a, const simd_t b) noexcept                                 \
 		{                                                                                          \
 			return vaddq_##SUFFIX(a, b);                                                           \
@@ -58,12 +58,12 @@ namespace mag
 
 #define DEFINE_SIMD_OPS_INT_NO_MUL(T, N, SUFFIX)                                                   \
 	template <>                                                                                    \
-	struct simd_ops<T, N>                                                                          \
+	struct ops<T, N>                                                                               \
 	{                                                                                              \
-		using simd_t = simd_traits<T, N>::simd_t;                                                  \
+		using simd_t = traits<T, N>::simd_t;                                                       \
 		static simd_t load(const T* p) noexcept { return vld1q_##SUFFIX(p); }                      \
 		static void store(T* p, const simd_t v) noexcept { vst1q_##SUFFIX(p, v); }                 \
-		static simd_t set1(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                     \
+		static simd_t splat(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                    \
 		static simd_t add(const simd_t a, const simd_t b) noexcept                                 \
 		{                                                                                          \
 			return vaddq_##SUFFIX(a, b);                                                           \
@@ -82,12 +82,12 @@ namespace mag
 
 #define DEFINE_SIMD_OPS_FLOAT(T, N, SUFFIX)                                                        \
 	template <>                                                                                    \
-	struct simd_ops<T, N>                                                                          \
+	struct ops<T, N>                                                                               \
 	{                                                                                              \
-		using simd_t = simd_traits<T, N>::simd_t;                                                  \
+		using simd_t = traits<T, N>::simd_t;                                                       \
 		static simd_t load(const T* p) noexcept { return vld1q_##SUFFIX(p); }                      \
 		static void store(T* p, const simd_t v) noexcept { vst1q_##SUFFIX(p, v); }                 \
-		static simd_t set1(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                     \
+		static simd_t splat(const T s) noexcept { return vdupq_n_##SUFFIX(s); }                    \
 		static simd_t add(const simd_t a, const simd_t b) noexcept                                 \
 		{                                                                                          \
 			return vaddq_##SUFFIX(a, b);                                                           \
@@ -109,4 +109,4 @@ namespace mag
 
 	DEFINE_SIMD_OPS_FLOAT(float, 4, f32);
 	DEFINE_SIMD_OPS_FLOAT(double, 2, f64);
-} // namespace mag
+} // namespace mag::simd

@@ -4,15 +4,18 @@
     {
       "name": "abstract",
       "hidden": true,
-      "generator": "Ninja"
+      "generator": "Ninja",
+      "cacheVariables": {
+        "MAG_BUILD_TESTS": "ON",
+        "MAG_BUILD_BENCHMARKS": "ON"
+      }
     },
     {
       "inherits": "abstract",
       "name": "generic-debug",
       "binaryDir": "${sourceDir}/build/generic-debug",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "MAG_BUILD_TESTS": "ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -20,8 +23,7 @@
       "name": "generic-release",
       "binaryDir": "${sourceDir}/build/generic-release",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "MAG_BUILD_TESTS": "ON"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {

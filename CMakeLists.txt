@@ -21,7 +21,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GCC")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 15)
         message(FATAL_ERROR
-                "GCC >= 16 is required. "
+                "GCC >= 15 is required. "
                 "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
         )
     endif ()
@@ -33,6 +33,7 @@ endif ()
 # Options #
 ###########
 option(MAG_BUILD_TESTS "Build tests" OFF)
+option(MAG_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
 option(MAG_ENABLE_SIMD_EXTENDED "Enable simd for signed/unsigned integers" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -86,6 +87,10 @@ if (MAG_ENABLE_SIMD)
     target_compile_definitions(mag PRIVATE MAG_ENABLE_SIMD)
 endif ()
 
+if (MAG_ENABLE_SIMD_EXTENDED)
+    target_compile_definitions(mag PRIVATE MAG_ENABLE_SIMD_EXTENDED)
+endif ()
+
 #####################
 # Build-tree export #
 #####################
@@ -94,32 +99,25 @@ export(TARGETS mag FILE "${CMAKE_CURRENT_BINARY_DIR}/mag_targets.cmake")
 ###############
 # Build tests #
 ###############
+if (MAG_BUILD_TESTS OR MAG_BUILD_BENCHMARKS)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/Catch2)
+endif()
+
 if (MAG_BUILD_TESTS)
     enable_testing()
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/Catch2)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
-endif ()
+endif()
+
+####################
+# Build benchmarks #
+####################
+if (MAG_BUILD_BENCHMARKS)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/benchmarks)
+endif()
 
 #############
 # Dev tools #
 #############
-if (PROJECT_IS_TOP_LEVEL)
-    add_custom_target(mag_copyright
-            COMMAND python3
-            "${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/scripts/copyright/copyright.py"
-            --config "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
-            --directory "${CMAKE_CURRENT_SOURCE_DIR}/src"
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMENT "Syncing copyright headers with Git history"
-            VERBATIM
-    )
-
-    add_dependencies(mag mag_copyright)
-endif ()
-
-#########################
-# Compile commands copy #
-#########################
 if (PROJECT_IS_TOP_LEVEL)
     include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
 
@@ -138,20 +136,16 @@ if (PROJECT_IS_TOP_LEVEL)
             TARGET ${PROJECT_NAME}
             DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
     )
+
+    add_custom_target(mag_copyright
+            COMMAND python3
+            "${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/scripts/copyright/copyright.py"
+            --config "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
+            --directory "${CMAKE_CURRENT_SOURCE_DIR}/src"
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "Syncing copyright headers with Git history"
+            VERBATIM
+    )
+
+    add_dependencies(mag mag_copyright)
 endif ()
-
-###################
-# Install targets #
-###################
-install(TARGETS mag
-        EXPORT mag_targets
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
-        FILE_SET cxx_modules DESTINATION modules
-)
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/
-        DESTINATION modules
-        FILES_MATCHING PATTERN "*.cppm"
-)

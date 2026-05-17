@@ -1,4 +1,4 @@
-[tool]
+[copyright]
 fix = true
 default_year = "2026"
 author = "Marcus Gigandet"
