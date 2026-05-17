@@ -22,9 +22,9 @@ export module mag:vector_ops;
 
 import :concepts;
 import :vector;
-#if defined(MAG_ENABLE_SIMD)
+
+#ifdef MAG_ENABLE_SIMD
 import :simd_ops;
-import :simd_traits;
 #endif
 
 export namespace mag
@@ -34,9 +34,9 @@ export namespace mag
 	constexpr Vec<T, N>& operator+=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_add)
+		if constexpr (std::is_same_v<T, U> && simd::supports_add<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
@@ -57,9 +57,9 @@ export namespace mag
 	constexpr Vec<T, N>& operator-=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_sub)
+		if constexpr (std::is_same_v<T, U> && simd::supports_subtraction<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
@@ -80,9 +80,9 @@ export namespace mag
 	constexpr Vec<T, N>& operator*=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_mul)
+		if constexpr (std::is_same_v<T, U> && simd::supports_multiplication<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
@@ -103,9 +103,9 @@ export namespace mag
 	constexpr Vec<T, N>& operator/=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_div)
+		if constexpr (std::is_same_v<T, U> && simd::supports_division<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
@@ -125,12 +125,12 @@ export namespace mag
 	constexpr auto operator+=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_add)
+		if constexpr (simd::supports_add<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vr = ops::add(va, vs);
 			ops::store(a.v, vr);
 			return a;
@@ -145,12 +145,12 @@ export namespace mag
 	constexpr auto operator-=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_sub)
+		if constexpr (simd::supports_subtraction<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vr = ops::sub(va, vs);
 			ops::store(a.v, vr);
 			return a;
@@ -165,12 +165,12 @@ export namespace mag
 	constexpr auto operator*=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_mul)
+		if constexpr (simd::supports_multiplication<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vr = ops::mul(va, vs);
 			ops::store(a.v, vr);
 			return a;
@@ -185,12 +185,12 @@ export namespace mag
 	constexpr auto operator/=(Vec<T, N>& a, const U& s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_div)
+		if constexpr (simd::supports_division<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vr = ops::div(va, vs);
 			ops::store(a.v, vr);
 			return a;
@@ -205,9 +205,9 @@ export namespace mag
 	constexpr auto operator+(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_add)
+		if constexpr (std::is_same_v<T, U> && simd::supports_add<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
@@ -229,9 +229,9 @@ export namespace mag
 	constexpr auto operator-(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_sub)
+		if constexpr (std::is_same_v<T, U> && simd::supports_subtraction<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
@@ -251,9 +251,9 @@ export namespace mag
 	constexpr auto operator*(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_mul)
+		if constexpr (std::is_same_v<T, U> && simd::supports_multiplication<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
@@ -273,9 +273,9 @@ export namespace mag
 	constexpr auto operator/(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_div)
+		if constexpr (std::is_same_v<T, U> && simd::supports_division<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
@@ -295,14 +295,14 @@ export namespace mag
 	constexpr auto operator+(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_mul &&
-					  simd_traits<T, N>::supports_set1)
+		if constexpr (std::is_same_v<T, U> && simd::supports_multiplication<T, N> &&
+					  simd::supports_splat<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
-			auto vb = ops::set1(s);
+			auto vb = ops::splat(s);
 			auto vr = ops::add(va, vb);
 			ops::store(r.v, vr);
 			return r;
@@ -318,13 +318,13 @@ export namespace mag
 	constexpr auto operator+(U s, const Vec<T, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_add &&
-					  simd_traits<T, N>::supports_set1)
+		if constexpr (std::is_same_v<T, U> && simd::supports_add<T, N> &&
+					  simd::supports_splat<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r{};
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vb = ops::load(b.v);
 			auto vr = ops::add(vs, vb);
 			ops::store(r.v, vr);
@@ -341,14 +341,14 @@ export namespace mag
 	constexpr auto operator-(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_sub && simd_traits<T, N>::supports_set1)
+		if constexpr (simd::supports_subtraction<T, N> && simd::supports_splat<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<std::common_type_t<T, U>, N> r;
 
 			auto va = ops::load(a.v);
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vr = ops::sub(va, vs);
 			ops::store(r.v, vr);
 			return r;
@@ -364,9 +364,9 @@ export namespace mag
 	constexpr auto operator-(U s, const Vec<T, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_sub && simd_traits<T, N>::supports_set1)
+		if constexpr (simd::supports_subtraction<T, N> && simd::supports_splat<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<std::common_type_t<T, U>, N> r;
 
@@ -387,14 +387,14 @@ export namespace mag
 	constexpr auto operator*(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_mul && simd_traits<T, N>::supports_set1)
+		if constexpr (simd::supports_multiplication<T, N> && simd::supports_splat<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<std::common_type_t<T, U>, N> r;
 
 			auto va = ops::load(a.v);
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vr = ops::mul(va, vs);
 			ops::store(r.v, vr);
 			return r;
@@ -410,13 +410,13 @@ export namespace mag
 	constexpr auto operator*(U s, const Vec<T, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_mul && simd_traits<T, N>::supports_set1)
+		if constexpr (simd::supports_multiplication<T, N> && simd::supports_splat<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<std::common_type_t<T, U>, N> r;
 
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vb = ops::load(b.v);
 			auto vr = ops::mul(vs, vb);
 			ops::store(r.v, vr);
@@ -433,14 +433,14 @@ export namespace mag
 	constexpr auto operator/(const Vec<T, N>& a, U s) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (simd_traits<T, N>::supports_div && simd_traits<T, N>::supports_set1)
+		if constexpr (simd::supports_division<T, N> && simd::supports_splat<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<std::common_type_t<T, U>, N> r;
 
 			auto va = ops::load(a.v);
-			auto vs = ops::set1(s);
+			auto vs = ops::splat(s);
 			auto vr = ops::div(va, vs);
 			ops::store(r.v, vr);
 			return r;
@@ -456,9 +456,9 @@ export namespace mag
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_mul)
+		if constexpr (std::is_same_v<T, U> && simd::supports_multiplication<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
@@ -491,16 +491,16 @@ export namespace mag
 	constexpr auto lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd_traits<T, N>::supports_set1 &&
-					  simd_traits<T, N>::supports_add && simd_traits<T, N>::supports_sub &&
-					  simd_traits<T, N>::supports_mul)
+		if constexpr (std::is_same_v<T, U> && simd::supports_splat<T, N> &&
+					  simd::supports_add<T, N> && simd::supports_subtraction<T, N> &&
+					  simd::supports_multiplication<T, N>)
 		{
-			using ops = simd_ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r;
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vt = ops::set1(static_cast<T>(t));
+			auto vt = ops::splat(static_cast<T>(t));
 			auto vr = ops::add(va, ops::mul(ops::sub(vb, va), vt));
 			ops::store(r.v, vr);
 			return r;

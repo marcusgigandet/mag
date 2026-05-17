@@ -20,32 +20,67 @@ export module mag:x86_traits;
 
 import :simd_traits;
 
-namespace mag
+namespace mag::simd
 {
-	// clang-format off
 #ifdef MAG_ENABLE_SIMD_EXTENDED
-    // Division is unsupported for integer types
-    template <> struct simd_traits<int8_t, 16> :   // Vec<int8_t, 16>
-                simd_traits_impl<__m128i, true, true, true, true, false> {};
-    template <> struct simd_traits<int16_t, 8> :   // Vec<int16_t, 8>
-                simd_traits_impl<__m128i, true, true, true, true, false> {};
-    template <> struct simd_traits<int32_t, 4> :   // Vec<int32_t, 4>
-                simd_traits_impl<__m128i, true, true, true, true, false> {};
-    template <> struct simd_traits<int64_t, 2> :   // Vec<int64_t, 2>
-                simd_traits_impl<__m128i, true, true, true, false, false> {};
-    template <> struct simd_traits<uint8_t, 16> :  // Vec<uint8_t, 16>
-                simd_traits_impl<__m128i, true, true, true, true, false> {};
-    template <> struct simd_traits<uint16_t, 8> :  // Vec<uint16_t, 8>
-                simd_traits_impl<__m128i, true, true, true, true, false> {};
-    template <> struct simd_traits<uint32_t, 4> :  // Vec<uint32_t, 4>
-                simd_traits_impl<__m128i, true, true, true, true, false> {};
-    template <> struct simd_traits<uint64_t, 2> :  // Vec<uint64_t, 2>
-                simd_traits_impl<__m128i, true, true, true, false, false> {};
+	// Vec<int8_t, 16>
+	template <>
+	struct traits<int8_t, 16> : traits_impl<__m128i>
+	{
+	};
+
+	// Vec<int16_t, 8>
+	template <>
+	struct traits<int16_t, 8> : traits_impl<__m128i>
+	{
+	};
+
+	// Vec<int32_t, 4>
+	template <>
+	struct traits<int32_t, 4> : traits_impl<__m128i>
+	{
+	};
+
+	// Vec<int64_t, 2>
+	template <>
+	struct traits<int64_t, 2> : traits_impl<__m128i>
+	{
+	};
+
+	// Vec<uint8_t, 16>
+	template <>
+	struct traits<uint8_t, 16> : traits_impl<__m128i>
+	{
+	};
+
+	// Vec<uint16_t, 8>
+	template <>
+	struct traits<uint16_t, 8> : traits_impl<__m128i>
+	{
+	};
+
+	// Vec<uint32_t, 4>
+	template <>
+	struct traits<uint32_t, 4> : traits_impl<__m128i>
+	{
+	};
+
+	// Vec<uint64_t, 2>
+	template <>
+	struct traits<uint64_t, 2> : traits_impl<__m128i>
+	{
+	};
 #endif
-    // Division and multiplication are supported for floating-point types
-    template <> struct simd_traits<float, 4> :     // Vec<float, 4>
-                simd_traits_impl<__m128, true, true, true, true, true> {};
-    template <> struct simd_traits<double, 2> :    // Vec<double, 2>
-                simd_traits_impl<__m128d, true, true, true, true, true> {};
-	// clang-format on
-} // namespace mag
+
+	// Vec<float, 4>
+	template <>
+	struct traits<float, 4> : traits_impl<__m128>
+	{
+	};
+
+	// Vec<double, 2>
+	template <>
+	struct traits<double, 2> : traits_impl<__m128d>
+	{
+	};
+} // namespace mag::simd

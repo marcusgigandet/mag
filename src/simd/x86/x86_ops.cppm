@@ -24,7 +24,7 @@ import :x86_traits;
 /**
  * @brief This namespace provides SIMD operations for x86 (SSE/AVX).
  */
-namespace mag
+namespace mag::simd
 {
 #ifdef MAG_ENABLE_SIMD_EXTENDED
 
@@ -35,7 +35,7 @@ namespace mag
 		using simd_t = simd_traits<T, N>::simd_t;                                                  \
 		static simd_t load(const T* p) noexcept { return LOAD(p); }                                \
 		static void store(T* p, const simd_t v) noexcept { STORE(p, v); }                          \
-		static simd_t set1(const T s) noexcept { return SET1(s); }                                 \
+		static simd_t splat(const T s) noexcept { return SET1(s); }                                \
 		static simd_t add(const simd_t a, const simd_t b) noexcept { return ADD(a, b); }           \
 		static simd_t sub(const simd_t a, const simd_t b) noexcept { return SUB(a, b); }           \
 		static T horizontal_sum(const simd_t v) noexcept { return HSUM(v); }                       \
@@ -103,7 +103,7 @@ namespace mag
 		using simd_t = simd_traits<T, N>::simd_t;                                                  \
 		static simd_t load(const T* p) noexcept { return LOAD(p); }                                \
 		static void store(T* p, const simd_t v) noexcept { STORE(p, v); }                          \
-		static simd_t set1(const T s) noexcept { return SET1(s); }                                 \
+		static simd_t splat(const T s) noexcept { return SET1(s); }                                \
 		static simd_t add(const simd_t a, const simd_t b) noexcept { return ADD(a, b); }           \
 		static simd_t sub(const simd_t a, const simd_t b) noexcept { return SUB(a, b); }           \
 		static T horizontal_sum(const simd_t v) noexcept { return HSUM(v); }                       \
@@ -138,17 +138,16 @@ namespace mag
 	template <>                                                                                    \
 	struct simd_ops<T, N>                                                                          \
 	{                                                                                              \
-		using simd_t = simd_traits<T, N>::simd_t;                                                  \
+		using simd_t = T;                                                                          \
 		static simd_t load(const T* p) noexcept { return LOAD(p); }                                \
 		static void store(T* p, const simd_t v) noexcept { STORE(p, v); }                          \
-		static simd_t set1(const T s) noexcept { return SET1(s); }                                 \
+		static simd_t splat(const T s) noexcept { return SET1(s); }                                \
 		static simd_t add(const simd_t a, const simd_t b) noexcept { return ADD(a, b); }           \
 		static simd_t sub(const simd_t a, const simd_t b) noexcept { return SUB(a, b); }           \
 		static simd_t mul(const simd_t a, const simd_t b) noexcept { return MUL(a, b); }           \
 		static simd_t div(const simd_t a, const simd_t b) noexcept { return DIV(a, b); }           \
 		static T horizontal_sum(const simd_t v) noexcept { return HSUM(v); }                       \
 	};
-
 	DEFINE_SIMD_OPS_FLOAT(float,
 						  4,
 						  _mm_loadu_ps,
@@ -169,4 +168,4 @@ namespace mag
 						  _mm_mul_pd,
 						  _mm_div_pd,
 						  [](__m128d v) { return _mm_cvtsd_f64(_mm_hadd_pd(v, v)); })
-} // namespace mag
+} // namespace mag::simd

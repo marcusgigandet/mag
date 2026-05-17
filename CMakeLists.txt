@@ -87,6 +87,10 @@ if (MAG_ENABLE_SIMD)
     target_compile_definitions(mag PRIVATE MAG_ENABLE_SIMD)
 endif ()
 
+if (MAG_ENABLE_SIMD_EXTENDED)
+    target_compile_definitions(mag PRIVATE MAG_ENABLE_SIMD_EXTENDED)
+endif ()
+
 #####################
 # Build-tree export #
 #####################
