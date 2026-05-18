@@ -20,8 +20,6 @@ module;
 #include <cstdint>
 export module mag:simd_ops;
 
-import :concepts;
-
 export namespace mag::simd
 {
 	/**
@@ -34,7 +32,7 @@ export namespace mag::simd
 	 * @tparam T Scalar element type.
 	 * @tparam N SIMD lane count.
 	 */
-	template <Numeric T, size_t N>
+	template <typename T, size_t N>
 	struct ops
 	{
 		/**
@@ -102,7 +100,6 @@ export namespace mag::simd
 		 * @return Result of a / b.
 		 */
 		static simd_t div(simd_t a, simd_t b) noexcept = delete;
-
 
 		/**
 		 * @brief Reduces a SIMD register to a single scalar by summing all lanes.
