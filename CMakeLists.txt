@@ -37,6 +37,7 @@ option(MAG_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
 option(MAG_ENABLE_SIMD_EXTENDED "Enable simd for signed/unsigned integers" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+option(MAG_NO_DEV_TOOLS "Disable all non-essential dev tools" OFF)
 
 #################
 # Set constants #
@@ -118,7 +119,7 @@ endif()
 #############
 # Dev tools #
 #############
-if (PROJECT_IS_TOP_LEVEL)
+if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
     include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
 
     file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")

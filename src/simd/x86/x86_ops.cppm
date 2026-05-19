@@ -16,6 +16,7 @@
 
 module;
 #include <immintrin.h>
+#include <cstdint>
 export module mag:x86_ops;
 
 import :simd_ops;

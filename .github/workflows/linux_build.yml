@@ -18,9 +18,7 @@ jobs:
             cmake \
             ninja-build \
             clang-18 \
-            clang-tools-18 \
-            clang-format \
-            python3
+            clang-tools-18
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,7 +30,7 @@ jobs:
           update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
 
       - name: Configure CMake
-        run: cmake --preset clang-release
+        run: cmake --preset clang-release -DMAG_NO_DEV_TOOLS=ON
 
       - name: Build
         run: cmake --build --preset clang-release
