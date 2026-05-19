@@ -58,7 +58,7 @@ else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
-        add_compile_options(-msse2 -msse3)
+        add_compile_options(-msse2 -msse3 -msse4.1)
     endif ()
 endif ()
 ###################
