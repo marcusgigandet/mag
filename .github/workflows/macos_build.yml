@@ -38,7 +38,7 @@ jobs:
         env:
           CC: ${{ env.CC }}
           CXX: ${{ env.CXX }}
-        run: cmake --preset $PRESET -DMAG_NO_DEV_TOOLS=ON
+        run: cmake --preset $PRESET -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DMAG_NO_DEV_TOOLS=ON
 
       - name: Build
         run: cmake --build --preset $PRESET

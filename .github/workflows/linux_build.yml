@@ -10,13 +10,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64, arm64]
+        arch: [ x86_64, arm64 ]
         include:
           - arch: x86_64
             runner: ubuntu-24.04
           - arch: arm64
             runner: ubuntu-24.04-arm
-        compiler: [clang, gcc]
+        compiler: [ clang, gcc ]
 
     runs-on: ${{ matrix.runner }}
 
@@ -66,7 +66,7 @@ jobs:
         env:
           CC: ${{ env.CC }}
           CXX: ${{ env.CXX }}
-        run: cmake --preset $PRESET -DMAG_NO_DEV_TOOLS=ON
+        run: cmake --preset $PRESET -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DMAG_NO_DEV_TOOLS=ON
 
       - name: Build
         run: cmake --build --preset $PRESET
