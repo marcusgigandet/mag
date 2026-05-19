@@ -1,0 +1,36 @@
+name: macOS Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          brew update
+          brew install cmake ninja llvm
+
+      - name: Set up Clang (LLVM from Homebrew)
+        run: |
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          clang++ --version
+
+      - name: Configure CMake
+        run: |
+          cmake --preset clang-release -DMAG_NO_DEV_TOOLS=ON
+
+      - name: Build
+        run: cmake --build --preset clang-release
+
+      - name: Run tests
+        run: ctest --preset clang-release --output-on-failure

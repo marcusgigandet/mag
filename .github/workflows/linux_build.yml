@@ -4,11 +4,14 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
-  build-and-test:
+  build-x86_64:
+    name: Build and Test (x86_64)
     runs-on: ubuntu-latest
     container:
       image: ubuntu:24.04
+
     steps:
       - name: Install dependencies
         run: |
@@ -28,6 +31,40 @@ jobs:
       - name: Set up Clang 18
         run: |
           update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+
+      - name: Configure CMake
+        run: cmake --preset clang-release -DMAG_NO_DEV_TOOLS=ON
+
+      - name: Build
+        run: cmake --build --preset clang-release
+
+      - name: Run tests
+        run: ctest --preset clang-release --output-on-failure
+
+
+  build-arm64:
+    name: Build and Test (ARM64)
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git \
+            cmake \
+            ninja-build \
+            clang-18 \
+            clang-tools-18
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Clang 18
+        run: |
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
 
       - name: Configure CMake
         run: cmake --preset clang-release -DMAG_NO_DEV_TOOLS=ON
