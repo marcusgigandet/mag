@@ -31,14 +31,11 @@ export import :vector_ops;
 
 #ifdef MAG_ENABLE_SIMD
 export import :simd_ops;
-export import :simd_traits;
 
 #ifdef __ARM_NEON
 export import :neon_ops;
-export import :neon_traits;
 #elif defined(__x86_64__) || defined(_M_X64)
 export import :x86_ops;
-export import :x86_traits;
 #endif
 
 #endif
