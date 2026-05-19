@@ -53,14 +53,19 @@ jobs:
       - name: Configure compiler
         run: |
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
+            echo "CC=gcc-15" >> $GITHUB_ENV
             echo "CXX=g++-15" >> $GITHUB_ENV
             echo "PRESET=gcc-release" >> $GITHUB_ENV
           else
+            echo "CC=clang-18" >> $GITHUB_ENV
             echo "CXX=clang++-18" >> $GITHUB_ENV
             echo "PRESET=clang-release" >> $GITHUB_ENV
           fi
 
       - name: Configure CMake
+        env:
+          CC: ${{ env.CC }}
+          CXX: ${{ env.CXX }}
         run: cmake --preset $PRESET -DMAG_NO_DEV_TOOLS=ON
 
       - name: Build
