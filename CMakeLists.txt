@@ -55,11 +55,11 @@ else ()
     # Filter based on x86 and arm
     # Add more architectures if we add future support for something like RISC-V
     if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|arm)")
-        set(MAG_PLATFORM_ARM TRUE CACHE BOOL "" FORCE)
+        set(MAG_NEON_SIMD TRUE CACHE BOOL "" FORCE)
 
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
     else ()
-        set(MAG_PLATFORM_X86 TRUE CACHE BOOL "" FORCE)
+        set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
         add_compile_options(-msse2 -msse3 -msse4.1)
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
     endif ()
@@ -93,8 +93,8 @@ target_compile_features(mag
 target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_ENABLE_SIMD}>:MAG_ENABLE_SIMD>
         $<$<BOOL:${MAG_ENABLE_SIMD_EXTENDED}>:MAG_ENABLE_SIMD_EXTENDED>
-        $<$<BOOL:${MAG_PLATFORM_ARM}>:MAG_PLATFORM_ARM>
-        $<$<BOOL:${MAG_PLATFORM_X86}>:MAG_PLATFORM_X86>
+        $<$<BOOL:${MAG_NEON_SIMD}>:MAG_NEON_SIMD>
+        $<$<BOOL:${MAG_X86_SIMD}>:MAG_X86_SIMD>
 )
 
 #####################
