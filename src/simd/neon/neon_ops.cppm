@@ -50,7 +50,7 @@ namespace mag::simd
 			return vmulq_s8(a, b);
 		}
 
-		MAG_INLINE static int8_t horizontal_sum(simd_t v) noexcept { return vaddvq_s8(v); }
+		MAG_INLINE static int8_t hsum(simd_t v) noexcept { return vaddvq_s8(v); }
 	};
 
 
@@ -77,7 +77,7 @@ namespace mag::simd
 			return vmulq_s16(a, b);
 		}
 
-		MAG_INLINE static int16_t horizontal_sum(const simd_t v) noexcept { return vaddvq_s16(v); }
+		MAG_INLINE static int16_t hsum(const simd_t v) noexcept { return vaddvq_s16(v); }
 	};
 
 
@@ -104,7 +104,7 @@ namespace mag::simd
 			return vmulq_s32(a, b);
 		}
 
-		MAG_INLINE static int32_t horizontal_sum(const simd_t v) noexcept { return vaddvq_s32(v); }
+		MAG_INLINE static int32_t hsum(const simd_t v) noexcept { return vaddvq_s32(v); }
 	};
 
 
@@ -127,7 +127,7 @@ namespace mag::simd
 			return vsubq_s64(a, b);
 		}
 
-		MAG_INLINE static int64_t horizontal_sum(const simd_t v) noexcept { return vaddvq_s64(v); }
+		MAG_INLINE static int64_t hsum(const simd_t v) noexcept { return vaddvq_s64(v); }
 	};
 
 
@@ -154,7 +154,7 @@ namespace mag::simd
 			return vmulq_u8(a, b);
 		}
 
-		MAG_INLINE static uint8_t horizontal_sum(const simd_t v) noexcept { return vaddvq_u8(v); }
+		MAG_INLINE static uint8_t hsum(const simd_t v) noexcept { return vaddvq_u8(v); }
 	};
 
 
@@ -181,7 +181,7 @@ namespace mag::simd
 			return vmulq_u16(a, b);
 		}
 
-		MAG_INLINE static uint16_t horizontal_sum(const simd_t v) noexcept { return vaddvq_u16(v); }
+		MAG_INLINE static uint16_t hsum(const simd_t v) noexcept { return vaddvq_u16(v); }
 	};
 
 
@@ -208,7 +208,7 @@ namespace mag::simd
 			return vmulq_u32(a, b);
 		}
 
-		MAG_INLINE static uint32_t horizontal_sum(const simd_t v) noexcept { return vaddvq_u32(v); }
+		MAG_INLINE static uint32_t hsum(const simd_t v) noexcept { return vaddvq_u32(v); }
 	};
 
 
@@ -231,7 +231,7 @@ namespace mag::simd
 			return vsubq_u64(a, b);
 		}
 
-		MAG_INLINE static uint64_t horizontal_sum(const simd_t v) noexcept { return vaddvq_u64(v); }
+		MAG_INLINE static uint64_t hsum(const simd_t v) noexcept { return vaddvq_u64(v); }
 	};
 #endif
 
@@ -262,7 +262,7 @@ namespace mag::simd
 			return vdivq_f32(a, b);
 		}
 
-		MAG_INLINE static float horizontal_sum(const simd_t v) noexcept { return vaddvq_f32(v); }
+		MAG_INLINE static float hsum(const simd_t v) noexcept { return vaddvq_f32(v); }
 	};
 
 
@@ -293,7 +293,7 @@ namespace mag::simd
 			return vdivq_f64(a, b);
 		}
 
-		MAG_INLINE static double horizontal_sum(const simd_t v) noexcept { return vaddvq_f64(v); }
+		MAG_INLINE static double hsum(const simd_t v) noexcept { return vaddvq_f64(v); }
 	};
 } // namespace mag::simd
 

@@ -50,7 +50,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi8(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi8(a, b); }
 
-		MAG_INLINE static int8_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static int8_t hsum(const simd_t v) noexcept
 		{
 			return static_cast<int8_t>(_mm_extract_epi8(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
 		}
@@ -76,7 +76,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi16(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi16(a, b); }
 
-		MAG_INLINE static int16_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static int16_t hsum(const simd_t v) noexcept
 		{
 			return static_cast<int16_t>(_mm_extract_epi16(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
 		}
@@ -102,7 +102,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi32(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi32(a, b); }
 
-		MAG_INLINE static int32_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static int32_t hsum(const simd_t v) noexcept
 		{
 			return _mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v));
 		}
@@ -128,7 +128,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi64(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi64(a, b); }
 
-		MAG_INLINE static int64_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static int64_t hsum(const simd_t v) noexcept
 		{
 			return _mm_cvtsi128_si64(_mm_add_epi64(v, _mm_srli_si128(v, 8)));
 		}
@@ -154,7 +154,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi8(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi8(a, b); }
 
-		MAG_INLINE static uint8_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static uint8_t hsum(const simd_t v) noexcept
 		{
 			return static_cast<uint8_t>(_mm_extract_epi8(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
 		}
@@ -180,7 +180,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi16(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi16(a, b); }
 
-		MAG_INLINE static uint16_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static uint16_t hsum(const simd_t v) noexcept
 		{
 			return static_cast<uint16_t>(
 					_mm_extract_epi16(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
@@ -207,7 +207,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi32(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi32(a, b); }
 
-		MAG_INLINE static uint32_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static uint32_t hsum(const simd_t v) noexcept
 		{
 			return static_cast<uint32_t>(
 					_mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v)));
@@ -237,7 +237,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t add(const simd_t a, const simd_t b) noexcept { return _mm_add_epi64(a, b); }
 		MAG_INLINE static simd_t sub(const simd_t a, const simd_t b) noexcept { return _mm_sub_epi64(a, b); }
 
-		MAG_INLINE static uint64_t horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static uint64_t hsum(const simd_t v) noexcept
 		{
 			return static_cast<uint64_t>(_mm_cvtsi128_si64(_mm_add_epi64(v, _mm_srli_si128(v, 8))));
 		}
@@ -259,7 +259,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t mul(const simd_t a, const simd_t b) noexcept { return _mm_mul_ps(a, b); }
 		MAG_INLINE static simd_t div(const simd_t a, const simd_t b) noexcept { return _mm_div_ps(a, b); }
 
-		MAG_INLINE static float horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static float hsum(const simd_t v) noexcept
 		{
 			return _mm_cvtss_f32(_mm_hadd_ps(_mm_hadd_ps(v, v), v));
 		}
@@ -281,7 +281,7 @@ namespace mag::simd
 		MAG_INLINE static simd_t mul(const simd_t a, const simd_t b) noexcept { return _mm_mul_pd(a, b); }
 		MAG_INLINE static simd_t div(const simd_t a, const simd_t b) noexcept { return _mm_div_pd(a, b); }
 
-		MAG_INLINE static double horizontal_sum(const simd_t v) noexcept
+		MAG_INLINE static double hsum(const simd_t v) noexcept
 		{
 			return _mm_cvtsd_f64(_mm_hadd_pd(v, v));
 		}
