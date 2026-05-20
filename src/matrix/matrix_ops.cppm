@@ -15,6 +15,7 @@
  */
 
 module;
+#include <cstddef>
 #include <type_traits>
 export module mag:matrix_ops;
 
