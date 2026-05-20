@@ -114,43 +114,50 @@ namespace mag
 
 		constexpr Mat inverse() const noexcept { return inverse(*this); }
 
-		constexpr static Mat inverse(const Mat& m) noexcept
+		constexpr static Mat inverse(const Mat& mat) noexcept
 		{
-			const T a = m[0][0], b = m[0][1], c = m[0][2], d = m[0][3];
-			const T e = m[1][0], f = m[1][1], g = m[1][2], h = m[1][3];
-			const T i = m[2][0], j = m[2][1], k = m[2][2], l = m[2][3];
-			const T m0 = m[3][0], n = m[3][1], o = m[3][2], p = m[3][3];
+			const T m00{mat[0][0]}, m01{mat[0][1]}, m02{mat[0][2]}, m03{mat[0][3]};
+			const T m10{mat[1][0]}, m11{mat[1][1]}, m12{mat[1][2]}, m13{mat[1][3]};
+			const T m20{mat[2][0]}, m21{mat[2][1]}, m22{mat[2][2]}, m23{mat[2][3]};
+			const T m30{mat[3][0]}, m31{mat[3][1]}, m32{mat[3][2]}, m33{mat[3][3]};
 
 			// Calculate the 4x4 determinant
-			const T det = a * (f * (k * p - l * o) - g * (j * p - l * n) + h * (j * o - k * n)) -
-						  b * (e * (k * p - l * o) - g * (i * p - l * m0) + h * (i * o - k * m0)) +
-						  c * (e * (j * p - l * n) - f * (i * p - l * m0) + h * (i * n - j * m0)) -
-						  d * (e * (j * o - k * n) - f * (i * o - k * m0) + g * (i * n - j * m0));
+			// clang-format off
+			const T det{
+				m00 * (m11 * (m22 * m33 - m23 * m32) - m12 * (m21 * m33 - m23 * m31)
+					+ m13 * (m21 * m32 - m22 * m31)) -
+				m01 * (m10 * (m22 * m33 - m23 * m32) - m12 * (m20 * m33 - m23 * m30)
+					+ m13 * (m20 * m32 - m22 * m30)) +
+				m02 * (m10 * (m21 * m33 - m23 * m31) - m11 * (m20 * m33 - m23 * m30)
+					+ m13 * (m20 * m31 - m21 * m30)) -
+				m03 * (m10 * (m21 * m32 - m22 * m31) - m11 * (m20 * m32 - m22 * m30)
+					+ m12 * (m20 * m31 - m21 * m30))};
+			// clang-format on
 
-			const T inv_det = static_cast<T>(1) / det;
+			const T inv_det{1 / det};
 
 			// Calculate the adjugate matrix
 			// clang-format off
 			return {
-				(f * (k * p - l * o) - g * (j * p - l * n) + h * (j * o - k * n)) * inv_det,
-				(e * (k * p - l * o) - g * (i * p - l * m0) + h * (i * o - k * m0)) * -inv_det,
-				(e * (j * p - l * n) - f * (i * p - l * m0) + h * (i * n - j * m0)) * inv_det,
-				(e * (j * o - k * n) - f * (i * o - k * m0) + g * (i * n - j * m0)) * -inv_det,
+				(m11 * (m22 * m33 - m23 * m32) - m12 * (m21 * m33 - m23 * m31) + m13 * (m21 * m32 - m22 * m31)) * inv_det,
+				(m10 * (m22 * m33 - m23 * m32) - m12 * (m20 * m33 - m23 * m30) + m13 * (m20 * m32 - m22 * m30)) * -inv_det,
+				(m10 * (m21 * m33 - m23 * m31) - m11 * (m20 * m33 - m23 * m30) + m13 * (m20 * m31 - m21 * m30)) * inv_det,
+				(m10 * (m21 * m32 - m22 * m31) - m11 * (m20 * m32 - m22 * m30) + m12 * (m20 * m31 - m21 * m30)) * -inv_det,
 
-				(b * (k * p - l * o) - c * (j * p - l * n) + d * (j * o - k * n)) * -inv_det,
-				(a * (k * p - l * o) - c * (i * p - l * m0) + d * (i * o - k * m0)) * inv_det,
-				(a * (j * p - l * n) - b * (i * p - l * m0) + d * (i * n - j * m0)) * -inv_det,
-				(a * (j * o - k * n) - b * (i * o - k * m0) + c * (i * n - j * m0)) * inv_det,
+				(m01 * (m22 * m33 - m23 * m32) - m02 * (m21 * m33 - m23 * m31) + m03 * (m21 * m32 - m22 * m31)) * -inv_det,
+				(m00 * (m22 * m33 - m23 * m32) - m02 * (m20 * m33 - m23 * m30) + m03 * (m20 * m32 - m22 * m30)) * inv_det,
+				(m00 * (m21 * m33 - m23 * m31) - m01 * (m20 * m33 - m23 * m30) + m03 * (m20 * m31 - m21 * m30)) * -inv_det,
+				(m00 * (m21 * m32 - m22 * m31) - m01 * (m20 * m32 - m22 * m30) + m02 * (m20 * m31 - m21 * m30)) * inv_det,
 
-				(b * (g * p - h * o) - c * (f * p - h * n) + d * (f * o - g * n)) * inv_det,
-				(a * (g * p - h * o) - c * (e * p - h * m0) + d * (e * o - g * m0)) * -inv_det,
-				(a * (f * p - h * n) - b * (e * p - h * m0) + d * (e * n - f * m0)) * inv_det,
-				(a * (f * o - g * n) - b * (e * o - g * m0) + c * (e * n - f * m0)) * -inv_det,
+				(m01 * (m12 * m33 - m13 * m32) - m02 * (m11 * m33 - m13 * m31) + m03 * (m11 * m32 - m12 * m31)) * inv_det,
+				(m00 * (m12 * m33 - m13 * m32) - m02 * (m10 * m33 - m13 * m30) + m03 * (m10 * m32 - m12 * m30)) * -inv_det,
+				(m00 * (m11 * m33 - m13 * m31) - m01 * (m10 * m33 - m13 * m30) + m03 * (m10 * m31 - m11 * m30)) * inv_det,
+				(m00 * (m11 * m32 - m12 * m31) - m01 * (m10 * m32 - m12 * m30) + m02 * (m10 * m31 - m11 * m30)) * -inv_det,
 
-				(b * (g * l - h * k) - c * (f * l - h * j) + d * (f * k - g * j)) * -inv_det,
-				(a * (g * l - h * k) - c * (e * l - h * i) + d * (e * k - g * i)) * inv_det,
-				(a * (f * l - h * j) - b * (e * l - h * i) + d * (e * j - f * i)) * -inv_det,
-				(a * (f * k - g * j) - b * (e * k - g * i) + c * (e * j - f * i)) * inv_det
+				(m01 * (m12 * m23 - m13 * m22) - m02 * (m11 * m23 - m13 * m21) + m03 * (m11 * m22 - m12 * m21)) * -inv_det,
+				(m00 * (m12 * m23 - m13 * m22) - m02 * (m10 * m23 - m13 * m20) + m03 * (m10 * m22 - m12 * m20)) * inv_det,
+				(m00 * (m11 * m23 - m13 * m21) - m01 * (m10 * m23 - m13 * m20) + m03 * (m10 * m21 - m11 * m20)) * -inv_det,
+				(m00 * (m11 * m22 - m12 * m21) - m01 * (m10 * m22 - m12 * m20) + m02 * (m10 * m21 - m11 * m20)) * inv_det
 			};
 			// clang-format on
 		}
@@ -159,10 +166,10 @@ namespace mag
 		constexpr static Mat inverse(U x, U y, U z) noexcept
 		{
 			// clang-format off
-			return {static_cast<T>(1) / static_cast<T>(x), 0, 0, 0,
-					0, static_cast<T>(1) / static_cast<T>(y), 0, 0,
-					0, 0, static_cast<T>(1) / static_cast<T>(z), 0,
-					0, 0, 0, static_cast<T>(1)};
+			return {1 / static_cast<T>(x), 0, 0, 0,
+					0, 1 / static_cast<T>(y), 0, 0,
+					0, 0, 1 / static_cast<T>(z), 0,
+					0, 0, 0, 1};
 			// clang-format on
 		}
 
@@ -186,8 +193,8 @@ namespace mag
 		template <Numeric U>
 		constexpr static Mat rotateX(U radians) noexcept
 		{
-			const T c = static_cast<T>(std::cos(radians));
-			const T s = static_cast<T>(std::sin(radians));
+			const T c{static_cast<T>(std::cos(radians))};
+			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
 			return {1, 0,  0, 0,
 					0, c, -s, 0,
@@ -199,8 +206,8 @@ namespace mag
 		template <Numeric U>
 		constexpr static Mat rotateY(U radians) noexcept
 		{
-			const T c = static_cast<T>(std::cos(radians));
-			const T s = static_cast<T>(std::sin(radians));
+			const T c{static_cast<T>(std::cos(radians))};
+			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
 			return {c, 0, s, 0,
 					0, 1, 0, 0,
@@ -212,8 +219,8 @@ namespace mag
 		template <Numeric U>
 		constexpr static Mat rotateZ(U radians) noexcept
 		{
-			const T c = static_cast<T>(std::cos(radians));
-			const T s = static_cast<T>(std::sin(radians));
+			const T c{static_cast<T>(std::cos(radians))};
+			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
 			return {c, -s, 0, 0,
 					s,  c, 0, 0,
@@ -226,9 +233,9 @@ namespace mag
 		constexpr static Mat
 		lookAt(const Vec<U, 3>& eye, const Vec<U, 3>& center, const Vec<U, 3>& up) noexcept
 		{
-			const Vec<U, 3> f = (center - eye).normalized(); // Forward vector
-			const Vec<U, 3> s = f.cross(up).normalized();	 // Right vector
-			const Vec<U, 3> u = s.cross(f);
+			const Vec<U, 3> f{(center - eye).normalized()}; // Forward vector
+			const Vec<U, 3> s{cross(f, up).normalized()};	// Right vector
+			const Vec<U, 3> u{cross(s, f)};
 
 			// clang-format off
 			return Mat{s.x,   s.y,  s.z, -s.dot(eye),
@@ -241,10 +248,10 @@ namespace mag
 		template <Numeric U>
 		constexpr static Mat perspective(U fovY_degrees, U aspect, U nearZ, U farZ) noexcept
 		{
-			const U fovY = fovY_degrees * DEG_TO_RAD;
-			const U f = 1.0 / tan(fovY * 0.5);
-			const U A = farZ / (nearZ - farZ);
-			const U B = (farZ * nearZ) / (nearZ - farZ);
+			const U fovY{static_cast<U>(fovY_degrees * deg_to_rad<U>)};
+			const U f{static_cast<U>(1.0 / tan(fovY * 0.5))};
+			const U A{farZ / (nearZ - farZ)};
+			const U B{(farZ * nearZ) / (nearZ - farZ)};
 
 			// clang-format off
 			return {f / aspect, 0,  0,  0,

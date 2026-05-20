@@ -30,6 +30,35 @@ import :simd_ops;
 export namespace mag
 {
 	template <Numeric T, Numeric U, size_t N>
+	constexpr auto operator<=>(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
+	{
+		using comparison_t = decltype(a[0] <=> b[0]);
+
+		for (size_t i = 0; i < N; ++i)
+		{
+			if (auto cmp = a[i] <=> b[i]; cmp != 0)
+				return cmp;
+		}
+
+		return comparison_t::equivalent;
+	}
+
+	template <Numeric T, Numeric U, size_t N>
+	constexpr bool operator==(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
+	{
+		for (size_t i = 0; i < N; ++i)
+			if (a[i] != b[i])
+				return false;
+		return true;
+	}
+
+	template <Numeric T, Numeric U, size_t N>
+	constexpr bool operator!=(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
+	{
+		return !(a == b);
+	}
+
+	template <Numeric T, Numeric U, size_t N>
 		requires std::convertible_to<U, T>
 	constexpr Vec<T, N>& operator+=(Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
@@ -450,69 +479,5 @@ export namespace mag
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] / s;
 		return ret;
-	}
-
-	template <Numeric T, Numeric U, size_t N>
-	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
-	{
-#ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd::supports_multiplication<T, N>)
-		{
-			using ops = simd::ops<T, N>;
-
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			auto vm = ops::mul(va, vb);
-
-			return static_cast<T>(ops::horizontal_sum(vm));
-		}
-#endif
-		using R = std::common_type_t<T, U>;
-		R ret = 0;
-		for (size_t i = 0; i < N; ++i)
-			ret += a[i] * b[i];
-		return ret;
-	}
-
-	template <typename Derived, Numeric T, size_t N>
-	template <Numeric U>
-	constexpr auto IVec<Derived, T, N>::dot(const Vec<U, N>& o) const noexcept
-	{
-		return mag::dot(derived(), o);
-	}
-
-	template <Numeric T, size_t N>
-	constexpr T distance(const Vec<T, N>& a, const Vec<T, N>& b) noexcept
-	{
-		return (a - b).length();
-	}
-
-	template <Numeric T, Numeric U, size_t N>
-	constexpr Vec<T, N> lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
-	{
-#ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd::supports_splat<T, N> &&
-					  simd::supports_add<T, N> && simd::supports_subtraction<T, N> &&
-					  simd::supports_multiplication<T, N>)
-		{
-			using ops = simd::ops<T, N>;
-
-			Vec<T, N> r;
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			auto vt = ops::splat(static_cast<T>(t));
-			auto vr = ops::add(va, ops::mul(ops::sub(vb, va), vt));
-			ops::store(r.v, vr);
-			return r;
-		}
-#endif
-		return a + t * (b - a);
-	}
-
-	template <Numeric T, size_t N>
-	constexpr Vec<T, N> normalize(Vec<T, N> v)
-	{
-		float length = std::sqrt(v.x * v.x + v.y * v.y);
-		return (length > 0.0f) ? Vec<T, N>{v.x / length, v.y / length} : Vec<T, N>{0.0f, 0.0f};
 	}
 } // namespace mag

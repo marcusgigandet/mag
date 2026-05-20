@@ -91,19 +91,22 @@ namespace mag
 
 		constexpr static Mat inverse(const Mat& m) noexcept
 		{
-			const T a = m[0][0], d = m[0][1], g = m[0][2];
-			const T b = m[1][0], e = m[1][1], h = m[1][2];
-			const T c = m[2][0], f = m[2][1], i = m[2][2];
+			const T m00{m[0][0]}, m01{m[0][1]}, m02{m[0][2]};
+			const T m10{m[1][0]}, m11{m[1][1]}, m12{m[1][2]};
+			const T m20{m[2][0]}, m21{m[2][1]}, m22{m[2][2]};
 
 			// Calculate the determinant
-			const T det = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
-			const T inv_det = static_cast<T>(1) / det;
+			const T det{
+					m00 * (m11 * m22 - m21 * m12) - m10 * (m01 * m22 - m21 * m02) +
+							m20 * (m01 * m12 - m11 * m02),
+			};
+			const T inv_det{1 / det};
 
 			// Calculate the adjugate matrix
 			// clang-format off
-			return {(e * i - f * h) * inv_det, (c * h - b * i) * inv_det, (b * f - c * e) * inv_det,
-					(f * g - d * i) * inv_det, (a * i - c * g) * inv_det, (c * d - a * f) * inv_det,
-					(d * h - e * g) * inv_det, (b * g - a * h) * inv_det, (a * e - b * d) * inv_det};
+			return {(m11 * m22 - m21 * m12) * inv_det, (m20 * m12 - m10 * m22) * inv_det, (m10 * m21 - m20 * m11) * inv_det,
+					(m21 * m02 - m01 * m22) * inv_det, (m00 * m22 - m20 * m02) * inv_det, (m20 * m01 - m00 * m21) * inv_det,
+					(m01 * m12 - m11 * m02) * inv_det, (m10 * m02 - m00 * m12) * inv_det, (m00 * m11 - m10 * m01) * inv_det};
 			// clang-format on
 		}
 
@@ -111,17 +114,17 @@ namespace mag
 		constexpr static Mat inverse(U x, U y, U z) noexcept
 		{
 			// clang-format off
-			return {static_cast<T>(1) / static_cast<T>(x), 0, 0,
-					0, static_cast<T>(1) / static_cast<T>(y), 0,
-					0, 0, static_cast<T>(1) / static_cast<T>(z)};
+			return {1 / static_cast<T>(x), 0, 0,
+					0, 1 / static_cast<T>(y), 0,
+					0, 0, 1 / static_cast<T>(z)};
 			// clang-format on
 		}
 
 		template <Numeric U>
 		constexpr static Mat rotateX(U radians) noexcept
 		{
-			const T c = static_cast<T>(std::cos(radians));
-			const T s = static_cast<T>(std::sin(radians));
+			const T c{static_cast<T>(std::cos(radians))};
+			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
 			return {1, 0, 0,
 					0, c, -s,
@@ -132,8 +135,8 @@ namespace mag
 		template <Numeric U>
 		constexpr static Mat rotateY(U radians) noexcept
 		{
-			const T c = static_cast<T>(std::cos(radians));
-			const T s = static_cast<T>(std::sin(radians));
+			const T c{static_cast<T>(std::cos(radians))};
+			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
 			return {c, 0, s,
 					0, 1, 0,
@@ -144,8 +147,8 @@ namespace mag
 		template <Numeric U>
 		constexpr static Mat rotateZ(U radians) noexcept
 		{
-			const T c = static_cast<T>(std::cos(radians));
-			const T s = static_cast<T>(std::sin(radians));
+			const T c{static_cast<T>(std::cos(radians))};
+			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
 			return {c, -s, 0,
 					s, c, 0,

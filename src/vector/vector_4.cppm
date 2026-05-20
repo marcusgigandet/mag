@@ -40,21 +40,13 @@ namespace mag
 		constexpr Vec() = default;
 
 		template <Numeric U>
-		explicit constexpr Vec(U val)
+		explicit constexpr Vec(U val) : x(val), y(val), z(val), w(val)
 		{
-			x = val;
-			y = val;
-			z = val;
-			w = val;
 		}
 
 		template <Numeric U0, Numeric U1, Numeric U2, Numeric U3>
-		constexpr Vec(U0 x, U1 y, U2 z, U3 w)
+		constexpr Vec(U0 x, U1 y, U2 z, U3 w) : x(x), y(y), z(z), w(w)
 		{
-			v[0] = x;
-			v[1] = y;
-			v[2] = z;
-			v[3] = w;
 		}
 	};
 } // namespace mag

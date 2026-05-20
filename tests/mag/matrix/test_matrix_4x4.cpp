@@ -201,7 +201,7 @@ TEST_CASE("Mat4x4 transformations", "[Mat4x4]")
 	SECTION("Rotation")
 	{
 		// Test X rotation
-		auto rx = Mat4f::rotateX(PI / 2.0f); // 90 degrees
+		auto rx = Mat4f::rotateX(pi<float> / 2.0f); // 90 degrees
 		Vec<float, 4> v(0, 1, 0, 1);
 		auto r = rx * v;
 		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));
@@ -210,7 +210,7 @@ TEST_CASE("Mat4x4 transformations", "[Mat4x4]")
 		REQUIRE(r.w == Catch::Approx(1.0f).margin(1e-5f));
 
 		// Test Y rotation
-		auto ry = Mat4f::rotateY(PI / 2.0f); // 90 degrees
+		auto ry = Mat4f::rotateY(pi<float> / 2.0f); // 90 degrees
 		v = Vec<float, 4>(1, 0, 0, 1);
 		r = ry * v;
 		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));
@@ -219,7 +219,7 @@ TEST_CASE("Mat4x4 transformations", "[Mat4x4]")
 		REQUIRE(r.w == Catch::Approx(1.0f).margin(1e-5f));
 
 		// Test Z rotation
-		auto rz = Mat4f::rotateZ(PI / 2.0f); // 90 degrees
+		auto rz = Mat4f::rotateZ(pi<float> / 2.0f); // 90 degrees
 		v = Vec<float, 4>(1, 0, 0, 1);
 		r = rz * v;
 		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));

@@ -221,7 +221,7 @@ TEST_CASE("Mat3x3 inverse", "[Mat3x3]")
 
     SECTION("Inverse of rotation matrix")
     {
-        Mat3f rot = Mat3f::rotateZ(PI_F_2);
+        Mat3f rot = Mat3f::rotateZ(half_pi<float>);
         Mat3f inv_rot = Mat3f::inverse(rot);
         Mat3f product = rot * inv_rot;
         for (int i = 0; i < 3; ++i)

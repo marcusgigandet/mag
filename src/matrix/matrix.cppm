@@ -143,69 +143,6 @@ namespace mag
 		constexpr T* data() noexcept { return &derived().m[0][0]; }
 		constexpr const T* data() const noexcept { return &derived().m[0][0]; }
 
-		template <Numeric U>
-		constexpr Derived& operator+=(U val) noexcept
-		{
-			for (size_t c = 0; c < C; ++c)
-				for (size_t r = 0; r < R; ++r)
-					derived()(c, r) += val;
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator-=(U val) noexcept
-		{
-			for (size_t c = 0; c < C; ++c)
-				for (size_t r = 0; r < R; ++r)
-					derived()(c, r) -= val;
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator*=(U val) noexcept
-		{
-			for (size_t c = 0; c < C; ++c)
-				for (size_t r = 0; r < R; ++r)
-					derived()(c, r) *= val;
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator/=(U val) noexcept
-		{
-			for (size_t c = 0; c < C; ++c)
-				for (size_t r = 0; r < R; ++r)
-					derived()(c, r) /= val;
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator+=(Mat<U, C, R> o) noexcept
-		{
-			for (size_t c = 0; c < C; ++c)
-				for (size_t r = 0; r < R; ++r)
-					derived()(c, r) += o[c][r];
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator-=(Mat<U, C, R> o) noexcept
-		{
-			for (size_t c = 0; c < C; ++c)
-				for (size_t r = 0; r < R; ++r)
-					derived()(c, r) -= o[c][r];
-			return derived();
-		}
-
-		template <Numeric U>
-		constexpr Derived& operator*=(Mat<U, C, R> o) noexcept
-		{
-			for (size_t c = 0; c < C; ++c)
-				for (size_t r = 0; r < R; ++r)
-					derived()(c, r) *= o[c][r];
-			return derived();
-		}
-
 		constexpr Mat<T, R, C> transpose() const noexcept
 		{
 			Mat<T, R, C> result{};
@@ -236,7 +173,7 @@ namespace mag
 		[[nodiscard]] std::string toString() const noexcept
 		{
 			std::ostringstream oss;
-			const auto m{derived()};
+			const auto& m{derived()};
 
 			oss << std::fixed << std::setprecision(6);
 			oss << "Mat" << R << "x" << C << "(\n";

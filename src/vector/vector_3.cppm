@@ -42,36 +42,24 @@ namespace mag
 		constexpr Vec() = default;
 
 		template <Numeric U>
-		explicit constexpr Vec(U val)
+		explicit constexpr Vec(U val) : x(val), y(val), z(val)
 		{
-			x = val;
-			y = val;
-			z = val;
 		}
 
 		template <Numeric U0, Numeric U1, Numeric U2>
-		constexpr Vec(U0 x, U1 y, U2 z)
+		constexpr Vec(U0 x, U1 y, U2 z) : x(x), y(y), z(z)
 		{
-			v[0] = x;
-			v[1] = y;
-			v[2] = z;
-		}
-
-		template <Numeric U>
-		constexpr Vec<std::common_type_t<T, U>, 3> cross(const Vec<U, 3>& o) const noexcept
-		{
-			using R = std::common_type_t<T, U>;
-			return Vec<R, 3>{
-					v[1] * o[2] - v[2] * o[1],
-					v[2] * o[0] - v[0] * o[2],
-					v[0] * o[1] - v[1] * o[0],
-			};
 		}
 	};
 
 	export template <Numeric T, Numeric U>
 	constexpr auto cross(const Vec<T, 3>& a, const Vec<U, 3>& b) noexcept
 	{
-		return a.cross(b);
+		using R = std::common_type_t<T, U>;
+		return Vec<R, 3>{
+				a[1] * b[2] - a[2] * b[1],
+				a[2] * b[0] - a[0] * b[2],
+				a[0] * b[1] - a[1] * b[0],
+		};
 	}
 } // namespace mag
