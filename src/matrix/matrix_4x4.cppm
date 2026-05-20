@@ -26,7 +26,7 @@ import :vector_4;
 
 namespace mag
 {
-	export template <typename T>
+	template <typename T>
 	struct Mat<T, 4, 4> : IMat<Mat<T, 4, 4>, T, 4, 4>
 	{
 		union

@@ -26,10 +26,10 @@
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
+
     {
       "inherits": "generic-debug",
       "name": "clang-debug",
-      "hidden": false,
       "binaryDir": "${sourceDir}/build/clang-debug",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++"
@@ -38,13 +38,30 @@
     {
       "inherits": "generic-release",
       "name": "clang-release",
-      "hidden": false,
       "binaryDir": "${sourceDir}/build/clang-release",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++"
       }
+    },
+
+    {
+      "inherits": "generic-debug",
+      "name": "gcc-debug",
+      "binaryDir": "${sourceDir}/build/gcc-debug",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "inherits": "generic-release",
+      "name": "gcc-release",
+      "binaryDir": "${sourceDir}/build/gcc-release",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
     }
   ],
+
   "buildPresets": [
     {
       "name": "clang-release",
@@ -53,8 +70,17 @@
     {
       "name": "clang-debug",
       "configurePreset": "clang-debug"
+    },
+    {
+      "name": "gcc-release",
+      "configurePreset": "gcc-release"
+    },
+    {
+      "name": "gcc-debug",
+      "configurePreset": "gcc-debug"
     }
   ],
+
   "testPresets": [
     {
       "name": "clang-debug",
@@ -66,6 +92,20 @@
     {
       "name": "clang-release",
       "configurePreset": "clang-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "gcc-debug",
+      "configurePreset": "gcc-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "gcc-release",
+      "configurePreset": "gcc-release",
       "output": {
         "outputOnFailure": true
       }
