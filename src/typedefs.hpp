@@ -25,7 +25,7 @@
 #endif
 
 // Define macros to suppress compiler warnings
-#if defined(__clang__)
+#if defined(__clang__) && __clang_major__ >= 22
 #define MAG_DIAG_PUSH _Pragma("clang diagnostic push")
 #define MAG_DIAG_POP _Pragma("clang diagnostic pop")
 #define MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE _Pragma("clang diagnostic ignored \"-WTU-local-entity-exposure\"")
