@@ -23,6 +23,10 @@ export module mag:vector;
 
 import :concepts;
 
+#ifdef MAG_ENABLE_SIMD
+import :simd_ops;
+#endif
+
 namespace mag
 {
 	/**
@@ -33,6 +37,65 @@ namespace mag
 	 */
 	export template <Numeric T, size_t N>
 	struct Vec;
+
+
+	export template <Numeric T, size_t N>
+	constexpr Vec<T, N> normalize(Vec<T, N> v)
+	{
+		float length{std::sqrt(v.x * v.x + v.y * v.y)};
+		return (length > 0.0f) ? Vec<T, N>{v.x / length, v.y / length} : Vec<T, N>{0.0f, 0.0f};
+	}
+
+	export template <Numeric T, Numeric U, size_t N>
+	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
+	{
+#ifdef MAG_ENABLE_SIMD
+		if constexpr (std::is_same_v<T, U> && simd::supports_multiplication<T, N>)
+		{
+			using ops = simd::ops<T, N>;
+
+			auto va = ops::load(a.v);
+			auto vb = ops::load(b.v);
+			auto vm = ops::mul(va, vb);
+
+			return static_cast<T>(ops::horizontal_sum(vm));
+		}
+#endif
+		using R = std::common_type_t<T, U>;
+		R ret = 0;
+		for (size_t i = 0; i < N; ++i)
+			ret += a[i] * b[i];
+		return ret;
+	}
+
+	export template <Numeric T, size_t N>
+	constexpr T distance(const Vec<T, N>& a, const Vec<T, N>& b) noexcept
+	{
+		return (a - b).length();
+	}
+
+	export template <Numeric T, Numeric U, size_t N>
+	constexpr Vec<T, N> lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
+	{
+#ifdef MAG_ENABLE_SIMD
+		if constexpr (std::is_same_v<T, U> && simd::supports_splat<T, N> &&
+					  simd::supports_add<T, N> && simd::supports_subtraction<T, N> &&
+					  simd::supports_multiplication<T, N>)
+		{
+			using ops = simd::ops<T, N>;
+
+			Vec<T, N> r;
+			auto va = ops::load(a.v);
+			auto vb = ops::load(b.v);
+			auto vt = ops::splat(static_cast<T>(t));
+			auto vr = ops::add(va, ops::mul(ops::sub(vb, va), vt));
+			ops::store(r.v, vr);
+			return r;
+		}
+#endif
+		return a + t * (b - a);
+	}
+
 
 	/**
 	 * @brief Base class for N-dimensional vectors using the Curiously Recurring Template Pattern
@@ -84,22 +147,12 @@ namespace mag
 		/* Reverse iterator support */
 		/****************************/
 
-		constexpr std::reverse_iterator<T*> rbegin() noexcept
-		{
-			return std::reverse_iterator<T*>(end());
-		}
-		constexpr std::reverse_iterator<const T*> rbegin() const noexcept
-		{
-			return std::reverse_iterator<const T*>(end());
-		}
-		constexpr std::reverse_iterator<T*> rend() noexcept
-		{
-			return std::reverse_iterator<T*>(begin());
-		}
-		constexpr std::reverse_iterator<const T*> rend() const noexcept
-		{
-			return std::reverse_iterator<const T*>(begin());
-		}
+		// clang-format off
+		constexpr std::reverse_iterator<T*> rbegin() noexcept { return std::reverse_iterator<T*>(end()); }
+		constexpr std::reverse_iterator<const T*> rbegin() const noexcept { return std::reverse_iterator<const T*>(end()); }
+		constexpr std::reverse_iterator<T*> rend() noexcept { return std::reverse_iterator<T*>(begin()); }
+		constexpr std::reverse_iterator<const T*> rend() const noexcept { return std::reverse_iterator<const T*>(begin()); }
+		// clang-format on
 
 		/**************************/
 		/* Const iterator support */
@@ -113,37 +166,11 @@ namespace mag
 		constexpr T& operator[](size_t i) noexcept { return derived().v[i]; }
 		constexpr const T& operator[](size_t i) const noexcept { return derived().v[i]; }
 
-		template <Numeric U>
-		constexpr auto operator<=>(const Vec<U, N>& o) const noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-				if (auto cmp = (*this)[i] <=> o[i]; cmp != 0)
-					return cmp;
-			return std::strong_ordering::equal;
-		}
-
-		template <Numeric U>
-		constexpr bool operator==(const Vec<U, N>& o) const noexcept
-		{
-			for (size_t i = 0; i < N; ++i)
-				if (derived()[i] != o[i])
-					return false;
-			return true;
-		}
-
-		template <Numeric U>
-		constexpr bool operator!=(const Vec<U, N>& o) const noexcept
-		{
-			return !(*this == o);
-		}
-
 		constexpr T length() const noexcept
 		{
-			T ret = 0;
+			T ret{0};
 			for (size_t i = 0; i < N; ++i)
-			{
 				ret += derived()[i] * derived()[i];
-			}
 
 			return std::sqrt(ret);
 		}
@@ -151,7 +178,7 @@ namespace mag
 		constexpr Derived normalized() const noexcept
 		{
 			Derived ret = derived();
-			T len = ret.length();
+			T len{ret.length()};
 			if (len > 0)
 				ret /= len;
 			return ret;
@@ -166,7 +193,10 @@ namespace mag
 		}
 
 		template <Numeric U>
-		constexpr auto dot(const Vec<U, N>& o) const noexcept;
+		constexpr auto dot(const Vec<U, N>& o) const noexcept
+		{
+			return mag::dot(derived(), o);
+		}
 
 		[[nodiscard]] std::string toString() const noexcept
 		{

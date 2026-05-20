@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
+module;
+#include <numbers>
 export module mag:constants;
 
 export namespace mag
 {
-	constexpr double PI = 3.14159265358979323846;
-	constexpr float PI_F = 3.1415927f;
+	template <typename T>
+	inline constexpr T pi{std::numbers::pi_v<T>};
 
-	constexpr double PI_2 = PI / 2;
-	constexpr float PI_F_2 = PI_F / 2;
+	template <typename T>
+	inline constexpr T e{std::numbers::e_v<T>};
 
-	constexpr double E = 2.71828182845904523536;
-	constexpr float E_F = 2.7182817f;
+	template <typename T>
+	inline constexpr T phi{static_cast<T>(1.6180339887498948482045868343656381L)};
 
-	constexpr double PHI = 1.61803398874989484820;
-	constexpr float PHI_F = 1.6180339f;
+	template <typename T>
+	inline constexpr T half_pi{pi<T> / static_cast<T>(2)};
 
-	constexpr double DEG_TO_RAD = PI / 180.0;
-	constexpr float DEG_TO_RAD_F = PI_F / 180.0f;
+	template <typename T>
+	inline constexpr T deg_to_rad{pi<T> / static_cast<T>(180)};
 
-	constexpr double RAD_TO_DEG = 180.0 / PI;
-	constexpr float RAD_TO_DEG_F = 180.0f / PI_F;
+	template <typename T>
+	inline constexpr T rad_to_deg{static_cast<T>(180) / pi<T>};
 } // namespace mag

@@ -106,6 +106,6 @@ TEST_CASE("Vec2 comparison", "[Vec2]")
 
 	REQUIRE(a == b);
 	REQUIRE(a != c);
-	// REQUIRE((a <=> b) == std::partial_ordering::equivalent);
-	// REQUIRE((a <=> c) != std::partial_ordering::equivalent);
+	REQUIRE((a <=> b) == std::partial_ordering::equivalent);
+	REQUIRE((a <=> c) != std::partial_ordering::equivalent);
 }
