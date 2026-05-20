@@ -488,7 +488,7 @@ export namespace mag
 	}
 
 	template <Numeric T, Numeric U, size_t N>
-	constexpr auto lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
+	constexpr Vec<T, N> lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && simd::supports_splat<T, N> &&

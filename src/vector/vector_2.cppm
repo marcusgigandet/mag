@@ -21,7 +21,7 @@ import :vector;
 
 namespace mag
 {
-	export template <Numeric T>
+	template <Numeric T>
 	struct alignas(8) Vec<T, 2> : IVec<Vec<T, 2>, T, 2>
 	{
 		union

@@ -20,7 +20,7 @@ export module mag:neon_ops;
 
 import :simd_ops;
 
-export namespace mag::simd
+namespace mag::simd
 {
 #ifdef MAG_ENABLE_SIMD_EXTENDED
 	template <>

@@ -24,7 +24,7 @@ import :simd_ops;
 /**
  * @brief This namespace provides SIMD operations for x86 (SSE/AVX).
  */
-export namespace mag::simd
+namespace mag::simd
 {
 #ifdef MAG_ENABLE_SIMD_EXTENDED
 	template <>
