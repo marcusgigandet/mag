@@ -60,7 +60,7 @@ else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
     else ()
         set(MAG_PLATFORM_X86 TRUE CACHE BOOL "" FORCE)
-
+        add_compile_options(-msse2 -msse3 -msse4.1)
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
     endif ()
 endif ()
@@ -95,12 +95,6 @@ target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_ENABLE_SIMD_EXTENDED}>:MAG_ENABLE_SIMD_EXTENDED>
         $<$<BOOL:${MAG_PLATFORM_ARM}>:MAG_PLATFORM_ARM>
         $<$<BOOL:${MAG_PLATFORM_X86}>:MAG_PLATFORM_X86>
-)
-
-target_compile_options(mag PRIVATE
-        $<$<BOOL:${MAG_PLATFORM_X86}>:-msse2>
-        $<$<BOOL:${MAG_PLATFORM_X86}>:-msse3>
-        $<$<BOOL:${MAG_PLATFORM_X86}>:-msse4.1>
 )
 
 #####################
