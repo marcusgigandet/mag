@@ -152,19 +152,4 @@ export namespace mag::simd
 	concept supports_horizontal_sum = requires(typename ops<T, N>::simd_t v) {
 		{ ops<T, N>::horizontal_sum(v) } -> std::same_as<T>;
 	};
-
-#ifdef MAG_ENABLE_SIMD_EXTENDED
-	using i8x16 = ops<int8_t, 16>;
-	using i16x8 = ops<int16_t, 8>;
-	using i32x4 = ops<int32_t, 4>;
-	using i64x2 = ops<int64_t, 2>;
-
-	using u8x16 = ops<uint8_t, 16>;
-	using u16x8 = ops<uint16_t, 8>;
-	using u32x4 = ops<uint32_t, 4>;
-	using u64x2 = ops<uint64_t, 2>;
-#endif
-
-	using f32x4 = ops<float, 4>;
-	using f64x2 = ops<double, 2>;
 } // namespace mag::simd

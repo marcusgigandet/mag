@@ -168,6 +168,18 @@ namespace mag
 
 		constexpr T length() const noexcept
 		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_multiplication<T, N> &&
+						  simd::supports_horizontal_sum<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto v = ops::load(&derived()[0]);
+				auto sq = ops::mul(v, v);
+
+				return std::sqrt(ops::horizontal_sum(sq));
+			}
+#endif
 			T ret{0};
 			for (size_t i = 0; i < N; ++i)
 				ret += derived()[i] * derived()[i];

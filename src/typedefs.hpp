@@ -14,28 +14,23 @@
  * limitations under the License.
  */
 
-export module mag;
+#pragma once
 
-export import :aliases;
-export import :concepts;
-export import :constants;
-export import :matrix;
-export import :matrix_3x3;
-export import :matrix_4x4;
-export import :matrix_ops;
-export import :vector;
-export import :vector_2;
-export import :vector_3;
-export import :vector_4;
-export import :vector_ops;
-
-#ifdef MAG_ENABLE_SIMD
-export import :simd_ops;
-
-#ifdef MAG_NEON_SIMD
-export import :neon_ops;
-#elif MAG_X86_SIMD
-export import :x86_ops;
+#if defined(__clang__) || defined(__GNUC__)
+    #define MAG_INLINE __attribute__((always_inline)) inline
+#elif defined(_MSC_VER)
+    #define MAG_INLINE __forceinline inline
+#else
+    #define MAG_INLINE inline
 #endif
 
+// Define macros to suppress compiler warnings
+#if defined(__clang__)
+#define MAG_DIAG_PUSH _Pragma("clang diagnostic push")
+#define MAG_DIAG_POP _Pragma("clang diagnostic pop")
+#define MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE _Pragma("clang diagnostic ignored \"-WTU-local-entity-exposure\"")
+#else
+#define MAG_DIAG_PUSH
+#define MAG_DIAG_POP
+#define MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 #endif
