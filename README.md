@@ -1,5 +1,8 @@
 # Mathématiques et Graphiques (MAG)
 
+[![macOS Build and Test](https://github.com/SlyFryFrog/mag/actions/workflows/macos_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/macos_build.yml)
+[![Linux Build and Test](https://github.com/SlyFryFrog/mag/actions/workflows/linux_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/linux_build.yml)
+
 ### Prérequis
 
 Pour construire MAG, vous avez besoin des outils suivants :
