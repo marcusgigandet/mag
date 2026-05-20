@@ -78,7 +78,7 @@ namespace mag
 		}
 
 		template <Numeric U>
-		constexpr Vec<T, 3> operator*(const Vec<U, 3>& v) const noexcept
+		constexpr Vec<T, 3> operator*(const Vec<U, 3>& v) noexcept
 		{
 			return {m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z,
 					m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z,
@@ -86,7 +86,6 @@ namespace mag
 		}
 
 		constexpr static Mat identity() noexcept { return Mat::diagonal(1); }
-
 		constexpr Mat inverse() const noexcept { return inverse(*this); }
 
 		constexpr static Mat inverse(const Mat& m) noexcept

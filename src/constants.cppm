@@ -21,20 +21,20 @@ export module mag:constants;
 export namespace mag
 {
 	template <typename T>
-	inline constexpr T pi = std::numbers::pi_v<T>;
+	inline constexpr T pi{std::numbers::pi_v<T>};
 
 	template <typename T>
-	inline constexpr T e = std::numbers::e_v<T>;
+	inline constexpr T e{std::numbers::e_v<T>};
 
 	template <typename T>
-	inline constexpr T phi = static_cast<T>(1.6180339887498948482045868343656381L);
+	inline constexpr T phi{static_cast<T>(1.6180339887498948482045868343656381L)};
 
 	template <typename T>
-	inline constexpr T half_pi = pi<T> / static_cast<T>(2);
+	inline constexpr T half_pi{pi<T> / static_cast<T>(2)};
 
 	template <typename T>
-	inline constexpr T deg_to_rad = pi<T> / static_cast<T>(180);
+	inline constexpr T deg_to_rad{pi<T> / static_cast<T>(180)};
 
 	template <typename T>
-	inline constexpr T rad_to_deg = static_cast<T>(180) / pi<T>;
+	inline constexpr T rad_to_deg{static_cast<T>(180) / pi<T>};
 } // namespace mag

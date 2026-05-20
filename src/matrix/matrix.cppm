@@ -80,11 +80,8 @@ namespace mag
 		/********************/
 
 		constexpr T* begin() noexcept { return &derived().m[0][0]; }
-
 		constexpr const T* begin() const noexcept { return &derived().m[0][0]; }
-
 		constexpr T* end() noexcept { return &derived().m[0][0] + C * R; }
-
 		constexpr const T* end() const noexcept { return &derived().m[0][0] + C * R; }
 
 		/****************************/
@@ -116,42 +113,49 @@ namespace mag
 		/**************************/
 
 		constexpr const T* cbegin() const noexcept { return begin(); }
-
 		constexpr const T* cend() const noexcept { return end(); }
-
 		constexpr std::reverse_iterator<const T*> crbegin() const noexcept { return rbegin(); }
-
 		constexpr std::reverse_iterator<const T*> crend() const noexcept { return rend(); }
 
-		constexpr std::span<T, R> operator[](size_t i) noexcept
-		{
-			return std::span<T, R>(derived().m[i]);
-		}
-
-		constexpr std::span<const T, R> operator[](size_t i) const noexcept
-		{
-			return derived().m[i];
-		}
+		// clang-format off
+		constexpr std::span<T, R> operator[](size_t i) noexcept { return std::span<T, R>(derived().m[i]); }
+		constexpr std::span<const T, R> operator[](size_t i) const noexcept { return derived().m[i]; }
 
 		constexpr T& operator()(size_t c, size_t r) noexcept { return derived().m[c][r]; }
-
-		constexpr const T& operator()(size_t c, size_t r) const noexcept
-		{
-			return derived().m[c][r];
-		}
+		constexpr const T& operator()(size_t c, size_t r) const noexcept { return derived().m[c][r]; }
+		// clang-format on
 
 		constexpr T* data() noexcept { return &derived().m[0][0]; }
 		constexpr const T* data() const noexcept { return &derived().m[0][0]; }
 
+		/**
+		 * @brief Returns the transpose of the matrix.
+		 *
+		 * Produces a new matrix where rows and columns are exchanged.
+		 * A matrix of size `C x R` becomes `R x C`.
+		 *
+		 * @return The transposed matrix.
+		 */
 		constexpr Mat<T, R, C> transpose() const noexcept
 		{
 			Mat<T, R, C> result{};
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					result(r, c) = derived()[c][r];
+					result(r, c) = derived()(c, r);
 			return result;
 		}
 
+		/**
+		 * @brief Creates a diagonal matrix from the given value.
+		 *
+		 * Initializes a matrix with all elements set to zero except for the main diagonal,
+		 * which is populated using the provided value.
+		 *
+		 * For non-square matrices, values are written up to `min(C, R)`.
+		 *
+		 * @param val Diagonal value.
+		 * @return  A matrix with the specified diagonal values.
+		 */
 		static constexpr Derived diagonal(const T val) noexcept
 		{
 			Derived result{};
@@ -161,6 +165,18 @@ namespace mag
 			return result;
 		}
 
+		/**
+		 * @brief Creates a diagonal matrix from the given vector.
+		 *
+		 * Initializes a matrix with all elements set to zero except for the main diagonal,
+		 * which is populated using the values from the given vector.
+		 *
+		 * For non-square matrices, values are written up to `min(C, R)`.
+		 *
+		 * @param diagVals Vector containing the diagonal values.
+		 *
+		 * @return A matrix with the specified diagonal values.
+		 */
 		static constexpr Derived diagonal(const Vec<T, R> diagVals) noexcept
 		{
 			Derived result{};

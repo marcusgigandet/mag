@@ -64,8 +64,7 @@ namespace mag
 		constexpr Mat(U0 i00, U1 i01, U2 i02, U3 i03,
 					  U4 i10, U5 i11, U6 i12, U7 i13,
 					  U8 i20, U9 i21, U10 i22, U11 i23,
-					  U12 i30, U13 i31, U14 i32, U15 i33) noexcept
-		:
+					  U12 i30, U13 i31, U14 i32, U15 i33) noexcept :
 			m00(static_cast<T>(i00)), m01(static_cast<T>(i10)), m02(static_cast<T>(i20)), m03(static_cast<T>(i30)),
 			m10(static_cast<T>(i01)), m11(static_cast<T>(i11)), m12(static_cast<T>(i21)), m13(static_cast<T>(i31)),
 			m20(static_cast<T>(i02)), m21(static_cast<T>(i12)), m22(static_cast<T>(i22)), m23(static_cast<T>(i32)),
@@ -74,31 +73,18 @@ namespace mag
 		}
 		// clang-format on
 
+		// clang-format off
 		template <Numeric U>
 		constexpr Mat(const Vec<U, 4>& col0,
 					  const Vec<U, 4>& col1,
 					  const Vec<U, 4>& col2,
-					  const Vec<U, 4>& col3) noexcept
+					  const Vec<U, 4>& col3) noexcept :
+			m00(static_cast<T>(col0.x)), m01(static_cast<T>(col0.y)), m02(static_cast<T>(col0.z)), m03(static_cast<T>(col0.w)),
+			m10(static_cast<T>(col1.x)), m11(static_cast<T>(col1.y)), m12(static_cast<T>(col1.z)), m13(static_cast<T>(col1.w)),
+			m20(static_cast<T>(col2.x)), m21(static_cast<T>(col2.y)), m22(static_cast<T>(col2.z)), m23(static_cast<T>(col2.w)),
+			m30(static_cast<T>(col3.x)), m31(static_cast<T>(col3.y)), m32(static_cast<T>(col3.z)), m33(static_cast<T>(col3.w))
+		// clang-format on
 		{
-			m[0][0] = static_cast<T>(col0.x);
-			m[0][1] = static_cast<T>(col0.y);
-			m[0][2] = static_cast<T>(col0.z);
-			m[0][3] = static_cast<T>(col0.w);
-
-			m[1][0] = static_cast<T>(col1.x);
-			m[1][1] = static_cast<T>(col1.y);
-			m[1][2] = static_cast<T>(col1.z);
-			m[1][3] = static_cast<T>(col1.w);
-
-			m[2][0] = static_cast<T>(col2.x);
-			m[2][1] = static_cast<T>(col2.y);
-			m[2][2] = static_cast<T>(col2.z);
-			m[2][3] = static_cast<T>(col2.w);
-
-			m[3][0] = static_cast<T>(col3.x);
-			m[3][1] = static_cast<T>(col3.y);
-			m[3][2] = static_cast<T>(col3.z);
-			m[3][3] = static_cast<T>(col3.w);
 		}
 
 		template <Numeric U>
@@ -238,10 +224,10 @@ namespace mag
 			const Vec<U, 3> u{cross(s, f)};
 
 			// clang-format off
-			return Mat{s.x,   s.y,  s.z, -s.dot(eye),
-					   u.x,   u.y,  u.z, -u.dot(eye),
-				      -f.x,  -f.y, -f.z,  f.dot(eye),
-					   0,     0,    0,    1};
+			return Mat{s.x,  s.y,  s.z, -s.dot(eye),
+					   u.x,  u.y,  u.z, -u.dot(eye),
+				      -f.x, -f.y, -f.z,  f.dot(eye),
+					   0,    0,    0,    1};
 			// clang-format on
 		}
 

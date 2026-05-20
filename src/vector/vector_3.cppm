@@ -23,6 +23,18 @@ import :vector;
 
 namespace mag
 {
+	export template <Numeric T, Numeric U>
+	constexpr auto cross(const Vec<T, 3>& a, const Vec<U, 3>& b) noexcept
+	{
+		using R = std::common_type_t<T, U>;
+		return Vec<R, 3>{
+				a[1] * b[2] - a[2] * b[1],
+				a[2] * b[0] - a[0] * b[2],
+				a[0] * b[1] - a[1] * b[0],
+		};
+	}
+
+
 	template <Numeric T>
 	struct alignas(16) Vec<T, 3> : IVec<Vec<T, 3>, T, 3>
 	{
@@ -50,16 +62,11 @@ namespace mag
 		constexpr Vec(U0 x, U1 y, U2 z) : x(x), y(y), z(z)
 		{
 		}
-	};
 
-	export template <Numeric T, Numeric U>
-	constexpr auto cross(const Vec<T, 3>& a, const Vec<U, 3>& b) noexcept
-	{
-		using R = std::common_type_t<T, U>;
-		return Vec<R, 3>{
-				a[1] * b[2] - a[2] * b[1],
-				a[2] * b[0] - a[0] * b[2],
-				a[0] * b[1] - a[1] * b[0],
-		};
-	}
+		template <Numeric U>
+		constexpr auto cross(const Vec<U, 3>& other) const noexcept
+		{
+			return mag::cross(*this, other);
+		}
+	};
 } // namespace mag

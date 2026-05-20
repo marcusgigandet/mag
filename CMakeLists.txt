@@ -36,8 +36,9 @@ option(MAG_BUILD_TESTS "Build tests" OFF)
 option(MAG_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
 option(MAG_ENABLE_SIMD_EXTENDED "Enable simd for signed/unsigned integers" ON)
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(MAG_NO_DEV_TOOLS "Disable all non-essential dev tools" OFF)
+option(MAG_CODE_ANALYSIS "Analyze code with clang-tidy" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 #################
 # Set constants #
@@ -54,11 +55,10 @@ else ()
     # Filter based on x86 and arm
     # Add more architectures if we add future support for something like RISC-V
     if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm|aarch64|ARM64")
-        set(MAG_PLATFORM_ARM TRUE)
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
-        add_compile_options(-msse2 -msse3 -msse4.1)
+        target_compile_options(mag PRIVATE -msse3 -msse4.1)
     endif ()
 endif ()
 ###################
@@ -84,13 +84,13 @@ target_compile_features(mag
         cxx_std_20
 )
 
-if (MAG_ENABLE_SIMD)
-    target_compile_definitions(mag PRIVATE MAG_ENABLE_SIMD)
-endif ()
-
-if (MAG_ENABLE_SIMD_EXTENDED)
-    target_compile_definitions(mag PRIVATE MAG_ENABLE_SIMD_EXTENDED)
-endif ()
+###########################
+# Add compile definitions #
+###########################
+target_compile_definitions(mag PRIVATE
+        $<$<BOOL:${MAG_ENABLE_SIMD}>:MAG_ENABLE_SIMD>
+        $<$<BOOL:${MAG_ENABLE_SIMD_EXTENDED}>:MAG_ENABLE_SIMD_EXTENDED>
+)
 
 #####################
 # Build-tree export #
@@ -149,4 +149,14 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
     )
 
     add_dependencies(mag mag_copyright)
+
+    if (MAG_CODE_ANALYSIS)
+        set_target_properties(mag PROPERTIES
+                CXX_CLANG_TIDY
+                "clang-tidy;
+            -p=${CMAKE_BINARY_DIR};
+            --system-headers=0;
+            -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
+        )
+    endif ()
 endif ()
