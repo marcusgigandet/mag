@@ -54,11 +54,14 @@ if (NOT MAG_ENABLE_SIMD)
 else ()
     # Filter based on x86 and arm
     # Add more architectures if we add future support for something like RISC-V
-    if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm|aarch64|ARM64")
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|arm)")
+        set(MAG_PLATFORM_ARM TRUE CACHE BOOL "" FORCE)
+
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
     else ()
+        set(MAG_PLATFORM_X86 TRUE CACHE BOOL "" FORCE)
+
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
-        target_compile_options(mag PRIVATE -msse3 -msse4.1)
     endif ()
 endif ()
 ###################
@@ -84,12 +87,20 @@ target_compile_features(mag
         cxx_std_20
 )
 
-###########################
-# Add compile definitions #
-###########################
+#######################################
+# Add compile definitions and options #
+#######################################
 target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_ENABLE_SIMD}>:MAG_ENABLE_SIMD>
         $<$<BOOL:${MAG_ENABLE_SIMD_EXTENDED}>:MAG_ENABLE_SIMD_EXTENDED>
+        $<$<BOOL:${MAG_PLATFORM_ARM}>:MAG_PLATFORM_ARM>
+        $<$<BOOL:${MAG_PLATFORM_X86}>:MAG_PLATFORM_X86>
+)
+
+target_compile_options(mag PRIVATE
+        $<$<BOOL:${MAG_PLATFORM_X86}>:-msse2>
+        $<$<BOOL:${MAG_PLATFORM_X86}>:-msse3>
+        $<$<BOOL:${MAG_PLATFORM_X86}>:-msse4.1>
 )
 
 #####################
@@ -102,19 +113,19 @@ export(TARGETS mag FILE "${CMAKE_CURRENT_BINARY_DIR}/mag_targets.cmake")
 ###############
 if (MAG_BUILD_TESTS OR MAG_BUILD_BENCHMARKS)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/Catch2)
-endif()
+endif ()
 
 if (MAG_BUILD_TESTS)
     enable_testing()
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
-endif()
+endif ()
 
 ####################
 # Build benchmarks #
 ####################
 if (MAG_BUILD_BENCHMARKS)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/benchmarks)
-endif()
+endif ()
 
 #############
 # Dev tools #
