@@ -18,7 +18,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
                 "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
         )
     endif ()
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GCC")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 15)
         message(FATAL_ERROR
                 "GCC >= 15 is required. "
