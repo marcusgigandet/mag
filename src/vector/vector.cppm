@@ -38,6 +38,26 @@ namespace mag
 	export template <Numeric T, size_t N>
 	struct Vec;
 
+	export template <Numeric T, size_t N>
+	constexpr T length(const Vec<T, N>& v) noexcept
+	{
+#ifdef MAG_ENABLE_SIMD
+		if constexpr (simd::supports_mul<T, N> && simd::supports_hsum<T, N>)
+		{
+			using ops = simd::ops<T, N>;
+
+			auto simd_v = ops::load(v.v);
+			auto sq = ops::mul(simd_v, simd_v);
+
+			return std::sqrt(ops::hsum(sq));
+		}
+#endif
+		T ret{0};
+		for (size_t i = 0; i < N; ++i)
+			ret += v[i] * v[i];
+
+		return std::sqrt(ret);
+	}
 
 	export template <Numeric T, size_t N>
 	constexpr Vec<T, N> normalize(Vec<T, N> v)
@@ -50,7 +70,7 @@ namespace mag
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && simd::supports_multiplication<T, N>)
+		if constexpr (std::is_same_v<T, U> && simd::supports_mul<T, N>)
 		{
 			using ops = simd::ops<T, N>;
 
@@ -58,7 +78,7 @@ namespace mag
 			auto vb = ops::load(b.v);
 			auto vm = ops::mul(va, vb);
 
-			return static_cast<T>(ops::horizontal_sum(vm));
+			return static_cast<T>(ops::hsum(vm));
 		}
 #endif
 		using R = std::common_type_t<T, U>;
@@ -71,7 +91,7 @@ namespace mag
 	export template <Numeric T, size_t N>
 	constexpr T distance(const Vec<T, N>& a, const Vec<T, N>& b) noexcept
 	{
-		return (a - b).length();
+		return length(a - b);
 	}
 
 	export template <Numeric T, Numeric U, size_t N>
@@ -79,8 +99,8 @@ namespace mag
 	{
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && simd::supports_splat<T, N> &&
-					  simd::supports_add<T, N> && simd::supports_subtraction<T, N> &&
-					  simd::supports_multiplication<T, N>)
+					  simd::supports_add<T, N> && simd::supports_sub<T, N> &&
+					  simd::supports_mul<T, N>)
 		{
 			using ops = simd::ops<T, N>;
 
@@ -166,14 +186,167 @@ namespace mag
 		constexpr T& operator[](size_t i) noexcept { return derived().v[i]; }
 		constexpr const T& operator[](size_t i) const noexcept { return derived().v[i]; }
 
-		constexpr T length() const noexcept
+		template <Numeric U>
+		constexpr Vec<T, N>& operator+=(const Vec<U, N>& o) noexcept
 		{
-			T ret{0};
-			for (size_t i = 0; i < N; ++i)
-				ret += derived()[i] * derived()[i];
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (std::is_same_v<T, U> && simd::supports_add<T, N>)
+			{
+				using ops = simd::ops<T, N>;
 
-			return std::sqrt(ret);
+				auto va = ops::load(derived().v);
+				auto vb = ops::load(o.v);
+				auto vr = ops::add(va, vb);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] += o[i];
+			return derived();
 		}
+
+		template <Numeric U>
+		constexpr Vec<T, N>& operator-=(const Vec<U, N>& o) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (std::is_same_v<T, U> && simd::supports_sub<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto va = ops::load(derived().v);
+				auto vb = ops::load(o.v);
+				auto vr = ops::sub(va, vb);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] -= o[i];
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Vec<T, N>& operator*=(const Vec<U, N>& o) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (std::is_same_v<T, U> && simd::supports_mul<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto va = ops::load(derived().v);
+				auto vb = ops::load(o.v);
+				auto vr = ops::mul(va, vb);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] *= o[i];
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr Vec<T, N>& operator/=(const Vec<U, N>& o) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (std::is_same_v<T, U> && simd::supports_div<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto va = ops::load(derived().v);
+				auto vb = ops::load(o.v);
+				auto vr = ops::div(va, vb);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] /= o[i];
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator+=(const U& s) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_add<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto va = ops::load(derived().v);
+				auto vs = ops::splat(s);
+				auto vr = ops::add(va, vs);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] += s;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator-=(const U& s) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_sub<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto va = ops::load(derived().v);
+				auto vs = ops::splat(s);
+				auto vr = ops::sub(va, vs);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] -= s;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator*=(const U& s) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_mul<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto va = ops::load(derived().v);
+				auto vs = ops::splat(s);
+				auto vr = ops::mul(va, vs);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] *= s;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator/=(U s) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_div<T, N>)
+			{
+				using ops = simd::ops<T, N>;
+
+				auto va = ops::load(derived().v);
+				auto vs = ops::splat(s);
+				auto vr = ops::div(va, vs);
+				ops::store(derived().v, vr);
+				return derived();
+			}
+#endif
+			for (size_t i = 0; i < N; ++i)
+				derived()[i] /= s;
+			return derived();
+		}
+
+		constexpr T length() const noexcept { return mag::length(derived()); }
 
 		constexpr Derived normalized() const noexcept
 		{

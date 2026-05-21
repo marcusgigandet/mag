@@ -47,6 +47,9 @@ file(GLOB_RECURSE MODULES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
+file(GLOB_RECURSE HEADERS
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
+)
 
 # Remove unused code
 if (NOT MAG_ENABLE_SIMD)
@@ -67,7 +70,7 @@ endif ()
 ###################
 # Target: library #
 ###################
-add_library(mag)
+add_library(mag ${HEADERS})
 add_library(mag::mag ALIAS mag)
 
 target_sources(mag
@@ -79,6 +82,7 @@ target_sources(mag
 
 target_include_directories(mag
         PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor
 )
 

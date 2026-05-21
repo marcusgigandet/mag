@@ -16,13 +16,13 @@
 
 export module mag;
 
+export import :aliases;
 export import :concepts;
 export import :constants;
 export import :matrix;
 export import :matrix_3x3;
 export import :matrix_4x4;
 export import :matrix_ops;
-export import :type_defs;
 export import :vector;
 export import :vector_2;
 export import :vector_3;

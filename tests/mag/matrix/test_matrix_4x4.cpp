@@ -114,20 +114,17 @@ TEST_CASE("Mat4x4 arithmetic operations", "[Mat4x4]")
 
 	SECTION("Vector multiplication")
 	{
+		Vec<float, 4> expected{30.0f, 70.0f, 110.0f, 150.0f};
 		Vec<float, 4> v(1, 2, 3, 4);
 		auto r = a * v;
-		REQUIRE(r.x == Catch::Approx(30.0f));
-		REQUIRE(r.y == Catch::Approx(70.0f));
-		REQUIRE(r.z == Catch::Approx(110.0f));
-		REQUIRE(r.w == Catch::Approx(150.0f));
+		REQUIRE(r == expected);
 	}
 
 	SECTION("Compound assignment")
 	{
 		Mat4f c = a;
 		c += b;
-		REQUIRE(c[0][0] == Catch::Approx(17.0f));
-		REQUIRE(c[3][3] == Catch::Approx(17.0f));
+		REQUIRE(c == Mat4f(17.0f));
 
 		c -= a;
 		REQUIRE(c == b);

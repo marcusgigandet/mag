@@ -23,6 +23,9 @@ export module mag:matrix;
 import :concepts;
 import :vector;
 
+#ifdef MAG_ENABLE_SIMD
+import :simd_ops;
+#endif
 
 namespace mag
 {
@@ -128,6 +131,174 @@ namespace mag
 		constexpr T* data() noexcept { return &derived().m[0][0]; }
 		constexpr const T* data() const noexcept { return &derived().m[0][0]; }
 
+		template <Numeric U>
+		constexpr auto operator+=(U val) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_add<T, R> && simd::supports_splat<T, R>)
+			{
+				for (size_t c = 0; c < C; ++c)
+				{
+					auto va = simd::ops<T, R>::load(derived().m[c]);
+					auto vb = simd::ops<T, R>::splat(val);
+					auto rv = simd::ops<T, R>::add(va, vb);
+
+					simd::ops<T, R>::store(derived().m[c], rv);
+				}
+
+				return derived();
+			}
+#endif
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()(c, r) += val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator-=(U val) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_sub<T, R> && simd::supports_splat<T, R>)
+			{
+				for (size_t c = 0; c < C; ++c)
+				{
+					auto va = simd::ops<T, R>::load(derived().m[c]);
+					auto vb = simd::ops<T, R>::splat(val);
+					auto rv = simd::ops<T, R>::sub(va, vb);
+
+					simd::ops<T, R>::store(derived().m[c], rv);
+				}
+
+				return derived();
+			}
+#endif
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()(c, r) -= val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator*=(U val) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_mul<T, R> && simd::supports_splat<T, R>)
+			{
+				for (size_t c = 0; c < C; ++c)
+				{
+					auto va = simd::ops<T, R>::load(derived().m[c]);
+					auto vb = simd::ops<T, R>::splat(val);
+					auto rv = simd::ops<T, R>::mul(va, vb);
+
+					simd::ops<T, R>::store(derived().m[c], rv);
+				}
+
+				return derived();
+			}
+#endif
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()(c, r) *= val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator/=(U val) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_div<T, R> && simd::supports_splat<T, R>)
+			{
+				for (size_t c = 0; c < C; ++c)
+				{
+					auto va = simd::ops<T, R>::load(derived().m[c]);
+					auto vb = simd::ops<T, R>::splat(val);
+					auto rv = simd::ops<T, R>::div(va, vb);
+
+					simd::ops<T, R>::store(derived().m[c], rv);
+				}
+
+				return derived();
+			}
+#endif
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()(c, r) /= val;
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator+=(const Mat<U, C, R>& rhs) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_add<T, R>)
+			{
+				for (size_t c = 0; c < C; ++c)
+				{
+					auto va = simd::ops<T, R>::load(derived().m[c]);
+					auto vb = simd::ops<T, R>::load(rhs.m[c]);
+					auto rv = simd::ops<T, R>::add(va, vb);
+
+					simd::ops<T, R>::store(derived().m[c], rv);
+				}
+
+				return derived();
+			}
+#endif
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()(c, r) += rhs(c, r);
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator-=(const Mat<U, C, R>& rhs) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_sub<T, R>)
+			{
+				for (size_t c = 0; c < C; ++c)
+				{
+					auto va = simd::ops<T, R>::load(derived().m[c]);
+					auto vb = simd::ops<T, R>::load(rhs.m[c]);
+					auto rv = simd::ops<T, R>::sub(va, vb);
+
+					simd::ops<T, R>::store(derived().m[c], rv);
+				}
+
+				return derived();
+			}
+#endif
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()(c, r) -= rhs(c, r);
+			return derived();
+		}
+
+		template <Numeric U>
+		constexpr auto operator*=(const Mat<U, C, R>& rhs) noexcept
+		{
+#ifdef MAG_ENABLE_SIMD
+			if constexpr (simd::supports_sub<T, R>)
+			{
+				for (size_t c = 0; c < C; ++c)
+				{
+					auto va = simd::ops<T, R>::load(derived().m[c]);
+					auto vb = simd::ops<T, R>::load(rhs.m[c]);
+					auto rv = simd::ops<T, R>::mul(va, vb);
+
+					simd::ops<T, R>::store(derived().m[c], rv);
+				}
+
+				return derived();
+			}
+#endif
+			for (size_t c = 0; c < C; ++c)
+				for (size_t r = 0; r < R; ++r)
+					derived()(c, r) *= rhs(c, r);
+			return derived();
+		}
+
 		/**
 		 * @brief Returns the transpose of the matrix.
 		 *
@@ -215,13 +386,13 @@ namespace mag
 	export template <Numeric T, size_t C, size_t R>
 	struct Mat : IMat<Mat<T, C, R>, T, C, R>
 	{
-		T v[C][R];
+		T m[C][R];
 
 		constexpr Mat() noexcept
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					v(c, r) = static_cast<T>(0);
+					m(c, r) = static_cast<T>(0);
 		}
 
 		template <Numeric U>
@@ -229,7 +400,7 @@ namespace mag
 		{
 			for (size_t c = 0; c < C; ++c)
 				for (size_t r = 0; r < R; ++r)
-					v(c, r) = static_cast<T>(val);
+					m(c, r) = static_cast<T>(val);
 		}
 	};
 } // namespace mag

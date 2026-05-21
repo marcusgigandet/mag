@@ -2,50 +2,84 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <glm/glm.hpp>
+
 #include <vector>
 
 import mag;
+
 using namespace mag;
 
-TEST_CASE("Benchmark basic 3D vector workloads", "[benchmark]")
+namespace
 {
-	static constexpr std::size_t N = 1'000'000;
+	constexpr std::size_t N{1'000'000};
+	constexpr std::size_t ITERATIONS{32};
 
-	std::vector<Vec<float, 3>> a(N, {1.0f, 2.0f, 3.0f});
-	std::vector<Vec<float, 3>> b(N, {4.0f, 5.0f, 6.0f});
+	std::vector<Vec3f> a(N);
+	std::vector<Vec3f> b(N);
 
-	std::vector<glm::vec3> glm_a(N, {1.0f, 2.0f, 3.0f});
-	std::vector<glm::vec3> glm_b(N, {4.0f, 5.0f, 6.0f});
+	std::vector<glm::vec3> glm_a(N);
+	std::vector<glm::vec3> glm_b(N);
 
-	BENCHMARK("3D vector add")
+	void initializeData()
 	{
-		std::vector<Vec<float, 3>> c;
-		c.reserve(N);
-
 		for (std::size_t i = 0; i < N; ++i)
 		{
-			const auto& va = a[i];
-			const auto& vb = b[i];
+			const float x{static_cast<float>(i) * 0.001f};
 
-			c.emplace_back(va.x + vb.x, va.y + vb.y, va.z + vb.z);
+			a[i] = Vec3f(x, x + 1.0f, x + 2.0f);
+			b[i] = Vec3f(x + 4.0f, x + 5.0f, x + 6.0f);
+
+			glm_a[i] = glm::vec3(x, x + 1.0f, x + 2.0f);
+			glm_b[i] = glm::vec3(x + 4.0f, x + 5.0f, x + 6.0f);
+		}
+	}
+
+	float sink{0.0f};
+} // namespace
+
+TEST_CASE("Benchmark - Vec3 workloads", "[benchmark]")
+{
+	initializeData();
+
+	BENCHMARK("mag - Vec3 workload 1")
+	{
+		Vec<float, 3> accum{0.0f};
+
+		for (std::size_t iter = 0; iter < ITERATIONS; ++iter)
+		{
+			for (std::size_t i = 0; i < N; ++i)
+			{
+				auto v{a[i] * 0.5f + b[i] * 1.5f};
+				const auto len{v.length()};
+
+				v /= len;
+				accum += v * 0.25f;
+			}
 		}
 
-		return c;
+		sink = accum.x + accum.y + accum.z;
+
+		return sink;
 	};
 
-	BENCHMARK("3D glm vector add")
+	BENCHMARK("glm - Vec3 workload 1")
 	{
-		std::vector<glm::vec3> c;
-		c.reserve(N);
+		glm::vec3 accum{0.0f};
 
-		for (std::size_t i = 0; i < N; ++i)
+		for (std::size_t iter = 0; iter < ITERATIONS; ++iter)
 		{
-			const auto& va = glm_a[i];
-			const auto& vb = glm_b[i];
+			for (std::size_t i = 0; i < N; ++i)
+			{
+				auto v{glm_a[i] * 0.5f + glm_b[i] * 1.5f};
+				const float len{glm::length(v)};
 
-			c.emplace_back(va.x + vb.x, va.y + vb.y, va.z + vb.z);
+				v /= len;
+				accum += v * 0.25f;
+			}
 		}
 
-		return c;
+		sink = accum.x + accum.y + accum.z;
+
+		return sink;
 	};
 }

@@ -41,69 +41,6 @@ export namespace mag
 	}
 
 	template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator+=(Mat<T, C, R>& a, U val) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				a(c, r) += val;
-		return a;
-	}
-
-	template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator-=(Mat<T, C, R>& a, U val) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				a(c, r) -= val;
-		return a;
-	}
-
-	template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator*=(Mat<T, C, R>& a, U val) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				a(c, r) *= val;
-		return a;
-	}
-
-	template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator/=(Mat<T, C, R>& a, U val) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				a(c, r) /= val;
-		return a;
-	}
-
-	template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator+=(Mat<T, C, R>& lhs, Mat<U, C, R>& rhs) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				lhs(c, r) += rhs(c, r);
-		return lhs;
-	}
-
-	template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator-=(Mat<T, C, R>& lhs, Mat<U, C, R>& rhs) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				lhs(c, r) -= rhs(c, r);
-		return lhs;
-	}
-
-	template <Numeric T, Numeric U, size_t R, size_t C>
-	constexpr auto operator*=(Mat<T, C, R>& lhs, Mat<U, C, R>& rhs) noexcept
-	{
-		for (size_t c = 0; c < C; ++c)
-			for (size_t r = 0; r < R; ++r)
-				lhs(c, r) *= rhs(c, r);
-		return lhs;
-	}
-
-	template <Numeric T, Numeric U, size_t R, size_t C>
 	constexpr auto operator+(const Mat<T, C, R>& a, U val) noexcept
 	{
 		Mat<std::common_type_t<T, U>, R, C> ret;
