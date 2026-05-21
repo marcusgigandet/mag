@@ -9,49 +9,50 @@ import mag;
 
 using namespace mag;
 
-constexpr std::size_t N{1'000'000};
-constexpr std::size_t ITERATIONS{32};
-
-alignas(64) std::vector<Vec<float, 4>> a(N);
-alignas(64) std::vector<Vec<float, 4>> b(N);
-
-alignas(64) std::vector<glm::vec4> glm_a(N);
-alignas(64) std::vector<glm::vec4> glm_b(N);
-
-void initialize_data()
+namespace
 {
-	for (std::size_t i = 0; i < N; ++i)
+	constexpr std::size_t N{1'000'000};
+	constexpr std::size_t ITERATIONS{32};
+
+	std::vector<Vec4f> a(N);
+	std::vector<Vec4f> b(N);
+
+	std::vector<glm::vec4> glm_a(N);
+	std::vector<glm::vec4> glm_b(N);
+
+	void initializeData()
 	{
-		const float x{static_cast<float>(i) * 0.001f};
+		for (std::size_t i = 0; i < N; ++i)
+		{
+			const float x{static_cast<float>(i) * 0.001f};
 
-		a[i] = Vec<float, 4>(x, x + 1.0f, x + 2.0f, x + 3.0f);
-		b[i] = Vec<float, 4>(x + 4.0f, x + 5.0f, x + 6.0f, x + 7.0f);
+			a[i] = Vec4f(x, x + 1.0f, x + 2.0f, x + 3.0f);
+			b[i] = Vec4f(x + 4.0f, x + 5.0f, x + 6.0f, x + 7.0f);
 
-		glm_a[i] = glm::vec4(x, x + 1.0f, x + 2.0f, x + 3.0f);
-		glm_b[i] = glm::vec4(x + 4.0f, x + 5.0f, x + 6.0f, x + 7.0f);
+			glm_a[i] = glm::vec4(x, x + 1.0f, x + 2.0f, x + 3.0f);
+			glm_b[i] = glm::vec4(x + 4.0f, x + 5.0f, x + 6.0f, x + 7.0f);
+		}
 	}
-}
 
-volatile float sink{0.0f};
+	float sink{0.0f};
+} // namespace
 
-TEST_CASE("Benchmark intensive SIMD vector workloads", "[benchmark]")
+TEST_CASE("Benchmark - Vec4 workloads", "[benchmark]")
 {
-	initialize_data();
+	initializeData();
 
-	BENCHMARK("mag fused vector workload")
+	BENCHMARK("mag - Vec4 workload 1")
 	{
-		Vec<float, 4> accum(0.0f);
+		Vec<float, 4> accum{0.0f};
 
 		for (std::size_t iter = 0; iter < ITERATIONS; ++iter)
 		{
 			for (std::size_t i = 0; i < N; ++i)
 			{
-				auto v = a[i] * 0.5f + b[i] * 1.5f;
-
-				const auto len = v.length();
+				auto v{a[i] * 0.5f + b[i] * 1.5f};
+				const auto len{v.length()};
 
 				v /= len;
-
 				accum += v * 0.25f;
 			}
 		}
@@ -61,20 +62,18 @@ TEST_CASE("Benchmark intensive SIMD vector workloads", "[benchmark]")
 		return sink;
 	};
 
-	BENCHMARK("glm fused vector workload")
+	BENCHMARK("glm - Vec4 workload 1")
 	{
-		glm::vec4 accum(0.0f);
+		glm::vec4 accum{0.0f};
 
 		for (std::size_t iter = 0; iter < ITERATIONS; ++iter)
 		{
 			for (std::size_t i = 0; i < N; ++i)
 			{
-				auto v = glm_a[i] * 0.5f + glm_b[i] * 1.5f;
-
-				const float len = glm::length(v);
+				auto v{glm_a[i] * 0.5f + glm_b[i] * 1.5f};
+				const float len{glm::length(v)};
 
 				v /= len;
-
 				accum += v * 0.25f;
 			}
 		}
