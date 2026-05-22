@@ -16,6 +16,7 @@
 
 module;
 #include "typedefs.hpp"
+#include <cstddef>
 #include <span>
 export module mag:simd;
 
