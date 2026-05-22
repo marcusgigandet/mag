@@ -15,11 +15,12 @@
  */
 
 module;
-#include <concepts>
 #include <cstddef>
 export module mag:simd_ops;
 
-export namespace mag::simd
+import :concepts;
+
+export namespace mag
 {
 	/**
 	 * @brief SIMD backend operations interface.
@@ -31,13 +32,13 @@ export namespace mag::simd
 	 * @tparam T Scalar element type.
 	 * @tparam N SIMD lane count.
 	 */
-	template <typename T, size_t N>
+	template <Numeric T, size_t N>
 	struct ops
 	{
 		/**
 		 * @brief Underlying SIMD register type for this backend.
 		 */
-		using simd_t = T;
+		using native_t = T;
 
 		/**
 		 * @brief Loads N elements from memory into a SIMD register.
@@ -45,8 +46,7 @@ export namespace mag::simd
 		 * @param p Pointer to input array of at least N elements.
 		 * @return SIMD register containing loaded values.
 		 */
-		static simd_t load(const T* p) noexcept = delete;
-
+		static native_t load(const T* p) noexcept = delete;
 
 		/**
 		 * @brief Stores SIMD register values back to memory.
@@ -54,7 +54,7 @@ export namespace mag::simd
 		 * @param p Pointer to output array of at least N elements.
 		 * @param v SIMD register to store.
 		 */
-		static void store(T* p, simd_t v) noexcept = delete;
+		static void store(T* p, native_t v) noexcept = delete;
 
 		/**
 		 * @brief Broadcasts a scalar value across all SIMD lanes.
@@ -62,7 +62,7 @@ export namespace mag::simd
 		 * @param s Scalar value to replicate.
 		 * @return SIMD register with all lanes set to s.
 		 */
-		static simd_t splat(T s) noexcept = delete;
+		static native_t splat(T s) noexcept = delete;
 
 		/**
 		 * @brief Performs element-wise addition of two SIMD registers.
@@ -71,7 +71,7 @@ export namespace mag::simd
 		 * @param b Second operand.
 		 * @return Result of a + b.
 		 */
-		static simd_t add(simd_t a, simd_t b) noexcept = delete;
+		static native_t add(native_t a, native_t b) noexcept = delete;
 
 		/**
 		 * @brief Performs element-wise subtraction of two SIMD registers.
@@ -80,7 +80,7 @@ export namespace mag::simd
 		 * @param b Second operand.
 		 * @return Result of a - b.
 		 */
-		static simd_t sub(simd_t a, simd_t b) noexcept = delete;
+		static native_t sub(native_t a, native_t b) noexcept = delete;
 
 		/**
 		 * @brief Performs element-wise multiplication of two SIMD registers.
@@ -89,7 +89,7 @@ export namespace mag::simd
 		 * @param b Second operand.
 		 * @return Result of a * b.
 		 */
-		static simd_t mul(simd_t a, simd_t b) noexcept = delete;
+		static native_t mul(native_t a, native_t b) noexcept = delete;
 
 		/**
 		 * @brief Performs element-wise division of two SIMD registers.
@@ -98,7 +98,7 @@ export namespace mag::simd
 		 * @param b Second operand.
 		 * @return Result of a / b.
 		 */
-		static simd_t div(simd_t a, simd_t b) noexcept = delete;
+		static native_t div(native_t a, native_t b) noexcept = delete;
 
 		/**
 		 * @brief Reduces a SIMD register to a single scalar by summing all lanes.
@@ -106,46 +106,6 @@ export namespace mag::simd
 		 * @param v SIMD register to reduce.
 		 * @return Sum of all elements in v.
 		 */
-		static T hsum(simd_t v) noexcept = delete;
+		static T hsum(native_t v) noexcept = delete;
 	};
-
-	template <typename T, size_t N>
-	concept loadable = requires(const T* p) {
-		{ ops<T, N>::load(p) } -> std::same_as<typename ops<T, N>::simd_t>;
-	};
-
-	template <typename T, size_t N>
-	concept storable = requires(T* p, typename ops<T, N>::simd_t v) {
-		{ ops<T, N>::store(p, v) } -> std::same_as<void>;
-	};
-
-	template <typename T, size_t N>
-	concept supports_splat = requires(T s) {
-		{ ops<T, N>::splat(s) } -> std::same_as<typename ops<T, N>::simd_t>;
-	};
-
-	template <typename T, size_t N>
-	concept supports_add = requires(typename ops<T, N>::simd_t a, typename ops<T, N>::simd_t b) {
-		{ ops<T, N>::add(a, b) } -> std::same_as<typename ops<T, N>::simd_t>;
-	};
-
-	template <typename T, size_t N>
-	concept supports_sub = requires(typename ops<T, N>::simd_t a, typename ops<T, N>::simd_t b) {
-		{ ops<T, N>::sub(a, b) } -> std::same_as<typename ops<T, N>::simd_t>;
-	};
-
-	template <typename T, size_t N>
-	concept supports_mul = requires(typename ops<T, N>::simd_t a, typename ops<T, N>::simd_t b) {
-		{ ops<T, N>::mul(a, b) } -> std::same_as<typename ops<T, N>::simd_t>;
-	};
-
-	template <typename T, size_t N>
-	concept supports_div = requires(typename ops<T, N>::simd_t a, typename ops<T, N>::simd_t b) {
-		{ ops<T, N>::div(a, b) } -> std::same_as<typename ops<T, N>::simd_t>;
-	};
-
-	template <typename T, size_t N>
-	concept supports_hsum = requires(typename ops<T, N>::simd_t v) {
-		{ ops<T, N>::hsum(v) } -> std::same_as<T>;
-	};
-} // namespace mag::simd
+} // namespace mag

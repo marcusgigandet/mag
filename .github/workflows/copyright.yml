@@ -2,7 +2,8 @@ name: Verify Copyright Headers
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   call-verify-copyright:

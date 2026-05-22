@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [llvm-clang]
+        compiler: [clang]
 
     runs-on: macos-26
 
@@ -27,7 +27,7 @@ jobs:
 
       - name: Configure compiler
         run: |
-          if [ "${{ matrix.compiler }}" = "llvm-clang" ]; then
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
             echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
             echo "CC=clang" >> $GITHUB_ENV
             echo "CXX=clang++" >> $GITHUB_ENV

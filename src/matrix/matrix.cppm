@@ -135,15 +135,15 @@ namespace mag
 		constexpr auto operator+=(U val) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (simd::supports_add<T, R> && simd::supports_splat<T, R>)
+			if constexpr (supports_add<T, R> && supports_splat<T, R>)
 			{
 				for (size_t c = 0; c < C; ++c)
 				{
-					auto va = simd::ops<T, R>::load(derived().m[c]);
-					auto vb = simd::ops<T, R>::splat(val);
-					auto rv = simd::ops<T, R>::add(va, vb);
+					auto va = ops<T, R>::load(derived().m[c]);
+					auto vb = ops<T, R>::splat(val);
+					auto rv = ops<T, R>::add(va, vb);
 
-					simd::ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], rv);
 				}
 
 				return derived();
@@ -159,15 +159,15 @@ namespace mag
 		constexpr auto operator-=(U val) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (simd::supports_sub<T, R> && simd::supports_splat<T, R>)
+			if constexpr (supports_sub<T, R> && supports_splat<T, R>)
 			{
 				for (size_t c = 0; c < C; ++c)
 				{
-					auto va = simd::ops<T, R>::load(derived().m[c]);
-					auto vb = simd::ops<T, R>::splat(val);
-					auto rv = simd::ops<T, R>::sub(va, vb);
+					auto va = ops<T, R>::load(derived().m[c]);
+					auto vb = ops<T, R>::splat(val);
+					auto rv = ops<T, R>::sub(va, vb);
 
-					simd::ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], rv);
 				}
 
 				return derived();
@@ -183,15 +183,15 @@ namespace mag
 		constexpr auto operator*=(U val) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (simd::supports_mul<T, R> && simd::supports_splat<T, R>)
+			if constexpr (supports_mul<T, R> && supports_splat<T, R>)
 			{
 				for (size_t c = 0; c < C; ++c)
 				{
-					auto va = simd::ops<T, R>::load(derived().m[c]);
-					auto vb = simd::ops<T, R>::splat(val);
-					auto rv = simd::ops<T, R>::mul(va, vb);
+					auto va = ops<T, R>::load(derived().m[c]);
+					auto vb = ops<T, R>::splat(val);
+					auto rv = ops<T, R>::mul(va, vb);
 
-					simd::ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], rv);
 				}
 
 				return derived();
@@ -207,15 +207,15 @@ namespace mag
 		constexpr auto operator/=(U val) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (simd::supports_div<T, R> && simd::supports_splat<T, R>)
+			if constexpr (supports_div<T, R> && supports_splat<T, R>)
 			{
 				for (size_t c = 0; c < C; ++c)
 				{
-					auto va = simd::ops<T, R>::load(derived().m[c]);
-					auto vb = simd::ops<T, R>::splat(val);
-					auto rv = simd::ops<T, R>::div(va, vb);
+					auto va = ops<T, R>::load(derived().m[c]);
+					auto vb = ops<T, R>::splat(val);
+					auto rv = ops<T, R>::div(va, vb);
 
-					simd::ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], rv);
 				}
 
 				return derived();
@@ -231,15 +231,15 @@ namespace mag
 		constexpr auto operator+=(const Mat<U, C, R>& rhs) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (simd::supports_add<T, R>)
+			if constexpr (supports_add<T, R>)
 			{
 				for (size_t c = 0; c < C; ++c)
 				{
-					auto va = simd::ops<T, R>::load(derived().m[c]);
-					auto vb = simd::ops<T, R>::load(rhs.m[c]);
-					auto rv = simd::ops<T, R>::add(va, vb);
+					auto va = ops<T, R>::load(derived().m[c]);
+					auto vb = ops<T, R>::load(rhs.m[c]);
+					auto rv = ops<T, R>::add(va, vb);
 
-					simd::ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], rv);
 				}
 
 				return derived();
@@ -255,15 +255,15 @@ namespace mag
 		constexpr auto operator-=(const Mat<U, C, R>& rhs) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (simd::supports_sub<T, R>)
+			if constexpr (supports_sub<T, R>)
 			{
 				for (size_t c = 0; c < C; ++c)
 				{
-					auto va = simd::ops<T, R>::load(derived().m[c]);
-					auto vb = simd::ops<T, R>::load(rhs.m[c]);
-					auto rv = simd::ops<T, R>::sub(va, vb);
+					auto va = ops<T, R>::load(derived().m[c]);
+					auto vb = ops<T, R>::load(rhs.m[c]);
+					auto rv = ops<T, R>::sub(va, vb);
 
-					simd::ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], rv);
 				}
 
 				return derived();
@@ -279,15 +279,15 @@ namespace mag
 		constexpr auto operator*=(const Mat<U, C, R>& rhs) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (simd::supports_sub<T, R>)
+			if constexpr (supports_sub<T, R>)
 			{
 				for (size_t c = 0; c < C; ++c)
 				{
-					auto va = simd::ops<T, R>::load(derived().m[c]);
-					auto vb = simd::ops<T, R>::load(rhs.m[c]);
-					auto rv = simd::ops<T, R>::mul(va, vb);
+					auto va = ops<T, R>::load(derived().m[c]);
+					auto vb = ops<T, R>::load(rhs.m[c]);
+					auto rv = ops<T, R>::mul(va, vb);
 
-					simd::ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], rv);
 				}
 
 				return derived();

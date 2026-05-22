@@ -30,12 +30,5 @@ export import :vector_4;
 export import :vector_ops;
 
 #ifdef MAG_ENABLE_SIMD
-export import :simd_ops;
-
-#ifdef MAG_NEON_SIMD
-export import :neon_ops;
-#elif MAG_X86_SIMD
-export import :x86_ops;
-#endif
-
+export import :simd;
 #endif

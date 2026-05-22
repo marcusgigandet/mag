@@ -135,7 +135,7 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
 
     enforce_clang_format(
             TARGET ${PROJECT_NAME}
-            FILES ${MODULES} ${TEST_SOURCES}
+            FILES ${MODULES} ${TEST_SOURCES} ${HEADERS}
     )
     enforce_copyright(
             TARGET ${PROJECT_NAME}
@@ -146,18 +146,6 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
             TARGET ${PROJECT_NAME}
             DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
     )
-
-    add_custom_target(mag_copyright
-            COMMAND python3
-            "${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/scripts/copyright/copyright.py"
-            --config "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
-            --directory "${CMAKE_CURRENT_SOURCE_DIR}/src"
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMENT "Syncing copyright headers with Git history"
-            VERBATIM
-    )
-
-    add_dependencies(mag mag_copyright)
 
     if (MAG_CODE_ANALYSIS)
         set_target_properties(mag PROPERTIES
