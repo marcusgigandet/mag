@@ -9,7 +9,7 @@ using namespace mag;
 
 namespace
 {
-	constexpr Vec4f toVec(f32x4& v)
+	constexpr Vec4f toVec(const f32x4& v)
 	{
 		Vec4f out{};
 		v.store(out.v);
@@ -81,7 +81,7 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 	SECTION("load from span")
 	{
 		float data[4]{5.0f, 6.0f, 7.0f, 8.0f};
-		std::span<float, 4> s{data};
+		std::span s{data};
 
 		f32x4 c;
 		c.load(s);
@@ -91,7 +91,8 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 
 	SECTION("store to pointer")
 	{
-		f32x4 c{5.0f, 6.0f, 7.0f, 8.0f};
+		// Check that convertable types are allowed
+		f32x4 c{5.0f, 6.0f, 7.0, 8.0};
 
 		std::array<float, 4> out{};
 		c.store(out.data());

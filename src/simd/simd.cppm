@@ -36,7 +36,7 @@ namespace mag
 	/**
 	 * @brief SIMD interface.
 	 *
-	 * Provides the primitive SIMD operations for a given type and width.
+	 * Provides the primitive SIMD operations for a given type and lane count.
 	 *
 	 * @tparam T Scalar element type.
 	 * @tparam N SIMD lane count.
@@ -50,32 +50,52 @@ namespace mag
 	public:
 		Simd() noexcept = default;
 
-		explicit Simd(const T data)
-			requires(supports_splat<T, N>)
-			: m_data(ops<T, N>::splat(data))
-		{
-		}
+		/**
+		 * @brief Broadcasts a scalar value across all SIMD lanes.
+		 *
+		 * @param s Scalar value to replicate.
+		 */
+		explicit Simd(const T s) : m_data(ops<T, N>::splat(s)) {}
 
-		explicit Simd(const std::span<T, N> data)
-			requires(supports_splat<T, N>)
-			: m_data(ops<T, N>::splat(data))
-		{
-		}
+		/**
+		 * @brief Uploads a span of N elements to the SIMD register.
+		 *
+		 * @param data Data being uploaded.
+		 */
+		explicit Simd(const std::span<T, N> data) : m_data(ops<T, N>::load(data)) {}
 
-		explicit Simd(const T* ptr)
-			requires(loadable<T, N>)
-			: m_data(ops<T, N>::load(ptr))
-		{
-		}
+		/**
+		 * @brief Uploads N elements from memory into a SIMD register
+		 *
+		 * @param ptr Must be a valid pointer containing N elements of T.
+		 *
+		 * @note This method is unsafe and will result in an error if an incorrectly sized ptr is
+		 * provided.
+		 */
+		explicit Simd(const T* ptr) : m_data(ops<T, N>::load(ptr)) {}
 
+		/**
+		 * @brief Loads N unique elements into a SIMD register.
+		 *
+		 * Initializes each lane of the SIMD register with the corresponding
+		 * argument value.
+		 *
+		 * @tparam Args Types of the values used to initialize the SIMD lanes.
+		 * @param args Values to load into the SIMD register lanes.
+		 */
 		template <typename... Args>
-			requires(sizeof...(Args) == N) && (std::same_as<Args, T> && ...)
+			requires(sizeof...(Args) == N) && (std::convertible_to<Args, T> && ...)
 		explicit Simd(Args... args) noexcept
 		{
 			alignas(alignof(T)) T tmp[N]{static_cast<T>(args)...};
 			m_data = ops<T, N>::load(tmp);
 		}
 
+		/**
+		 * @brief Copies data from a native simd type.
+		 *
+		 * @param data Native simd type being copied.
+		 */
 		explicit Simd(const ops<T, N>::native_t data) : m_data(data) {}
 
 		Simd(const Simd&) noexcept = default;
@@ -105,7 +125,7 @@ namespace mag
 		}
 
 		MAG_INLINE Simd operator+=(const Simd o)
-			requires supports_sub<T, N>
+			requires supports_add<T, N>
 		{
 			return m_data = *this + o;
 		}
@@ -115,12 +135,12 @@ namespace mag
 			return m_data = *this - o;
 		}
 		MAG_INLINE Simd operator*=(const Simd o)
-			requires supports_sub<T, N>
+			requires supports_mul<T, N>
 		{
 			return m_data = *this * o;
 		}
 		MAG_INLINE Simd operator/=(const Simd o)
-			requires supports_sub<T, N>
+			requires supports_div<T, N>
 		{
 			return m_data = *this / o;
 		}
@@ -141,19 +161,40 @@ namespace mag
 		 *
 		 * @param s Scalar value to replicate.
 		 */
-		MAG_INLINE void splat(T s) noexcept { m_data = ops<T, N>::splat(s); }
+		MAG_INLINE void splat(T s) noexcept
+			requires supports_splat<T, N>
+		{
+			m_data = ops<T, N>::splat(s);
+		}
 
 		/**
-		 * @brief Loads N elements from memory into a SIMD register.
+		 * @brief Loads N elements from a span of memory into a SIMD register.
 		 *
 		 * @param data Span of data containing data to load into SIMD register.
 		 */
 		MAG_INLINE void load(const std::span<T, N> data) { m_data = ops<T, N>::load(data.data()); }
 
+		/**
+		 * @brief Loads N elements from memory into a SIMD register
+		 *
+		 * @param ptr Must be a valid pointer containing N elements of T.
+		 *
+		 * @note This method is unsafe and will result in an error if an incorrectly sized ptr is
+		 * provided.
+		 */
 		MAG_INLINE void load(const T* ptr) { m_data = ops<T, N>::load(ptr); }
 
+		/**
+		 * @brief Loads N unique elements into a SIMD register.
+		 *
+		 * Initializes each lane of the SIMD register with the corresponding
+		 * argument value.
+		 *
+		 * @tparam Args Types of the values used to initialize the SIMD lanes.
+		 * @param args Values to load into the SIMD register lanes.
+		 */
 		template <typename... Args>
-			requires(sizeof...(Args) == N) && (std::same_as<Args, T> && ...)
+			requires(sizeof...(Args) == N) && (std::convertible_to<Args, T> && ...)
 		MAG_INLINE void load(Args... args) noexcept
 		{
 			alignas(alignof(T)) T tmp[N]{static_cast<T>(args)...};
@@ -170,7 +211,7 @@ namespace mag
 		/**
 		 * @brief Stores SIMD register values back to memory.
 		 *
-		 * @param dst Span of data to write SIMD registers to.
+		 * @param dst Data to write SIMD registers to.
 		 */
 		MAG_INLINE void store(T* dst) const { ops<T, N>::store(dst, m_data); }
 	};

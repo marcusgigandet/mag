@@ -24,16 +24,6 @@ import :simd_ops;
 namespace mag
 {
 	template <typename T, size_t N>
-	concept loadable = requires(const T* p) {
-		{ ops<T, N>::load(p) } -> std::same_as<typename ops<T, N>::native_t>;
-	};
-
-	template <typename T, size_t N>
-	concept storable = requires(T* p, typename ops<T, N>::native_t v) {
-		{ ops<T, N>::store(p, v) } -> std::same_as<void>;
-	};
-
-	template <typename T, size_t N>
 	concept supports_splat = requires(T s) {
 		{ ops<T, N>::splat(s) } -> std::same_as<typename ops<T, N>::native_t>;
 	};
