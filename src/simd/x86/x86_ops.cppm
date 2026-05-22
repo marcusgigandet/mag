@@ -16,8 +16,8 @@
 
 module;
 #include "typedefs.hpp"
-#include <immintrin.h>
 #include <cstdint>
+#include <immintrin.h>
 export module mag:x86_ops;
 
 import :simd_ops;
@@ -47,8 +47,14 @@ namespace mag
 
 		MAG_INLINE static native_t splat(int8_t s) noexcept { return _mm_set1_epi8(s); }
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi8(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi8(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi8(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi8(a, b);
+		}
 
 		MAG_INLINE static int8_t hsum(const native_t v) noexcept
 		{
@@ -73,8 +79,14 @@ namespace mag
 
 		MAG_INLINE static native_t splat(int16_t s) noexcept { return _mm_set1_epi16(s); }
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi16(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi16(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi16(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi16(a, b);
+		}
 
 		MAG_INLINE static int16_t hsum(const native_t v) noexcept
 		{
@@ -99,8 +111,14 @@ namespace mag
 
 		MAG_INLINE static native_t splat(int32_t s) noexcept { return _mm_set1_epi32(s); }
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi32(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi32(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi32(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi32(a, b);
+		}
 
 		MAG_INLINE static int32_t hsum(const native_t v) noexcept
 		{
@@ -125,8 +143,14 @@ namespace mag
 
 		MAG_INLINE static native_t splat(int64_t s) noexcept { return _mm_set1_epi64x(s); }
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi64(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi64(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi64(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi64(a, b);
+		}
 
 		MAG_INLINE static int64_t hsum(const native_t v) noexcept
 		{
@@ -149,10 +173,19 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(uint8_t s) noexcept { return _mm_set1_epi8(static_cast<char>(s)); }
+		MAG_INLINE static native_t splat(uint8_t s) noexcept
+		{
+			return _mm_set1_epi8(static_cast<char>(s));
+		}
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi8(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi8(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi8(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi8(a, b);
+		}
 
 		MAG_INLINE static uint8_t hsum(const native_t v) noexcept
 		{
@@ -175,10 +208,19 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(uint16_t s) noexcept { return _mm_set1_epi16(static_cast<short>(s)); }
+		MAG_INLINE static native_t splat(uint16_t s) noexcept
+		{
+			return _mm_set1_epi16(static_cast<short>(s));
+		}
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi16(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi16(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi16(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi16(a, b);
+		}
 
 		MAG_INLINE static uint16_t hsum(const native_t v) noexcept
 		{
@@ -202,10 +244,19 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(uint32_t s) noexcept { return _mm_set1_epi32(static_cast<int>(s)); }
+		MAG_INLINE static native_t splat(uint32_t s) noexcept
+		{
+			return _mm_set1_epi32(static_cast<int>(s));
+		}
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi32(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi32(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi32(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi32(a, b);
+		}
 
 		MAG_INLINE static uint32_t hsum(const native_t v) noexcept
 		{
@@ -234,8 +285,14 @@ namespace mag
 			return _mm_set1_epi64x(static_cast<long long>(s));
 		}
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_epi64(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_epi64(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_epi64(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_epi64(a, b);
+		}
 
 		MAG_INLINE static uint64_t hsum(const native_t v) noexcept
 		{
@@ -254,10 +311,22 @@ namespace mag
 
 		MAG_INLINE static native_t splat(const float s) noexcept { return _mm_set1_ps(s); }
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_ps(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_ps(a, b); }
-		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept { return _mm_mul_ps(a, b); }
-		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept { return _mm_div_ps(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_ps(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_ps(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mul_ps(a, b);
+		}
+		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
+		{
+			return _mm_div_ps(a, b);
+		}
 
 		MAG_INLINE static float hsum(const native_t v) noexcept
 		{
@@ -276,16 +345,28 @@ namespace mag
 
 		MAG_INLINE static native_t splat(const double s) noexcept { return _mm_set1_pd(s); }
 
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept { return _mm_add_pd(a, b); }
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept { return _mm_sub_pd(a, b); }
-		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept { return _mm_mul_pd(a, b); }
-		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept { return _mm_div_pd(a, b); }
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_pd(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_pd(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mul_pd(a, b);
+		}
+		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
+		{
+			return _mm_div_pd(a, b);
+		}
 
 		MAG_INLINE static double hsum(const native_t v) noexcept
 		{
 			return _mm_cvtsd_f64(_mm_hadd_pd(v, v));
 		}
 	};
-} // namespace mag::simd
+} // namespace mag
 
 MAG_DIAG_POP

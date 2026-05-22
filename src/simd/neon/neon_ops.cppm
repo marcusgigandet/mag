@@ -17,6 +17,7 @@
 module;
 #include "typedefs.hpp"
 #include <arm_neon.h>
+#include <cstdint>
 export module mag:neon_ops;
 
 import :simd_ops;

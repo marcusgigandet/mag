@@ -23,9 +23,9 @@ export import :simd_concepts;
 export import :simd_ops;
 
 #ifdef MAG_NEON_SIMD
-import :neon_ops;
+export import :neon_ops;
 #elif MAG_X86_SIMD
-import :x86_ops;
+export import :x86_ops;
 #endif
 
 import :concepts;
