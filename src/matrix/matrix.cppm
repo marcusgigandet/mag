@@ -141,9 +141,7 @@ namespace mag
 				{
 					auto va = ops<T, R>::load(derived().m[c]);
 					auto vb = ops<T, R>::splat(val);
-					auto rv = ops<T, R>::add(va, vb);
-
-					ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], va + vb);
 				}
 
 				return derived();
@@ -165,9 +163,7 @@ namespace mag
 				{
 					auto va = ops<T, R>::load(derived().m[c]);
 					auto vb = ops<T, R>::splat(val);
-					auto rv = ops<T, R>::sub(va, vb);
-
-					ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], va - vb);
 				}
 
 				return derived();
@@ -189,9 +185,7 @@ namespace mag
 				{
 					auto va = ops<T, R>::load(derived().m[c]);
 					auto vb = ops<T, R>::splat(val);
-					auto rv = ops<T, R>::mul(va, vb);
-
-					ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], va * vb);
 				}
 
 				return derived();
@@ -213,9 +207,7 @@ namespace mag
 				{
 					auto va = ops<T, R>::load(derived().m[c]);
 					auto vb = ops<T, R>::splat(val);
-					auto rv = ops<T, R>::div(va, vb);
-
-					ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], va / vb);
 				}
 
 				return derived();
@@ -237,9 +229,7 @@ namespace mag
 				{
 					auto va = ops<T, R>::load(derived().m[c]);
 					auto vb = ops<T, R>::load(rhs.m[c]);
-					auto rv = ops<T, R>::add(va, vb);
-
-					ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], va + vb);
 				}
 
 				return derived();
@@ -261,9 +251,7 @@ namespace mag
 				{
 					auto va = ops<T, R>::load(derived().m[c]);
 					auto vb = ops<T, R>::load(rhs.m[c]);
-					auto rv = ops<T, R>::sub(va, vb);
-
-					ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], va - vb);
 				}
 
 				return derived();
@@ -285,9 +273,7 @@ namespace mag
 				{
 					auto va = ops<T, R>::load(derived().m[c]);
 					auto vb = ops<T, R>::load(rhs.m[c]);
-					auto rv = ops<T, R>::mul(va, vb);
-
-					ops<T, R>::store(derived().m[c], rv);
+					ops<T, R>::store(derived().m[c], va * vb);
 				}
 
 				return derived();
