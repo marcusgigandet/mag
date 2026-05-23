@@ -15,6 +15,7 @@
  */
 
 module;
+#include <array>
 #include <cstddef>
 export module mag:simd_ops;
 
@@ -38,7 +39,7 @@ export namespace mag
 		/**
 		 * @brief Underlying SIMD register type for this backend.
 		 */
-		using native_t = T;
+		using native_t = std::array<T, N>;
 
 		/**
 		 * @brief Loads N elements from memory into a SIMD register.
