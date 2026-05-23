@@ -22,8 +22,7 @@ export module mag:x86_ops;
 
 import :simd_ops;
 
-MAG_DIAG_PUSH
-MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
+// NOLINTBEGIN(portability-simd-intrinsics)
 
 /**
  * @brief This namespace provides SIMD operations for x86 (SSE/AVX).
@@ -369,4 +368,4 @@ namespace mag
 	};
 } // namespace mag
 
-MAG_DIAG_POP
+// NOLINTEND(portability-simd-intrinsics)
