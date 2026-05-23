@@ -16,7 +16,6 @@
 
 module;
 #include "typedefs.hpp"
-#include <cstddef>
 #include <span>
 export module mag:simd;
 
@@ -48,21 +47,24 @@ namespace mag
 		ops<T, N>::native_t m_data;
 
 	public:
-		Simd() noexcept = default;
+		MAG_INLINE Simd() noexcept = default;
 
 		/**
 		 * @brief Broadcasts a scalar value across all SIMD lanes.
 		 *
 		 * @param s Scalar value to replicate.
 		 */
-		explicit Simd(const T s) : m_data(ops<T, N>::splat(s)) {}
+		template <std::convertible_to<T> U>
+		MAG_INLINE explicit Simd(U s) : m_data(ops<T, N>::splat(static_cast<T>(s)))
+		{
+		}
 
 		/**
 		 * @brief Uploads a span of N elements to the SIMD register.
 		 *
 		 * @param data Data being uploaded.
 		 */
-		explicit Simd(const std::span<T, N> data) : m_data(ops<T, N>::load(data)) {}
+		MAG_INLINE explicit Simd(const std::span<T, N> data) : m_data(ops<T, N>::load(data)) {}
 
 		/**
 		 * @brief Uploads N elements from memory into a SIMD register
@@ -72,7 +74,7 @@ namespace mag
 		 * @note This method is unsafe and will result in an error if an incorrectly sized ptr is
 		 * provided.
 		 */
-		explicit Simd(const T* ptr) : m_data(ops<T, N>::load(ptr)) {}
+		MAG_INLINE explicit Simd(const T* ptr) : m_data(ops<T, N>::load(ptr)) {}
 
 		/**
 		 * @brief Loads N unique elements into a SIMD register.
@@ -85,7 +87,7 @@ namespace mag
 		 */
 		template <typename... Args>
 			requires(sizeof...(Args) == N) && (std::convertible_to<Args, T> && ...)
-		explicit Simd(Args... args) noexcept
+		MAG_INLINE explicit Simd(Args... args) noexcept
 		{
 			alignas(alignof(T)) T tmp[N]{static_cast<T>(args)...};
 			m_data = ops<T, N>::load(tmp);
@@ -96,53 +98,57 @@ namespace mag
 		 *
 		 * @param data Native simd type being copied.
 		 */
-		explicit Simd(const ops<T, N>::native_t data) : m_data(data) {}
+		MAG_INLINE explicit Simd(const ops<T, N>::native_t data) : m_data(data) {}
 
 		Simd(const Simd&) noexcept = default;
 		Simd(Simd&&) noexcept = default;
 		Simd& operator=(const Simd&) noexcept = default;
 		Simd& operator=(Simd&&) noexcept = default;
 
-		MAG_INLINE friend Simd operator+(const Simd a, const Simd b)
+		MAG_INLINE friend Simd operator+(const Simd& a, const Simd& b)
 			requires supports_add<T, N>
 		{
 			return Simd{ops<T, N>::add(a.m_data, b.m_data)};
 		}
-		MAG_INLINE friend Simd operator-(const Simd a, const Simd b)
+		MAG_INLINE friend Simd operator-(const Simd& a, const Simd& b)
 			requires supports_sub<T, N>
 		{
 			return Simd{ops<T, N>::sub(a.m_data, b.m_data)};
 		}
-		MAG_INLINE friend Simd operator*(const Simd a, const Simd b)
+		MAG_INLINE friend Simd operator*(const Simd& a, const Simd& b)
 			requires supports_mul<T, N>
 		{
 			return Simd{ops<T, N>::mul(a.m_data, b.m_data)};
 		}
-		MAG_INLINE friend Simd operator/(const Simd a, const Simd b)
+		MAG_INLINE friend Simd operator/(const Simd& a, const Simd& b)
 			requires supports_div<T, N>
 		{
 			return Simd{ops<T, N>::div(a.m_data, b.m_data)};
 		}
 
-		MAG_INLINE Simd operator+=(const Simd o)
+		MAG_INLINE Simd& operator+=(const Simd& o)
 			requires supports_add<T, N>
 		{
-			return m_data = *this + o;
+			m_data = ops<T, N>::add(m_data, o.m_data);
+			return *this;
 		}
-		MAG_INLINE Simd operator-=(const Simd o)
+		MAG_INLINE Simd& operator-=(const Simd& o)
 			requires supports_sub<T, N>
 		{
-			return m_data = *this - o;
+			m_data = ops<T, N>::sub(m_data, o.m_data);
+			return *this;
 		}
-		MAG_INLINE Simd operator*=(const Simd o)
+		MAG_INLINE Simd& operator*=(const Simd& o)
 			requires supports_mul<T, N>
 		{
-			return m_data = *this * o;
+			m_data = ops<T, N>::mul(m_data, o.m_data);
+			return *this;
 		}
-		MAG_INLINE Simd operator/=(const Simd o)
+		MAG_INLINE Simd& operator/=(const Simd& o)
 			requires supports_div<T, N>
 		{
-			return m_data = *this / o;
+			m_data = ops<T, N>::div(m_data, o.m_data);
+			return *this;
 		}
 
 		/**
@@ -215,4 +221,11 @@ namespace mag
 		 */
 		MAG_INLINE void store(T* dst) const { ops<T, N>::store(dst, m_data); }
 	};
+
+	template <typename T, size_t N>
+	MAG_INLINE T hsum(const Simd<T, N>& s)
+		requires supports_hsum<T, N>
+	{
+		return s.hsum();
+	}
 } // namespace mag

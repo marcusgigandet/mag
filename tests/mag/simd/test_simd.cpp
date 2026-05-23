@@ -55,6 +55,49 @@ TEST_CASE("f32x4 basic arithmetic", "[simd]")
 	}
 }
 
+TEST_CASE("f32x4 compound arithmetic", "[simd]")
+{
+	f32x4 a{1.0f};
+	f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+
+	SECTION("addition assignment")
+	{
+		f32x4 c = b;
+		c += a;
+
+		REQUIRE(toVec(c) == Vec4f{2.0f, 3.0f, 4.0f, 5.0f});
+	}
+
+	SECTION("subtraction assignment")
+	{
+		f32x4 c = b;
+		c -= a;
+
+		REQUIRE(toVec(c) == Vec4f{0.0f, 1.0f, 2.0f, 3.0f});
+	}
+
+	SECTION("multiplication assignment")
+	{
+		f32x4 c = b;
+		c *= a;
+
+		REQUIRE(toVec(c) == Vec4f{1.0f, 2.0f, 3.0f, 4.0f});
+	}
+
+	SECTION("division assignment")
+	{
+		f32x4 c = b;
+		c /= a;
+
+		Vec4f r = toVec(c);
+
+		REQUIRE(r.x == Catch::Approx(1.0f));
+		REQUIRE(r.y == Catch::Approx(2.0f));
+		REQUIRE(r.z == Catch::Approx(3.0f));
+		REQUIRE(r.w == Catch::Approx(4.0f));
+	}
+}
+
 TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 {
 	f32x4 a{1.0f};
