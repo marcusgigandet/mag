@@ -1,4 +1,4 @@
-name: Format
+name: Verify Copyright Headers
 
 on:
   pull_request:
@@ -6,14 +6,19 @@ on:
       - main
 
 jobs:
+  call-verify-copyright:
+    uses: SlyFryFrog/toolbox/.github/workflows/verify_copyright.yml@main
+    with:
+      config: "config.toml"
+      directory: "src"
+
   check-formatting:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Install clang-format
-        run: sudo apt-get update && sudo apt-get install -y clang-format
+        run: |
+          sudo apt-get update && sudo apt-get install -y clang-format
 
       - name: Check formatting
         run: |
