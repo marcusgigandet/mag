@@ -38,7 +38,6 @@ AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortCaseExpressionOnASingleLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowAllArgumentsOnNextLine: false
 AlwaysBreakTemplateDeclarations: Yes
