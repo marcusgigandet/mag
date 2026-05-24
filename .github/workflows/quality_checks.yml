@@ -1,4 +1,4 @@
-name: Verify Copyright Headers
+name: Code Quality Checks
 
 on:
   pull_request:

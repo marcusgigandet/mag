@@ -59,12 +59,11 @@ else ()
     # Add more architectures if we add future support for something like RISC-V
     if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|arm)")
         set(MAG_NEON_SIMD TRUE CACHE BOOL "" FORCE)
-
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
     else ()
         set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
-        add_compile_options(-msse2 -msse3 -msse4.1)
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
+        add_compile_options(-msse2 -msse3 -msse4.1)
     endif ()
 endif ()
 ###################

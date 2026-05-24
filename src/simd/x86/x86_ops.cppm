@@ -24,9 +24,6 @@ import :simd_ops;
 
 // NOLINTBEGIN(portability-simd-intrinsics)
 
-/**
- * @brief This namespace provides SIMD operations for x86 (SSE/AVX).
- */
 namespace mag
 {
 #ifdef MAG_ENABLE_SIMD_EXTENDED
