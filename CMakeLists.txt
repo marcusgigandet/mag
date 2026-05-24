@@ -59,12 +59,11 @@ else ()
     # Add more architectures if we add future support for something like RISC-V
     if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|arm)")
         set(MAG_NEON_SIMD TRUE CACHE BOOL "" FORCE)
-
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
     else ()
         set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
-        add_compile_options(-msse2 -msse3 -msse4.1)
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
+        add_compile_options(-msse2 -msse3 -msse4.1)
     endif ()
 endif ()
 ###################
@@ -132,10 +131,11 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
     include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
 
     file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+    file(GLOB_RECURSE BENCHMARK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/*.cpp")
 
     enforce_clang_format(
             TARGET ${PROJECT_NAME}
-            FILES ${MODULES} ${TEST_SOURCES} ${HEADERS}
+            FILES ${MODULES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${HEADERS}
     )
     enforce_copyright(
             TARGET ${PROJECT_NAME}

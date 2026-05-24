@@ -7,19 +7,25 @@
 
 Pour construire MAG, vous avez besoin des outils suivants :
 
-- **Un compilateur C++20** qui prend en charge C++ modules (clang++-18 ou supérieure)
-- **Python 3.11+**
-- **Ninja**
-- **CMake**
+| Tool               | Version              | Description                                          |
+|--------------------|----------------------|------------------------------------------------------|
+| Compilateur C++20+ | clang++-18 ou g++-15 | Un compilateur C++20 qui prend en charge C++ modules |
+| CMake              | 3.28.3               |                                                      |
+| Ninja              | N/A                  |                                                      |
+| Python             | 3.11+                | Requis si `MAG_NO_DEV_TOOLS` n’est pas défini        |
 
 ### Option de compilation CMake
 
-- MAG_ENABLE_SIMD
-- MAG_ENABLE_SIMD_EXTENDED
-- MAG_BUILD_TESTS
-- BUILD_SHARED_LIBS
+| Option                   | Défaut | Description                                                                                                                                                    |
+|--------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MAG_ENABLE_SIMD          | ON     | Active les optimisations SIMD lorsque disponibles et implémente l'API simd                                                                                     |
+| MAG_ENABLE_SIMD_EXTENDED | ON     | Active les optimisations SIMD lorqu'elles sont disponibles pour les entiers et les entiers non signés. Cette option nécessite que MAG_ENABLE_SIMD soit active. |
+| MAG_CODE_ANALYSIS        | ON     | Active clang-tidy pour analyser le code                                                                                                                        |
+| MAG_NO_DEV_TOOLS         | OFF    | Désactive les outils réservés au développement                                                                                                                 |
+| MAG_BUILD_TESTS          | OFF    | Active la compilation des tests                                                                                                                                |
+| BUILD_SHARED_LIBS        | OFF    | Construire mag en mode partagé                                                                                                                                 |
 
-### Compiler le projet
+### Compiling the project - Compiler le projet
 
 ```bash
 cmake --preset clang-release -DMAG_BUILD_TESTS=off ;

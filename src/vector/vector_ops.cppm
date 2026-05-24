@@ -69,8 +69,8 @@ export namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::add(va, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, va + vb);
+
 			return r;
 		}
 #endif
@@ -93,8 +93,8 @@ export namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::sub(va, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, va - vb);
+
 			return r;
 		}
 #endif
@@ -115,8 +115,8 @@ export namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::mul(va, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, va * vb);
+
 			return r;
 		}
 #endif
@@ -137,8 +137,8 @@ export namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vr = ops::div(va, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, va / vb);
+
 			return r;
 		}
 #endif
@@ -159,8 +159,8 @@ export namespace mag
 			Vec<T, N> r{};
 			auto va = ops::load(a.v);
 			auto vb = ops::splat(s);
-			auto vr = ops::add(va, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, va + vb);
+
 			return r;
 		}
 #endif
@@ -181,8 +181,8 @@ export namespace mag
 			Vec<T, N> r{};
 			auto vs = ops::splat(s);
 			auto vb = ops::load(b.v);
-			auto vr = ops::add(vs, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, vs - vb);
+
 			return r;
 		}
 #endif
@@ -204,8 +204,8 @@ export namespace mag
 
 			auto va = ops::load(a.v);
 			auto vs = ops::splat(s);
-			auto vr = ops::sub(va, vs);
-			ops::store(r.v, vr);
+			ops::store(r.v, va - vs);
+
 			return r;
 		}
 #endif
@@ -227,8 +227,8 @@ export namespace mag
 
 			auto vs = ops::load(s);
 			auto vb = ops::load(b.v);
-			auto vr = ops::sub(vs, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, vs - vb);
+
 			return r;
 		}
 #endif
@@ -250,8 +250,8 @@ export namespace mag
 
 			auto va = ops::load(a.v);
 			auto vs = ops::splat(s);
-			auto vr = ops::mul(va, vs);
-			ops::store(r.v, vr);
+			ops::store(r.v, va * vs);
+
 			return r;
 		}
 #endif
@@ -273,8 +273,8 @@ export namespace mag
 
 			auto vs = ops::splat(s);
 			auto vb = ops::load(b.v);
-			auto vr = ops::mul(vs, vb);
-			ops::store(r.v, vr);
+			ops::store(r.v, vs * vb);
+
 			return r;
 		}
 #endif
@@ -294,10 +294,10 @@ export namespace mag
 
 			Vec<std::common_type_t<T, U>, N> r;
 
-			auto va = ops::load(a.v);
+			auto va = ops::load(a);
 			auto vs = ops::splat(s);
-			auto vr = ops::div(va, vs);
-			ops::store(r.v, vr);
+			ops::store(r.v, va / vs);
+
 			return r;
 		}
 #endif

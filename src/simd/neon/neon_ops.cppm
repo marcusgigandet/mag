@@ -22,6 +22,8 @@ export module mag:neon_ops;
 
 import :simd_ops;
 
+// Suppress "TU local entity ___ is exposed" errors on some compilers. This warning can be ignored
+// since inlining the functions calling native simd functions result in the exposure.
 MAG_DIAG_PUSH
 MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
@@ -298,4 +300,5 @@ namespace mag
 	};
 } // namespace mag
 
+// Restore to default state
 MAG_DIAG_POP

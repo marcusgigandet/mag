@@ -38,7 +38,6 @@ AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortCaseExpressionOnASingleLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowAllArgumentsOnNextLine: false
 AlwaysBreakTemplateDeclarations: Yes
@@ -53,7 +52,6 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 # Function calls & chaining
 PenaltyBreakBeforeFirstCallParameter: 40
 BreakBeforeBinaryOperators: None
-BreakAfterReturnType: None
 ContinuationIndentWidth: 8
 
 # Other formatting
@@ -66,7 +64,6 @@ SpaceInEmptyParentheses: false
 SpacesInParentheses: false
 InsertNewlineAtEOF: true
 SortIncludes: true
-ReflowComments: Always
 MaxEmptyLinesToKeep: 2
 EmptyLineBeforeAccessModifier: Always
 FixNamespaceComments: true

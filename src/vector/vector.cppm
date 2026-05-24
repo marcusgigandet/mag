@@ -47,7 +47,7 @@ namespace mag
 			using ops = ops<T, N>;
 
 			auto simd_v = ops::load(v.v);
-			auto sq = ops::mul(simd_v, simd_v);
+			auto sq = simd_v * simd_v;
 
 			return std::sqrt(ops::hsum(sq));
 		}
@@ -70,15 +70,13 @@ namespace mag
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
+		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_hsum<T, N>)
 		{
 			using ops = ops<T, N>;
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			auto vm = ops::mul(va, vb);
-
-			return static_cast<T>(ops::hsum(vm));
+			return static_cast<T>(ops::hsum(va * vb));
 		}
 #endif
 		using R = std::common_type_t<T, U>;
@@ -107,7 +105,7 @@ namespace mag
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
 			auto vt = ops::splat(static_cast<T>(t));
-			auto vr = ops::add(va, ops::mul(ops::sub(vb, va), vt));
+			auto vr = va + ((vb - va) * vt);
 			ops::store(r.v, vr);
 			return r;
 		}
@@ -195,8 +193,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
-				auto vr = ops::add(va, vb);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va + vb);
+
 				return derived();
 			}
 #endif
@@ -215,8 +213,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
-				auto vr = ops::sub(va, vb);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va - vb);
+
 				return derived();
 			}
 #endif
@@ -235,8 +233,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
-				auto vr = ops::mul(va, vb);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va * vb);
+
 				return derived();
 			}
 #endif
@@ -255,8 +253,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
-				auto vr = ops::div(va, vb);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va / vb);
+
 				return derived();
 			}
 #endif
@@ -275,8 +273,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
-				auto vr = ops::add(va, vs);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va + vs);
+
 				return derived();
 			}
 #endif
@@ -295,8 +293,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
-				auto vr = ops::sub(va, vs);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va - vs);
+
 				return derived();
 			}
 #endif
@@ -315,8 +313,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
-				auto vr = ops::mul(va, vs);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va * vs);
+
 				return derived();
 			}
 #endif
@@ -335,8 +333,8 @@ namespace mag
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
-				auto vr = ops::div(va, vs);
-				ops::store(derived().v, vr);
+				ops::store(derived().v, va / vs);
+
 				return derived();
 			}
 #endif
