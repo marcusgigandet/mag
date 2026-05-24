@@ -37,7 +37,7 @@ namespace mag
 			};
 		};
 
-		constexpr Vec() = default;
+			constexpr Vec() = default;
 
 		template <Numeric U>
 		explicit constexpr Vec(U val) : x(val), y(val)
