@@ -41,12 +41,11 @@ namespace mag
 	 * @tparam N SIMD lane count.
 	 */
 	export template <Numeric T, size_t N>
-	class Simd
+	struct Simd
 	{
 		/// Underlying SIMD register storage
-		ops<T, N>::native_t m_data;
+		ops<T, N>::native_t native{};
 
-	public:
 		MAG_INLINE Simd() noexcept = default;
 
 		/**
@@ -55,7 +54,7 @@ namespace mag
 		 * @param s Scalar value to replicate.
 		 */
 		template <std::convertible_to<T> U>
-		MAG_INLINE explicit Simd(U s) : m_data(ops<T, N>::splat(static_cast<T>(s)))
+		MAG_INLINE explicit Simd(U s) : native(ops<T, N>::splat(static_cast<T>(s)))
 		{
 		}
 
@@ -64,7 +63,7 @@ namespace mag
 		 *
 		 * @param data Data being uploaded.
 		 */
-		MAG_INLINE explicit Simd(const std::span<T, N> data) : m_data(ops<T, N>::load(data)) {}
+		MAG_INLINE explicit Simd(const std::span<T, N> data) : native(ops<T, N>::load(data)) {}
 
 		/**
 		 * @brief Uploads N elements from memory into a SIMD register
@@ -74,7 +73,7 @@ namespace mag
 		 * @note This method is unsafe and will result in an error if an incorrectly sized ptr is
 		 * provided.
 		 */
-		MAG_INLINE explicit Simd(const T* ptr) : m_data(ops<T, N>::load(ptr)) {}
+		MAG_INLINE explicit Simd(const T* ptr) : native(ops<T, N>::load(ptr)) {}
 
 		/**
 		 * @brief Loads N unique elements into a SIMD register.
@@ -90,7 +89,7 @@ namespace mag
 		MAG_INLINE explicit Simd(Args... args) noexcept
 		{
 			alignas(alignof(T)) T tmp[N]{static_cast<T>(args)...};
-			m_data = ops<T, N>::load(tmp);
+			native = ops<T, N>::load(tmp);
 		}
 
 		/**
@@ -98,7 +97,7 @@ namespace mag
 		 *
 		 * @param data Native simd type being copied.
 		 */
-		MAG_INLINE explicit Simd(const ops<T, N>::native_t data) : m_data(data) {}
+		MAG_INLINE explicit Simd(const ops<T, N>::native_t data) : native(data) {}
 
 		Simd(const Simd&) noexcept = default;
 		Simd(Simd&&) noexcept = default;
@@ -108,46 +107,87 @@ namespace mag
 		MAG_INLINE friend Simd operator+(const Simd& a, const Simd& b)
 			requires supports_add<T, N>
 		{
-			return Simd{ops<T, N>::add(a.m_data, b.m_data)};
+			return Simd{ops<T, N>::add(a.native, b.native)};
 		}
 		MAG_INLINE friend Simd operator-(const Simd& a, const Simd& b)
 			requires supports_sub<T, N>
 		{
-			return Simd{ops<T, N>::sub(a.m_data, b.m_data)};
+			return Simd{ops<T, N>::sub(a.native, b.native)};
 		}
 		MAG_INLINE friend Simd operator*(const Simd& a, const Simd& b)
 			requires supports_mul<T, N>
 		{
-			return Simd{ops<T, N>::mul(a.m_data, b.m_data)};
+			return Simd{ops<T, N>::mul(a.native, b.native)};
 		}
 		MAG_INLINE friend Simd operator/(const Simd& a, const Simd& b)
 			requires supports_div<T, N>
 		{
-			return Simd{ops<T, N>::div(a.m_data, b.m_data)};
+			return Simd{ops<T, N>::div(a.native, b.native)};
+		}
+
+		MAG_INLINE friend Simd operator+(const Simd& a, T b)
+			requires supports_add<T, N>
+		{
+			return Simd{a.native + ops<T, N>::splat(b)};
+		}
+		MAG_INLINE friend Simd operator+(T a, const Simd& b)
+			requires supports_add<T, N>
+		{
+			return Simd{ops<T, N>::splat(a) + b.native};
+		}
+		MAG_INLINE friend Simd operator-(const Simd& a, T b)
+			requires supports_sub<T, N>
+		{
+			return Simd{a.native - ops<T, N>::splat(b)};
+		}
+		MAG_INLINE friend Simd operator-(T a, const Simd& b)
+			requires supports_sub<T, N>
+		{
+			return Simd{ops<T, N>::splat(a) - b.native};
+		}
+		MAG_INLINE friend Simd operator*(const Simd& a, T b)
+			requires supports_mul<T, N>
+		{
+			return Simd{a.native * ops<T, N>::splat(b)};
+		}
+		MAG_INLINE friend Simd operator*(T a, const Simd& b)
+			requires supports_mul<T, N>
+		{
+			return Simd{ops<T, N>::splat(a) * b.native};
+		}
+		MAG_INLINE friend Simd operator/(const Simd& a, T b)
+			requires supports_div<T, N>
+		{
+			return Simd{a.native / ops<T, N>::splat(b)};
+		}
+		MAG_INLINE friend Simd operator/(T a, const Simd& b)
+			requires supports_div<T, N>
+		{
+			return Simd{ops<T, N>::splat(a) / b.native};
 		}
 
 		MAG_INLINE Simd& operator+=(const Simd& o)
 			requires supports_add<T, N>
 		{
-			m_data = ops<T, N>::add(m_data, o.m_data);
+			native = ops<T, N>::add(native, o.native);
 			return *this;
 		}
 		MAG_INLINE Simd& operator-=(const Simd& o)
 			requires supports_sub<T, N>
 		{
-			m_data = ops<T, N>::sub(m_data, o.m_data);
+			native = ops<T, N>::sub(native, o.native);
 			return *this;
 		}
 		MAG_INLINE Simd& operator*=(const Simd& o)
 			requires supports_mul<T, N>
 		{
-			m_data = ops<T, N>::mul(m_data, o.m_data);
+			native = ops<T, N>::mul(native, o.native);
 			return *this;
 		}
 		MAG_INLINE Simd& operator/=(const Simd& o)
 			requires supports_div<T, N>
 		{
-			m_data = ops<T, N>::div(m_data, o.m_data);
+			native = ops<T, N>::div(native, o.native);
 			return *this;
 		}
 
@@ -159,7 +199,7 @@ namespace mag
 		MAG_INLINE T hsum() const
 			requires supports_hsum<T, N>
 		{
-			return ops<T, N>::hsum(m_data);
+			return ops<T, N>::hsum(native);
 		}
 
 		/**
@@ -170,7 +210,7 @@ namespace mag
 		MAG_INLINE void splat(T s) noexcept
 			requires supports_splat<T, N>
 		{
-			m_data = ops<T, N>::splat(s);
+			native = ops<T, N>::splat(s);
 		}
 
 		/**
@@ -178,7 +218,7 @@ namespace mag
 		 *
 		 * @param data Span of data containing data to load into SIMD register.
 		 */
-		MAG_INLINE void load(const std::span<T, N> data) { m_data = ops<T, N>::load(data.data()); }
+		MAG_INLINE void load(const std::span<T, N> data) { native = ops<T, N>::load(data.data()); }
 
 		/**
 		 * @brief Loads N elements from memory into a SIMD register
@@ -188,7 +228,7 @@ namespace mag
 		 * @note This method is unsafe and will result in an error if an incorrectly sized ptr is
 		 * provided.
 		 */
-		MAG_INLINE void load(const T* ptr) { m_data = ops<T, N>::load(ptr); }
+		MAG_INLINE void load(const T* ptr) { native = ops<T, N>::load(ptr); }
 
 		/**
 		 * @brief Loads N unique elements into a SIMD register.
@@ -204,7 +244,7 @@ namespace mag
 		MAG_INLINE void load(Args... args) noexcept
 		{
 			alignas(alignof(T)) T tmp[N]{static_cast<T>(args)...};
-			m_data = ops<T, N>::load(tmp);
+			native = ops<T, N>::load(tmp);
 		}
 
 		/**
@@ -212,14 +252,14 @@ namespace mag
 		 *
 		 * @param dst Span of data to write SIMD registers to.
 		 */
-		MAG_INLINE void store(std::span<T, N> dst) const { ops<T, N>::store(dst, m_data); }
+		MAG_INLINE void store(std::span<T, N> dst) const { ops<T, N>::store(dst, native); }
 
 		/**
 		 * @brief Stores SIMD register values back to memory.
 		 *
 		 * @param dst Data to write SIMD registers to.
 		 */
-		MAG_INLINE void store(T* dst) const { ops<T, N>::store(dst, m_data); }
+		MAG_INLINE void store(T* dst) const { ops<T, N>::store(dst, native); }
 	};
 
 	template <typename T, size_t N>

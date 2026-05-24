@@ -70,7 +70,7 @@ namespace mag
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
+		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_hsum<T, N>)
 		{
 			using ops = ops<T, N>;
 
