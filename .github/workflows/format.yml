@@ -18,6 +18,6 @@ jobs:
       - name: Check formatting
         run: |
           find src tests benchmarks \
-            \( -name "*.h" -o -name "*.hpp" -o -name ".cppm" -o -name "*.cpp" \) \
+            \( -name "*.h" -o -name "*.hpp" -o -name "*.cppm" -o -name "*.cpp" \) \
             -print0 | \
           xargs -0 clang-format --dry-run --Werror
