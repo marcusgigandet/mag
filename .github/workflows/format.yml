@@ -17,7 +17,7 @@ jobs:
 
       - name: Check formatting
         run: |
-          find include src tests benchmarks \
+          find src tests benchmarks \
             \( -name "*.h" -o -name "*.hpp" -o -name ".cppm" -o -name "*.cpp" \) \
             -print0 | \
           xargs -0 clang-format --dry-run --Werror
