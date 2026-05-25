@@ -21,7 +21,7 @@ export module mag:simd_concepts;
 
 import :simd_ops;
 
-namespace mag
+export namespace mag::simd
 {
 	template <typename T, size_t N>
 	concept supports_splat = requires(T s) {
@@ -56,4 +56,31 @@ namespace mag
 	concept supports_reduction = requires(typename ops<T, N>::native_t v) {
 		{ ops<T, N>::hsum(v) } -> std::same_as<T>;
 	};
-} // namespace mag
+
+	template <typename T, size_t N>
+	concept supports_min =
+			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
+				{ ops<T, N>::min(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
+			};
+
+	template <typename T, size_t N>
+	concept supports_max =
+			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
+				{ ops<T, N>::max(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
+			};
+
+	template <typename T, size_t N>
+	concept supports_neg = requires(typename ops<T, N>::native_t v) {
+		{ ops<T, N>::neg(v) } -> std::same_as<typename ops<T, N>::native_t>;
+	};
+
+	template <typename T, size_t N>
+	concept supports_abs = requires(typename ops<T, N>::native_t v) {
+		{ ops<T, N>::abs(v) } -> std::same_as<typename ops<T, N>::native_t>;
+	};
+
+	template <typename T, size_t N>
+	concept supports_sqrt = requires(typename ops<T, N>::native_t v) {
+		{ ops<T, N>::sqrt(v) } -> std::same_as<typename ops<T, N>::native_t>;
+	};
+} // namespace mag::simd

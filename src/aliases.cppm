@@ -75,21 +75,24 @@ export namespace mag
 	using Mat4x2 = Mat<double, 4, 2>;
 	using Mat4x2f = Mat<float, 4, 2>;
 
+	namespace simd
+	{
 #ifdef MAG_ENABLE_SIMD
-	using f32x4 = Simd<float, 4>;
-	using f64x2 = Simd<double, 2>;
+		using f32x4 = Simd<float, 4>;
+		using f64x2 = Simd<double, 2>;
 
 #ifdef MAG_ENABLE_SIMD_EXTENDED
-	using i8x16 = Simd<int8_t, 16>;
-	using i16x8 = Simd<int16_t, 8>;
-	using i32x4 = Simd<int32_t, 4>;
-	using i64x2 = Simd<int64_t, 2>;
+		using i8x16 = Simd<int8_t, 16>;
+		using i16x8 = Simd<int16_t, 8>;
+		using i32x4 = Simd<int32_t, 4>;
+		using i64x2 = Simd<int64_t, 2>;
 
-	using u8x16 = Simd<uint8_t, 16>;
-	using u16x8 = Simd<uint16_t, 8>;
-	using u32x4 = Simd<uint32_t, 4>;
-	using u64x2 = Simd<uint64_t, 2>;
+		using u8x16 = Simd<uint8_t, 16>;
+		using u16x8 = Simd<uint16_t, 8>;
+		using u32x4 = Simd<uint32_t, 4>;
+		using u64x2 = Simd<uint64_t, 2>;
 #endif
 
 #endif
+	} // namespace simd
 } // namespace mag

@@ -20,7 +20,7 @@ export module mag:simd_ops;
 
 import :concepts;
 
-export namespace mag
+export namespace mag::simd
 {
 	/**
 	 * @brief SIMD backend operations interface.
@@ -47,4 +47,4 @@ export namespace mag
 	 */
 	template <Numeric T, size_t N>
 	struct ops;
-} // namespace mag
+} // namespace mag::simd

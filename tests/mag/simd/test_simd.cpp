@@ -2,10 +2,12 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <array>
+#include <iostream>
 #include <span>
 
 import mag;
 using namespace mag;
+using namespace mag::simd;
 
 namespace
 {
@@ -178,4 +180,15 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 		f32x4 e{0.0f, 0.0f, 0.0f, 0.0f};
 		REQUIRE(e.hmax() == Catch::Approx(0.0f));
 	}
+
+	f32x4 c{5, 6, 8, 12};
+	f32x4 d{3, 6, 3, 9};
+	auto f = sqrt(max(c, d));
+	float array[4];
+
+	f.store(array);
+
+	for (size_t i = 0; i < 4; i++)
+		std::cout << array[i] << std::endl;
+	std::cout << std::endl;
 }

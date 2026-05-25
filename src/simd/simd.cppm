@@ -31,7 +31,7 @@ export import :x86_ops;
 
 import :concepts;
 
-namespace mag
+namespace mag::simd
 {
 	/**
 	 * @brief SIMD interface.
@@ -322,7 +322,7 @@ namespace mag
 	 * @return Sum of all elements in the SIMD register.
 	 */
 	template <typename T, size_t N>
-	MAG_INLINE T hsum(const Simd<T, N>& s)
+	T hsum(const Simd<T, N>& s)
 		requires supports_reduction<T, N>
 	{
 		return s.hsum();
@@ -339,7 +339,7 @@ namespace mag
 	 * @return Smallest element in the SIMD register.
 	 */
 	template <typename T, size_t N>
-	MAG_INLINE T hmin(const Simd<T, N>& s)
+	T hmin(const Simd<T, N>& s)
 		requires supports_reduction<T, N>
 	{
 		return s.hmin();
@@ -356,9 +356,44 @@ namespace mag
 	 * @return Largest element in the SIMD register.
 	 */
 	template <typename T, size_t N>
-	MAG_INLINE T hmax(const Simd<T, N>& s)
+	T hmax(const Simd<T, N>& s)
 		requires supports_reduction<T, N>
 	{
 		return s.hmax();
 	}
-} // namespace mag
+
+	export template <Numeric T, size_t N>
+	Simd<T, N> max(const Simd<T, N>& a, const Simd<T, N>& b) noexcept
+		requires supports_max<T, N>
+	{
+		return Simd<T, N>{ops<T, N>::max(a.native, b.native)};
+	}
+
+	export template <Numeric T, size_t N>
+	Simd<T, N> min(const Simd<T, N>& a, const Simd<T, N>& b) noexcept
+		requires supports_min<T, N>
+	{
+		return Simd<T, N>{ops<T, N>::min(a.native, b.native)};
+	}
+
+	export template <Numeric T, size_t N>
+	Simd<T, N> neg(const Simd<T, N>& v) noexcept
+		requires supports_neg<T, N>
+	{
+		return Simd<T, N>{ops<T, N>::neg(v.native)};
+	}
+
+	export template <Numeric T, size_t N>
+	Simd<T, N> abs(const Simd<T, N>& v) noexcept
+		requires supports_abs<T, N>
+	{
+		return Simd<T, N>{ops<T, N>::abs(v.native)};
+	}
+
+	export template <Numeric T, size_t N>
+	Simd<T, N> sqrt(const Simd<T, N>& v) noexcept
+		requires supports_sqrt<T, N>
+	{
+		return Simd<T, N>{ops<T, N>::sqrt(v.native)};
+	}
+} // namespace mag::simd

@@ -24,7 +24,7 @@ import :simd_ops;
 
 // NOLINTBEGIN(portability-simd-intrinsics)
 
-namespace mag
+namespace mag::simd
 {
 #ifdef MAG_ENABLE_SIMD_EXTENDED
 	template <>

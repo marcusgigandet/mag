@@ -42,9 +42,9 @@ namespace mag
 	constexpr T length(const Vec<T, N>& v) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (supports_mul<T, N> && supports_reduction<T, N>)
+		if constexpr (simd::supports_mul<T, N> && simd::supports_reduction<T, N>)
 		{
-			using ops = ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto simd_v = ops::load(v.v);
 			auto sq = simd_v * simd_v;
@@ -70,9 +70,10 @@ namespace mag
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_reduction<T, N>)
+		if constexpr (std::is_same_v<T, U> && simd::supports_mul<T, N> &&
+					  simd::supports_reduction<T, N>)
 		{
-			using ops = ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
@@ -96,10 +97,11 @@ namespace mag
 	constexpr Vec<T, N> lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && supports_splat<T, N> && supports_add<T, N> &&
-					  supports_sub<T, N> && supports_mul<T, N>)
+		if constexpr (std::is_same_v<T, U> && simd::supports_splat<T, N> &&
+					  simd::supports_add<T, N> && simd::supports_sub<T, N> &&
+					  simd::supports_mul<T, N>)
 		{
-			using ops = ops<T, N>;
+			using ops = simd::ops<T, N>;
 
 			Vec<T, N> r;
 			auto va = ops::load(a.v);
@@ -187,9 +189,9 @@ namespace mag
 		constexpr Vec<T, N>& operator+=(const Vec<U, N>& o) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (std::is_same_v<T, U> && supports_add<T, N>)
+			if constexpr (std::is_same_v<T, U> && simd::supports_add<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
@@ -207,9 +209,9 @@ namespace mag
 		constexpr Vec<T, N>& operator-=(const Vec<U, N>& o) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (std::is_same_v<T, U> && supports_sub<T, N>)
+			if constexpr (std::is_same_v<T, U> && simd::supports_sub<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
@@ -227,9 +229,9 @@ namespace mag
 		constexpr Vec<T, N>& operator*=(const Vec<U, N>& o) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
+			if constexpr (std::is_same_v<T, U> && simd::supports_mul<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
@@ -247,9 +249,9 @@ namespace mag
 		constexpr Vec<T, N>& operator/=(const Vec<U, N>& o) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (std::is_same_v<T, U> && supports_div<T, N>)
+			if constexpr (std::is_same_v<T, U> && simd::supports_div<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vb = ops::load(o.v);
@@ -267,9 +269,9 @@ namespace mag
 		constexpr auto operator+=(const U& s) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_add<T, N>)
+			if constexpr (simd::supports_add<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
@@ -287,9 +289,9 @@ namespace mag
 		constexpr auto operator-=(const U& s) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_sub<T, N>)
+			if constexpr (simd::supports_sub<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
@@ -307,9 +309,9 @@ namespace mag
 		constexpr auto operator*=(const U& s) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_mul<T, N>)
+			if constexpr (simd::supports_mul<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
@@ -327,9 +329,9 @@ namespace mag
 		constexpr auto operator/=(U s) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_div<T, N>)
+			if constexpr (simd::supports_div<T, N>)
 			{
-				using ops = ops<T, N>;
+				using ops = simd::ops<T, N>;
 
 				auto va = ops::load(derived().v);
 				auto vs = ops::splat(s);
