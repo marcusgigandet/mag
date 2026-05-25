@@ -53,7 +53,7 @@ namespace mag
 			};
 
 	template <typename T, size_t N>
-	concept supports_hsum = requires(typename ops<T, N>::native_t v) {
+	concept supports_reduction = requires(typename ops<T, N>::native_t v) {
 		{ ops<T, N>::hsum(v) } -> std::same_as<T>;
 	};
 } // namespace mag

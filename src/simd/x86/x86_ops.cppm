@@ -41,7 +41,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(int8_t s) noexcept { return _mm_set1_epi8(s); }
+		MAG_INLINE static native_t splat(const int8_t s) noexcept { return _mm_set1_epi8(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -55,6 +55,30 @@ namespace mag
 		MAG_INLINE static int8_t hsum(const native_t v) noexcept
 		{
 			return static_cast<int8_t>(_mm_extract_epi8(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
+		}
+
+		MAG_INLINE static int8_t hmax(const native_t v) noexcept
+		{
+			__m128i max = v;
+
+			max = _mm_max_epu8(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epu8(max, _mm_srli_si128(max, 4));
+			max = _mm_max_epu8(max, _mm_srli_si128(max, 2));
+			max = _mm_max_epu8(max, _mm_srli_si128(max, 1));
+
+			return static_cast<int8_t>(_mm_extract_epi8(max, 0));
+		}
+
+		MAG_INLINE static int8_t hmin(const native_t v) noexcept
+		{
+			__m128i min = v;
+
+			min = _mm_min_epu8(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epu8(min, _mm_srli_si128(min, 4));
+			min = _mm_min_epu8(min, _mm_srli_si128(min, 2));
+			min = _mm_min_epu8(min, _mm_srli_si128(min, 1));
+
+			return static_cast<int8_t>(_mm_extract_epi8(min, 0));
 		}
 	};
 
@@ -73,7 +97,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(int16_t s) noexcept { return _mm_set1_epi16(s); }
+		MAG_INLINE static native_t splat(const int16_t s) noexcept { return _mm_set1_epi16(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -87,6 +111,28 @@ namespace mag
 		MAG_INLINE static int16_t hsum(const native_t v) noexcept
 		{
 			return static_cast<int16_t>(_mm_extract_epi16(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
+		}
+
+		MAG_INLINE static int16_t hmax(const native_t v) noexcept
+		{
+			__m128i max = v;
+
+			max = _mm_max_epi16(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epi16(max, _mm_srli_si128(max, 4));
+			max = _mm_max_epi16(max, _mm_srli_si128(max, 2));
+
+			return static_cast<int16_t>(_mm_extract_epi16(max, 0));
+		}
+
+		MAG_INLINE static int16_t hmin(const native_t v) noexcept
+		{
+			__m128i min = v;
+
+			min = _mm_min_epi16(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epi16(min, _mm_srli_si128(min, 4));
+			min = _mm_min_epi16(min, _mm_srli_si128(min, 2));
+
+			return static_cast<int16_t>(_mm_extract_epi16(min, 0));
 		}
 	};
 
@@ -105,7 +151,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(int32_t s) noexcept { return _mm_set1_epi32(s); }
+		MAG_INLINE static native_t splat(const int32_t s) noexcept { return _mm_set1_epi32(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -119,6 +165,26 @@ namespace mag
 		MAG_INLINE static int32_t hsum(const native_t v) noexcept
 		{
 			return _mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v));
+		}
+
+		MAG_INLINE static int32_t hmax(const native_t v) noexcept
+		{
+			__m128i max = v;
+
+			max = _mm_max_epi32(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epi32(max, _mm_srli_si128(max, 4));
+
+			return _mm_cvtsi128_si32(max);
+		}
+
+		MAG_INLINE static int32_t hmin(const native_t v) noexcept
+		{
+			__m128i min = v;
+
+			min = _mm_min_epi32(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epi32(min, _mm_srli_si128(min, 4));
+
+			return _mm_cvtsi128_si32(min);
 		}
 	};
 
@@ -137,7 +203,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(int64_t s) noexcept { return _mm_set1_epi64x(s); }
+		MAG_INLINE static native_t splat(const int64_t s) noexcept { return _mm_set1_epi64x(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -151,6 +217,26 @@ namespace mag
 		MAG_INLINE static int64_t hsum(const native_t v) noexcept
 		{
 			return _mm_cvtsi128_si64(_mm_add_epi64(v, _mm_srli_si128(v, 8)));
+		}
+
+		MAG_INLINE static int64_t hmax(const native_t v) noexcept
+		{
+			const __m128i shifted = _mm_srli_si128(v, 8);
+			const __m128i mask = _mm_cmpgt_epi64(v, shifted);
+
+			const __m128i max = _mm_blendv_epi8(shifted, v, mask);
+
+			return _mm_cvtsi128_si64(max);
+		}
+
+		MAG_INLINE static int64_t hmin(const native_t v) noexcept
+		{
+			const __m128i shifted = _mm_srli_si128(v, 8);
+			const __m128i mask = _mm_cmpgt_epi64(shifted, v);
+
+			const __m128i min = _mm_blendv_epi8(v, shifted, mask);
+
+			return _mm_cvtsi128_si64(min);
 		}
 	};
 
@@ -169,7 +255,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(uint8_t s) noexcept
+		MAG_INLINE static native_t splat(const uint8_t s) noexcept
 		{
 			return _mm_set1_epi8(static_cast<char>(s));
 		}
@@ -186,6 +272,30 @@ namespace mag
 		MAG_INLINE static uint8_t hsum(const native_t v) noexcept
 		{
 			return static_cast<uint8_t>(_mm_extract_epi8(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
+		}
+
+		MAG_INLINE static uint8_t hmax(const native_t v) noexcept
+		{
+			__m128i max = v;
+
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 4));
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 2));
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 1));
+
+			return static_cast<int8_t>(_mm_extract_epi8(max, 0));
+		}
+
+		MAG_INLINE static uint8_t hmin(const native_t v) noexcept
+		{
+			__m128i min = v;
+
+			min = _mm_max_epu8(min, _mm_srli_si128(min, 8));
+			min = _mm_max_epu8(min, _mm_srli_si128(min, 4));
+			min = _mm_max_epu8(min, _mm_srli_si128(min, 2));
+			min = _mm_max_epu8(min, _mm_srli_si128(min, 1));
+
+			return static_cast<uint8_t>(_mm_extract_epi8(min, 0));
 		}
 	};
 
@@ -204,7 +314,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(uint16_t s) noexcept
+		MAG_INLINE static native_t splat(const uint16_t s) noexcept
 		{
 			return _mm_set1_epi16(static_cast<short>(s));
 		}
@@ -223,6 +333,28 @@ namespace mag
 			return static_cast<uint16_t>(
 					_mm_extract_epi16(_mm_sad_epu8(v, _mm_setzero_si128()), 0));
 		}
+
+		MAG_INLINE static uint16_t hmax(const native_t v) noexcept
+		{
+			__m128i max = v;
+
+			max = _mm_max_epu16(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epu16(max, _mm_srli_si128(max, 4));
+			max = _mm_max_epu16(max, _mm_srli_si128(max, 2));
+
+			return static_cast<uint16_t>(_mm_extract_epi16(max, 0));
+		}
+
+		MAG_INLINE static uint16_t hmin(const native_t v) noexcept
+		{
+			__m128i min = v;
+
+			min = _mm_min_epu16(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epu16(min, _mm_srli_si128(min, 4));
+			min = _mm_min_epu16(min, _mm_srli_si128(min, 2));
+
+			return static_cast<uint16_t>(_mm_extract_epi16(min, 0));
+		}
 	};
 
 
@@ -240,7 +372,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(uint32_t s) noexcept
+		MAG_INLINE static native_t splat(const uint32_t s) noexcept
 		{
 			return _mm_set1_epi32(static_cast<int>(s));
 		}
@@ -259,6 +391,26 @@ namespace mag
 			return static_cast<uint32_t>(
 					_mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v)));
 		}
+
+		MAG_INLINE static uint32_t hmax(const native_t v) noexcept
+		{
+			__m128i max = v;
+
+			max = _mm_max_epu32(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epu32(max, _mm_srli_si128(max, 4));
+
+			return static_cast<uint32_t>(_mm_cvtsi128_si32(max));
+		}
+
+		MAG_INLINE static uint32_t hmin(const native_t v) noexcept
+		{
+			__m128i min = v;
+
+			min = _mm_min_epu32(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epu32(min, _mm_srli_si128(min, 4));
+
+			return static_cast<uint32_t>(_mm_cvtsi128_si32(min));
+		}
 	};
 
 
@@ -276,7 +428,7 @@ namespace mag
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
 
-		MAG_INLINE static native_t splat(uint64_t s) noexcept
+		MAG_INLINE static native_t splat(const uint64_t s) noexcept
 		{
 			return _mm_set1_epi64x(static_cast<long long>(s));
 		}
@@ -292,7 +444,23 @@ namespace mag
 
 		MAG_INLINE static uint64_t hsum(const native_t v) noexcept
 		{
-			return static_cast<uint64_t>(_mm_cvtsi128_si64(_mm_add_epi64(v, _mm_srli_si128(v, 8))));
+			return _mm_cvtsi128_si64(_mm_add_epi64(v, _mm_srli_si128(v, 8)));
+		}
+
+		MAG_INLINE static uint64_t hmax(const native_t v) noexcept
+		{
+			const __m128i shifted = _mm_srli_si128(v, 8);
+			const __m128i max = _mm_max_epu64(v, shifted);
+
+			return static_cast<uint64_t>(_mm_cvtsi128_si64(max));
+		}
+
+		MAG_INLINE static uint64_t hmin(const native_t v) noexcept
+		{
+			const __m128i shifted = _mm_srli_si128(v, 8);
+			const __m128i min = _mm_min_epu64(v, shifted);
+
+			return static_cast<uint64_t>(_mm_cvtsi128_si64(min));
 		}
 	};
 #endif
@@ -328,6 +496,22 @@ namespace mag
 		{
 			return _mm_cvtss_f32(_mm_hadd_ps(_mm_hadd_ps(v, v), v));
 		}
+
+		MAG_INLINE static float hmax(const native_t v) noexcept
+		{
+			__m128 max1 = _mm_max_ps(v, _mm_movehl_ps(v, v));
+			const __m128 max2 =
+					_mm_max_ps(max1, _mm_shuffle_ps(max1, max1, _MM_SHUFFLE(1, 1, 1, 1)));
+			return _mm_cvtss_f32(max2);
+		}
+
+		MAG_INLINE static float hmin(const native_t v) noexcept
+		{
+			__m128 min1 = _mm_min_ps(v, _mm_movehl_ps(v, v));
+			const __m128 min2 =
+					_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1)));
+			return _mm_cvtss_f32(min2);
+		}
 	};
 
 
@@ -361,6 +545,20 @@ namespace mag
 		MAG_INLINE static double hsum(const native_t v) noexcept
 		{
 			return _mm_cvtsd_f64(_mm_hadd_pd(v, v));
+		}
+
+		MAG_INLINE static double hmax(const native_t v) noexcept
+		{
+			const __m128d shifted = _mm_unpackhi_pd(v, v);
+			const __m128d max = _mm_max_sd(v, shifted);
+			return _mm_cvtsd_f64(max);
+		}
+
+		MAG_INLINE static double hmin(const native_t v) noexcept
+		{
+			const __m128d shifted = _mm_unpackhi_pd(v, v);
+			const __m128d min = _mm_min_sd(v, shifted);
+			return _mm_cvtsd_f64(min);
 		}
 	};
 } // namespace mag

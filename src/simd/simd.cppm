@@ -191,6 +191,30 @@ namespace mag
 			native = ops<T, N>::div(native, o.native);
 			return *this;
 		}
+		MAG_INLINE Simd& operator+=(const T o)
+			requires supports_add<T, N>
+		{
+			native = ops<T, N>::add(native, ops<T, N>::splat(o));
+			return *this;
+		}
+		MAG_INLINE Simd& operator-=(const T o)
+			requires supports_sub<T, N>
+		{
+			native = ops<T, N>::sub(native, ops<T, N>::splat(o));
+			return *this;
+		}
+		MAG_INLINE Simd& operator*=(const T o)
+			requires supports_mul<T, N>
+		{
+			native = ops<T, N>::mul(native, ops<T, N>::splat(o));
+			return *this;
+		}
+		MAG_INLINE Simd& operator/=(const T o)
+			requires supports_div<T, N>
+		{
+			native = ops<T, N>::div(native, ops<T, N>::splat(o));
+			return *this;
+		}
 
 		/**
 		 * @brief Reduces a SIMD register to a single scalar by summing all lanes.
@@ -198,9 +222,33 @@ namespace mag
 		 * @return Sum of all elements in v.
 		 */
 		MAG_INLINE T hsum() const
-			requires supports_hsum<T, N>
+			requires supports_reduction<T, N>
 		{
 			return ops<T, N>::hsum(native);
+		}
+
+		/**
+		 * @brief Reduces a SIMD register to a single scalar by computing the minimum across all
+		 * lanes.
+		 *
+		 * @return The smallest element stored in the SIMD register.
+		 */
+		MAG_INLINE T hmin()
+			requires supports_reduction<T, N>
+		{
+			return ops<T, N>::hmin(native);
+		}
+
+		/**
+		 * @brief Reduces a SIMD register to a single scalar by computing the maximum across all
+		 * lanes.
+		 *
+		 * @return The largest element stored in the SIMD register.
+		 */
+		MAG_INLINE T hmax()
+			requires supports_reduction<T, N>
+		{
+			return ops<T, N>::hmax(native);
 		}
 
 		/**
@@ -263,10 +311,54 @@ namespace mag
 		MAG_INLINE void store(T* dst) const { ops<T, N>::store(dst, native); }
 	};
 
+	/**
+	 * @brief Reduces all SIMD lanes to a single scalar by summing elements.
+	 *
+	 * @tparam T Scalar element type.
+	 * @tparam N SIMD lane count.
+	 *
+	 * @param s SIMD value to reduce.
+	 *
+	 * @return Sum of all elements in the SIMD register.
+	 */
 	template <typename T, size_t N>
 	MAG_INLINE T hsum(const Simd<T, N>& s)
-		requires supports_hsum<T, N>
+		requires supports_reduction<T, N>
 	{
 		return s.hsum();
+	}
+
+	/**
+	 * @brief Reduces all SIMD lanes to a single scalar by selecting the minimum value.
+	 *
+	 * @tparam T Scalar element type.
+	 * @tparam N SIMD lane count.
+	 *
+	 * @param s SIMD value to reduce.
+	 *
+	 * @return Smallest element in the SIMD register.
+	 */
+	template <typename T, size_t N>
+	MAG_INLINE T hmin(const Simd<T, N>& s)
+		requires supports_reduction<T, N>
+	{
+		return s.hmin();
+	}
+
+	/**
+	 * @brief Reduces all SIMD lanes to a single scalar by selecting the maximum value.
+	 *
+	 * @tparam T Scalar element type.
+	 * @tparam N SIMD lane count.
+	 *
+	 * @param s SIMD value to reduce.
+	 *
+	 * @return Largest element in the SIMD register.
+	 */
+	template <typename T, size_t N>
+	MAG_INLINE T hmax(const Simd<T, N>& s)
+		requires supports_reduction<T, N>
+	{
+		return s.hmax();
 	}
 } // namespace mag

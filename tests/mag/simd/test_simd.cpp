@@ -147,4 +147,35 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 	{
 		REQUIRE((a + b).hsum() == Catch::Approx(2.0f + 3.0f + 4.0f + 5.0f));
 	}
+
+	SECTION("horizontal min")
+	{
+		f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+
+		REQUIRE(b.hmin() == Catch::Approx(1.0f));
+
+		f32x4 c{4.0f, -2.0f, 7.0f, 3.0f};
+		REQUIRE(c.hmin() == Catch::Approx(-2.0f));
+
+		f32x4 d{-1.0f, -5.0f, -3.0f, -4.0f};
+		REQUIRE(d.hmin() == Catch::Approx(-5.0f));
+
+		f32x4 e{0.0f, 0.0f, 0.0f, 0.0f};
+		REQUIRE(e.hmin() == Catch::Approx(0.0f));
+	}
+
+	SECTION("horizontal max")
+	{
+		f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+		REQUIRE(b.hmax() == Catch::Approx(4.0f));
+
+		f32x4 c{4.0f, -2.0f, 7.0f, 3.0f};
+		REQUIRE(c.hmax() == Catch::Approx(7.0f));
+
+		f32x4 d{-1.0f, -5.0f, -3.0f, -4.0f};
+		REQUIRE(d.hmax() == Catch::Approx(-1.0f));
+
+		f32x4 e{0.0f, 0.0f, 0.0f, 0.0f};
+		REQUIRE(e.hmax() == Catch::Approx(0.0f));
+	}
 }
