@@ -107,8 +107,7 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 
 	SECTION("load from args")
 	{
-		f32x4 c;
-		c.load(5.0f, 6.0f, 7.0f, 8.0f);
+		f32x4 c{5.0f, 6.0f, 7.0f, 8.0f};
 
 		REQUIRE(toVec(c) == Vec4f{5.0f, 6.0f, 7.0f, 8.0f});
 	}
@@ -117,8 +116,7 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 	{
 		constexpr float data[4]{5.0f, 6.0f, 7.0f, 8.0f};
 
-		f32x4 c;
-		c.load(data);
+		f32x4 c{data};
 
 		REQUIRE(toVec(c) == Vec4f{5.0f, 6.0f, 7.0f, 8.0f});
 	}
@@ -128,8 +126,7 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 		float data[4]{5.0f, 6.0f, 7.0f, 8.0f};
 		std::span s{data};
 
-		f32x4 c;
-		c.load(s);
+		f32x4 c{s};
 
 		REQUIRE(toVec(c) == Vec4f{5.0f, 6.0f, 7.0f, 8.0f});
 	}
@@ -145,40 +142,37 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 		REQUIRE(out == std::array<float, 4>{5.0f, 6.0f, 7.0f, 8.0f});
 	}
 
-	SECTION("horizontal sum")
-	{
-		REQUIRE((a + b).hsum() == Catch::Approx(2.0f + 3.0f + 4.0f + 5.0f));
-	}
+	SECTION("horizontal sum") { REQUIRE(hsum(a + b) == Catch::Approx(2.0f + 3.0f + 4.0f + 5.0f)); }
 
 	SECTION("horizontal min")
 	{
 		f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
 
-		REQUIRE(b.hmin() == Catch::Approx(1.0f));
+		REQUIRE(hmin(b) == Catch::Approx(1.0f));
 
 		f32x4 c{4.0f, -2.0f, 7.0f, 3.0f};
-		REQUIRE(c.hmin() == Catch::Approx(-2.0f));
+		REQUIRE(hmin(c) == Catch::Approx(-2.0f));
 
 		f32x4 d{-1.0f, -5.0f, -3.0f, -4.0f};
-		REQUIRE(d.hmin() == Catch::Approx(-5.0f));
+		REQUIRE(hmin(d) == Catch::Approx(-5.0f));
 
 		f32x4 e{0.0f, 0.0f, 0.0f, 0.0f};
-		REQUIRE(e.hmin() == Catch::Approx(0.0f));
+		REQUIRE(hmin(e) == Catch::Approx(0.0f));
 	}
 
 	SECTION("horizontal max")
 	{
 		f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
-		REQUIRE(b.hmax() == Catch::Approx(4.0f));
+		REQUIRE(hmax(b) == Catch::Approx(4.0f));
 
 		f32x4 c{4.0f, -2.0f, 7.0f, 3.0f};
-		REQUIRE(c.hmax() == Catch::Approx(7.0f));
+		REQUIRE(hmax(c) == Catch::Approx(7.0f));
 
 		f32x4 d{-1.0f, -5.0f, -3.0f, -4.0f};
-		REQUIRE(d.hmax() == Catch::Approx(-1.0f));
+		REQUIRE(hmax(d) == Catch::Approx(-1.0f));
 
 		f32x4 e{0.0f, 0.0f, 0.0f, 0.0f};
-		REQUIRE(e.hmax() == Catch::Approx(0.0f));
+		REQUIRE(hmax(e) == Catch::Approx(0.0f));
 	}
 
 	f32x4 c{5, 6, 8, 12};
