@@ -15,7 +15,6 @@
  */
 
 module;
-#include <concepts>
 #include <type_traits>
 #include <valarray>
 export module mag:vector_ops;
@@ -61,22 +60,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator+(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<T, N> r{};
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			ops::store(r.v, va + vb);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) + ops::load(b.v));
+			return ret;
 		}
 #endif
-		using R = std::common_type_t<T, U>;
 
-		Vec<R, N> ret;
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] + b[i];
 		return ret;
@@ -85,20 +80,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator-(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_sub<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<T, N> r{};
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			ops::store(r.v, va - vb);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) - ops::load(b.v));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] - b[i];
 		return ret;
@@ -107,20 +100,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator*(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<T, N> r{};
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			ops::store(r.v, va * vb);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) * ops::load(b.v));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] * b[i];
 		return ret;
@@ -129,20 +120,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator/(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_div<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<T, N> r{};
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			ops::store(r.v, va / vb);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) / ops::load(b.v));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] / b[i];
 		return ret;
@@ -151,20 +140,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator+(const Vec<T, N>& a, U s) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<T, N> r{};
-			auto va = ops::load(a.v);
-			auto vb = ops::splat(s);
-			ops::store(r.v, va + vb);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) + ops::splat(s));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] + s;
 		return ret;
@@ -173,20 +160,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator+(U s, const Vec<T, N>& b) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<T, N> r{};
-			auto vs = ops::splat(s);
-			auto vb = ops::load(b.v);
-			ops::store(r.v, vs - vb);
-
-			return r;
+			ops::store(ret.v, ops::splat(s) + ops::load(b.v));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = b[i] + s;
 		return ret;
@@ -195,21 +180,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator-(const Vec<T, N>& a, U s) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<std::common_type_t<T, U>, N> r;
-
-			auto va = ops::load(a.v);
-			auto vs = ops::splat(s);
-			ops::store(r.v, va - vs);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) - ops::splat(s));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] - s;
 		return ret;
@@ -218,21 +200,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator-(U s, const Vec<T, N>& b) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<std::common_type_t<T, U>, N> r;
-
-			auto vs = ops::load(s);
-			auto vb = ops::load(b.v);
-			ops::store(r.v, vs - vb);
-
-			return r;
+			ops::store(ret.v, ops::splat(s) - ops::load(b.v));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = s - b[i];
 		return ret;
@@ -241,21 +220,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator*(const Vec<T, N>& a, U s) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<std::common_type_t<T, U>, N> r;
-
-			auto va = ops::load(a.v);
-			auto vs = ops::splat(s);
-			ops::store(r.v, va * vs);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) * ops::splat(s));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] * s;
 		return ret;
@@ -264,21 +240,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator*(U s, const Vec<T, N>& b) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<std::common_type_t<T, U>, N> r;
-
-			auto vs = ops::splat(s);
-			auto vb = ops::load(b.v);
-			ops::store(r.v, vs * vb);
-
-			return r;
+			ops::store(ret.v, ops::splat(s) * ops::load(b.v));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = b[i] * s;
 		return ret;
@@ -287,21 +260,18 @@ export namespace mag
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator/(const Vec<T, N>& a, U s) noexcept
 	{
+		using R = std::common_type_t<T, U>;
+		Vec<R, N> ret;
+
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_div<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-
-			Vec<std::common_type_t<T, U>, N> r;
-
-			auto va = ops::load(a);
-			auto vs = ops::splat(s);
-			ops::store(r.v, va / vs);
-
-			return r;
+			ops::store(ret.v, ops::load(a.v) / ops::splat(s));
+			return ret;
 		}
 #endif
-		Vec<std::common_type_t<T, U>, N> ret;
+
 		for (size_t i = 0; i < N; ++i)
 			ret[i] = a[i] / s;
 		return ret;
