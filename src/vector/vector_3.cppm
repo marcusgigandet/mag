@@ -36,7 +36,7 @@ namespace mag
 
 
 	template <Numeric T>
-	struct Vec<T, 3> : IVec<Vec<T, 3>, T, 3>
+	struct alignas(16) Vec<T, 3> : IVec<Vec<T, 3>, T, 3>
 	{
 		union
 		{
