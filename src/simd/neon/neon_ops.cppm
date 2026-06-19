@@ -190,7 +190,7 @@ namespace mag::simd
 			const int64_t b0 = vgetq_lane_s64(b, 0);
 			const int64_t b1 = vgetq_lane_s64(b, 1);
 
-			return {a0 < b0 ? a0 : b0, a1 < b1 ? a1 : b1};
+			return vcombine_s64(vdup_n_s64(a0 < b0 ? a0 : b0), vdup_n_s64(a1 < b1 ? a1 : b1));
 		}
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
@@ -200,7 +200,7 @@ namespace mag::simd
 			const int64_t b0 = vgetq_lane_s64(b, 0);
 			const int64_t b1 = vgetq_lane_s64(b, 1);
 
-			return {a0 > b0 ? a0 : b0, a1 > b1 ? a1 : b1};
+			return vcombine_s64(vdup_n_s64(a0 > b0 ? a0 : b0), vdup_n_s64(a1 > b1 ? a1 : b1));
 		}
 	};
 
@@ -365,7 +365,7 @@ namespace mag::simd
 			const uint64_t b0 = vgetq_lane_u64(b, 0);
 			const uint64_t b1 = vgetq_lane_u64(b, 1);
 
-			return {a0 < b0 ? a0 : b0, a1 < b1 ? a1 : b1};
+			return vcombine_u64(vdup_n_u64(a0 < b0 ? a0 : b0), vdup_n_u64(a1 < b1 ? a1 : b1));
 		}
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
@@ -375,7 +375,7 @@ namespace mag::simd
 			const uint64_t b0 = vgetq_lane_u64(b, 0);
 			const uint64_t b1 = vgetq_lane_u64(b, 1);
 
-			return {a0 > b0 ? a0 : b0, a1 > b1 ? a1 : b1};
+			return vcombine_u64(vdup_n_u64(a0 > b0 ? a0 : b0), vdup_n_u64(a1 > b1 ? a1 : b1));
 		}
 	};
 #endif
