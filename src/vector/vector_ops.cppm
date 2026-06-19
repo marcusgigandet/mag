@@ -23,7 +23,7 @@ import :concepts;
 import :vector;
 
 #ifdef MAG_ENABLE_SIMD
-import :simd_ops;
+import :simd;
 #endif
 
 export namespace mag
