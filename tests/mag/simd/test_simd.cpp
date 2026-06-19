@@ -5,6 +5,7 @@
 #include <concepts>
 #include <span>
 #include <utility>
+#include <cmath>
 
 import mag;
 using namespace mag;

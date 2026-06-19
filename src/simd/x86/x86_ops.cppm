@@ -56,6 +56,21 @@ namespace mag::simd
 		{
 			return _mm_sub_epi8(a, b);
 		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			const __m128i signA = _mm_cmpgt_epi8(_mm_setzero_si128(), a);
+			const __m128i signB = _mm_cmpgt_epi8(_mm_setzero_si128(), b);
+			const __m128i aLo = _mm_unpacklo_epi8(a, signA);
+			const __m128i aHi = _mm_unpackhi_epi8(a, signA);
+			const __m128i bLo = _mm_unpacklo_epi8(b, signB);
+			const __m128i bHi = _mm_unpackhi_epi8(b, signB);
+			const __m128i mulLo = _mm_mullo_epi16(aLo, bLo);
+			const __m128i mulHi = _mm_mullo_epi16(aHi, bHi);
+			const __m128i mask = _mm_set1_epi16(0x00FF);
+			const __m128i loBytes = _mm_and_si128(mulLo, mask);
+			const __m128i hiBytes = _mm_and_si128(mulHi, mask);
+			return _mm_packus_epi16(loBytes, hiBytes);
+		}
 
 		MAG_INLINE static int8_t hsum(const native_t v) noexcept
 		{
@@ -121,6 +136,10 @@ namespace mag::simd
 		{
 			return _mm_sub_epi16(a, b);
 		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mullo_epi16(a, b);
+		}
 
 		MAG_INLINE static int16_t hsum(const native_t v) noexcept
 		{
@@ -183,6 +202,10 @@ namespace mag::simd
 		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
 		{
 			return _mm_sub_epi32(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mullo_epi32(a, b);
 		}
 
 		MAG_INLINE static int32_t hsum(const native_t v) noexcept
@@ -309,6 +332,20 @@ namespace mag::simd
 		{
 			return _mm_sub_epi8(a, b);
 		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			const __m128i zeros = _mm_setzero_si128();
+			const __m128i aLo = _mm_unpacklo_epi8(a, zeros);
+			const __m128i aHi = _mm_unpackhi_epi8(a, zeros);
+			const __m128i bLo = _mm_unpacklo_epi8(b, zeros);
+			const __m128i bHi = _mm_unpackhi_epi8(b, zeros);
+			const __m128i mulLo = _mm_mullo_epi16(aLo, bLo);
+			const __m128i mulHi = _mm_mullo_epi16(aHi, bHi);
+			const __m128i mask = _mm_set1_epi16(0x00FF);
+			const __m128i loBytes = _mm_and_si128(mulLo, mask);
+			const __m128i hiBytes = _mm_and_si128(mulHi, mask);
+			return _mm_packus_epi16(loBytes, hiBytes);
+		}
 
 		MAG_INLINE static uint8_t hsum(const native_t v) noexcept
 		{
@@ -377,6 +414,10 @@ namespace mag::simd
 		{
 			return _mm_sub_epi16(a, b);
 		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mullo_epi16(a, b);
+		}
 
 		MAG_INLINE static uint16_t hsum(const native_t v) noexcept
 		{
@@ -443,6 +484,10 @@ namespace mag::simd
 		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
 		{
 			return _mm_sub_epi32(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mullo_epi32(a, b);
 		}
 
 		MAG_INLINE static uint32_t hsum(const native_t v) noexcept
@@ -602,6 +647,18 @@ namespace mag::simd
 		{
 			return _mm_min_ps(a, b);
 		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept
+		{
+			return _mm_xor_ps(v, _mm_set1_ps(-0.0f));
+		}
+
+		MAG_INLINE static native_t abs(const native_t v) noexcept
+		{
+			return _mm_andnot_ps(_mm_set1_ps(-0.0f), v);
+		}
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return _mm_sqrt_ps(v); }
 	};
 
 	template <>
@@ -663,6 +720,18 @@ namespace mag::simd
 		{
 			return _mm_min_pd(a, b);
 		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept
+		{
+			return _mm_xor_pd(v, _mm_set1_pd(-0.0));
+		}
+
+		MAG_INLINE static native_t abs(const native_t v) noexcept
+		{
+			return _mm_andnot_pd(_mm_set1_pd(-0.0), v);
+		}
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return _mm_sqrt_pd(v); }
 	};
 } // namespace mag::simd
 
