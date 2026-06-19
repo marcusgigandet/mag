@@ -23,11 +23,13 @@ import :concepts;
 import :vector;
 
 #ifdef MAG_ENABLE_SIMD
-import :simd_ops;
+import :simd;
 #endif
 
 export namespace mag
 {
+	using namespace simd;
+
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator<=>(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{

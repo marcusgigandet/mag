@@ -270,3 +270,97 @@ TEST_CASE("Mat4x4 comparison", "[Mat4x4]")
 	REQUIRE(a == b);
 	REQUIRE(a != c);
 }
+
+TEST_CASE("Mat4x4 scalar, diagonal, and iterator utilities", "[Mat4x4]")
+{
+	Mat4f a{1, 2, 3, 4,
+			5, 6, 7, 8,
+			9, 10, 11, 12,
+			13, 14, 15, 16};
+	Mat4f b{2, 3, 4, 5,
+			6, 7, 8, 9,
+			10, 11, 12, 13,
+			14, 15, 16, 17};
+
+	SECTION("Scalar add/subtract free and compound operators")
+	{
+		auto add = a + 2.0f;
+		auto sub = a - 1.0f;
+		REQUIRE(add[0][0] == Catch::Approx(3.0f));
+		REQUIRE(add[3][3] == Catch::Approx(18.0f));
+		REQUIRE(sub[0][0] == Catch::Approx(0.0f));
+		REQUIRE(sub[3][3] == Catch::Approx(15.0f));
+
+		Mat4f c = a;
+		c += 2.0f;
+		c -= 2.0f;
+		REQUIRE(c == a);
+	}
+
+	SECTION("Element-wise matrix multiplication compound")
+	{
+		Mat4f c = a;
+		c *= b;
+		REQUIRE(c[0][0] == Catch::Approx(2.0f));
+		REQUIRE(c[1][1] == Catch::Approx(42.0f));
+		REQUIRE(c[3][3] == Catch::Approx(272.0f));
+	}
+
+	SECTION("Diagonal vector helper")
+	{
+		auto d = Mat4f::diagonal(Vec<float, 4>{2.0f, 3.0f, 4.0f, 5.0f});
+		REQUIRE(d[0][0] == Catch::Approx(2.0f));
+		REQUIRE(d[1][1] == Catch::Approx(3.0f));
+		REQUIRE(d[2][2] == Catch::Approx(4.0f));
+		REQUIRE(d[3][3] == Catch::Approx(5.0f));
+	}
+
+	SECTION("Iterator traversal and toString formatting")
+	{
+		float sum = 0.0f;
+		for (float v : a)
+			sum += v;
+		REQUIRE(sum == Catch::Approx(136.0f));
+		REQUIRE(a.toString().find("Mat4x4(") == 0);
+	}
+}
+
+TEST_CASE("Mat4x4 inverse and transform overloads", "[Mat4x4]")
+{
+	SECTION("Member inverse matches static inverse")
+	{
+		Mat4f m{1, 2, 3, 4,
+				0, 1, 4, 2,
+				5, 6, 0, 1,
+				0, 0, 0, 1};
+		REQUIRE(m.inverse() == Mat4f::inverse(m));
+	}
+
+	SECTION("Inverse of transform matrix composes to identity")
+	{
+		auto t = Mat4f::translate(2.0f, -3.0f, 4.0f);
+		auto r = Mat4f::rotateZ(pi<float> / 4.0f);
+		auto m = t * r;
+		auto inv = Mat4f::inverse(m);
+		auto product = m * inv;
+		for (int c = 0; c < 4; ++c)
+		{
+			for (int rIdx = 0; rIdx < 4; ++rIdx)
+			{
+				REQUIRE(product[c][rIdx] == Catch::Approx(c == rIdx ? 1.0f : 0.0f).margin(1e-4f));
+			}
+		}
+	}
+
+	SECTION("Translation vector overload")
+	{
+		Vec<float, 3> delta{1.0f, 2.0f, 3.0f};
+		auto t = Mat4f::translate(delta);
+		Vec<float, 4> v{1.0f, 1.0f, 1.0f, 1.0f};
+		auto r = t * v;
+		REQUIRE(r.x == Catch::Approx(2.0f));
+		REQUIRE(r.y == Catch::Approx(3.0f));
+		REQUIRE(r.z == Catch::Approx(4.0f));
+		REQUIRE(r.w == Catch::Approx(1.0f));
+	}
+}

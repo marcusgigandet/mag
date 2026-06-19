@@ -29,6 +29,8 @@ import :simd;
 
 namespace mag
 {
+	using namespace simd;
+
 	/**
 	 * @brief Generic N-dimensional vector for numerical computations.
 	 *
@@ -42,7 +44,7 @@ namespace mag
 	constexpr T length(const Vec<T, N>& v) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (supports_mul<T, N> && supports_hsum<T, N>)
+		if constexpr (supports_mul<T, N> && supports_reduction<T, N>)
 		{
 			using ops = ops<T, N>;
 
@@ -70,7 +72,7 @@ namespace mag
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_hsum<T, N>)
+		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_reduction<T, N>)
 		{
 			using ops = ops<T, N>;
 
@@ -336,6 +338,13 @@ namespace mag
 			return mag::dot(derived(), o);
 		}
 
+		/**
+		 * @brief Returns the vector as a formatted string.
+		 *
+		 * The resulting string contains the vector dimension and all component values,
+		 * e.g. `Vec3(1, 2, 3)`.
+		 * @return A string in the form `VecN(...)`.
+		 */
 		[[nodiscard]] std::string toString() const noexcept
 		{
 			std::ostringstream oss;

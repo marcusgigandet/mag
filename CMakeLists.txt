@@ -66,6 +66,7 @@ else ()
         add_compile_options(-msse2 -msse3 -msse4.1)
     endif ()
 endif ()
+
 ###################
 # Target: library #
 ###################

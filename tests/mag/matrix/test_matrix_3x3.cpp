@@ -242,3 +242,78 @@ TEST_CASE("Mat3x3 inverse", "[Mat3x3]")
     	REQUIRE(product == expected);
     }
 }
+
+TEST_CASE("Mat3x3 scalar and element-wise compound operations", "[Mat3x3]")
+{
+	Mat3f a{1, 2, 3,
+			4, 5, 6,
+			7, 8, 9};
+	Mat3f b{2, 3, 4,
+			5, 6, 7,
+			8, 9, 10};
+
+	SECTION("Scalar add/subtract free operators")
+	{
+		auto add = a + 2.0f;
+		auto sub = a - 1.0f;
+
+		REQUIRE(add == Mat3f{3, 4, 5,
+							 6, 7, 8,
+							 9, 10, 11});
+		REQUIRE(sub == Mat3f{0, 1, 2,
+							 3, 4, 5,
+							 6, 7, 8});
+	}
+
+	SECTION("Scalar compound add/subtract")
+	{
+		Mat3f c = a;
+		c += 2.0f;
+		REQUIRE(c == Mat3f{3, 4, 5,
+						   6, 7, 8,
+						   9, 10, 11});
+
+		c -= 2.0f;
+		REQUIRE(c == a);
+	}
+
+	SECTION("Element-wise matrix multiplication compound")
+	{
+		Mat3f c = a;
+		c *= b;
+		REQUIRE(c == Mat3f{2, 6, 12,
+						   20, 30, 42,
+						   56, 72, 90});
+	}
+}
+
+TEST_CASE("Mat3x3 rotation helpers and member inverse", "[Mat3x3]")
+{
+	SECTION("rotateX by 90 degrees")
+	{
+		auto rx = Mat3f::rotateX(pi<float> / 2.0f);
+		Vec<float, 3> v{0, 1, 0};
+		auto r = rx * v;
+		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.y == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.z == Catch::Approx(1.0f).margin(1e-5f));
+	}
+
+	SECTION("rotateY by 90 degrees")
+	{
+		auto ry = Mat3f::rotateY(pi<float> / 2.0f);
+		Vec<float, 3> v{1, 0, 0};
+		auto r = ry * v;
+		REQUIRE(r.x == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.y == Catch::Approx(0.0f).margin(1e-5f));
+		REQUIRE(r.z == Catch::Approx(-1.0f).margin(1e-5f));
+	}
+
+	SECTION("Member inverse matches static inverse")
+	{
+		Mat3f m{1, 2, 3,
+				0, 1, 4,
+				5, 6, 0};
+		REQUIRE(m.inverse() == Mat3f::inverse(m));
+	}
+}

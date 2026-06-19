@@ -27,7 +27,7 @@ import :simd_ops;
 MAG_DIAG_PUSH
 MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
-namespace mag
+namespace mag::simd
 {
 #ifdef MAG_ENABLE_SIMD_EXTENDED
 	template <>
@@ -53,7 +53,19 @@ namespace mag
 			return vmulq_s8(a, b);
 		}
 
-		MAG_INLINE static int8_t hsum(native_t v) noexcept { return vaddvq_s8(v); }
+		MAG_INLINE static int8_t hsum(const native_t v) noexcept { return vaddvq_s8(v); }
+		MAG_INLINE static int8_t hmax(const native_t v) noexcept { return vmaxvq_s8(v); }
+		MAG_INLINE static int8_t hmin(const native_t v) noexcept { return vminvq_s8(v); }
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_s8(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_s8(a, b);
+		}
 	};
 
 
@@ -81,6 +93,18 @@ namespace mag
 		}
 
 		MAG_INLINE static int16_t hsum(const native_t v) noexcept { return vaddvq_s16(v); }
+		MAG_INLINE static int16_t hmax(const native_t v) noexcept { return vmaxvq_s16(v); }
+		MAG_INLINE static int16_t hmin(const native_t v) noexcept { return vminvq_s16(v); }
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_s16(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_s16(a, b);
+		}
 	};
 
 
@@ -108,6 +132,18 @@ namespace mag
 		}
 
 		MAG_INLINE static int32_t hsum(const native_t v) noexcept { return vaddvq_s32(v); }
+		MAG_INLINE static int32_t hmax(const native_t v) noexcept { return vmaxvq_s32(v); }
+		MAG_INLINE static int32_t hmin(const native_t v) noexcept { return vminvq_s32(v); }
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_s32(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_s32(a, b);
+		}
 	};
 
 
@@ -131,6 +167,41 @@ namespace mag
 		}
 
 		MAG_INLINE static int64_t hsum(const native_t v) noexcept { return vaddvq_s64(v); }
+		MAG_INLINE static int64_t hmax(const native_t v) noexcept
+		{
+			// Get the max of the two lanes
+			const int64_t a = vgetq_lane_s64(v, 0);
+			const int64_t b = vgetq_lane_s64(v, 1);
+			return (a > b) ? a : b;
+		}
+
+		MAG_INLINE static int64_t hmin(const native_t v) noexcept
+		{
+			// Get the min of the two lanes
+			const int64_t a = vgetq_lane_s64(v, 0);
+			const int64_t b = vgetq_lane_s64(v, 1);
+			return (a < b) ? a : b;
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			const int64_t a0 = vgetq_lane_s64(a, 0);
+			const int64_t a1 = vgetq_lane_s64(a, 1);
+			const int64_t b0 = vgetq_lane_s64(b, 0);
+			const int64_t b1 = vgetq_lane_s64(b, 1);
+
+			return vcombine_s64(vdup_n_s64(a0 < b0 ? a0 : b0), vdup_n_s64(a1 < b1 ? a1 : b1));
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			const int64_t a0 = vgetq_lane_s64(a, 0);
+			const int64_t a1 = vgetq_lane_s64(a, 1);
+			const int64_t b0 = vgetq_lane_s64(b, 0);
+			const int64_t b1 = vgetq_lane_s64(b, 1);
+
+			return vcombine_s64(vdup_n_s64(a0 > b0 ? a0 : b0), vdup_n_s64(a1 > b1 ? a1 : b1));
+		}
 	};
 
 
@@ -158,6 +229,18 @@ namespace mag
 		}
 
 		MAG_INLINE static uint8_t hsum(const native_t v) noexcept { return vaddvq_u8(v); }
+		MAG_INLINE static uint8_t hmax(const native_t v) noexcept { return vmaxvq_u8(v); }
+		MAG_INLINE static uint8_t hmin(const native_t v) noexcept { return vminvq_u8(v); }
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_u8(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_u8(a, b);
+		}
 	};
 
 
@@ -185,6 +268,18 @@ namespace mag
 		}
 
 		MAG_INLINE static uint16_t hsum(const native_t v) noexcept { return vaddvq_u16(v); }
+		MAG_INLINE static uint16_t hmax(const native_t v) noexcept { return vmaxvq_u16(v); }
+		MAG_INLINE static uint16_t hmin(const native_t v) noexcept { return vminvq_u16(v); }
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_u16(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_u16(a, b);
+		}
 	};
 
 
@@ -212,6 +307,18 @@ namespace mag
 		}
 
 		MAG_INLINE static uint32_t hsum(const native_t v) noexcept { return vaddvq_u32(v); }
+		MAG_INLINE static uint32_t hmax(const native_t v) noexcept { return vmaxvq_u32(v); }
+		MAG_INLINE static uint32_t hmin(const native_t v) noexcept { return vminvq_u32(v); }
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_u32(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_u32(a, b);
+		}
 	};
 
 
@@ -235,6 +342,41 @@ namespace mag
 		}
 
 		MAG_INLINE static uint64_t hsum(const native_t v) noexcept { return vaddvq_u64(v); }
+		MAG_INLINE static uint64_t hmax(const native_t v) noexcept
+		{
+			// Get the max of the two lanes
+			const int64_t a = vgetq_lane_u64(v, 0);
+			const int64_t b = vgetq_lane_u64(v, 1);
+			return (a > b) ? a : b;
+		}
+
+		MAG_INLINE static uint64_t hmin(const native_t v) noexcept
+		{
+			// Get the min of the two lanes
+			const int64_t a = vgetq_lane_u64(v, 0);
+			const int64_t b = vgetq_lane_u64(v, 1);
+			return (a < b) ? a : b;
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			const uint64_t a0 = vgetq_lane_u64(a, 0);
+			const uint64_t a1 = vgetq_lane_u64(a, 1);
+			const uint64_t b0 = vgetq_lane_u64(b, 0);
+			const uint64_t b1 = vgetq_lane_u64(b, 1);
+
+			return vcombine_u64(vdup_n_u64(a0 < b0 ? a0 : b0), vdup_n_u64(a1 < b1 ? a1 : b1));
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			const uint64_t a0 = vgetq_lane_u64(a, 0);
+			const uint64_t a1 = vgetq_lane_u64(a, 1);
+			const uint64_t b0 = vgetq_lane_u64(b, 0);
+			const uint64_t b1 = vgetq_lane_u64(b, 1);
+
+			return vcombine_u64(vdup_n_u64(a0 > b0 ? a0 : b0), vdup_n_u64(a1 > b1 ? a1 : b1));
+		}
 	};
 #endif
 
@@ -266,6 +408,23 @@ namespace mag
 		}
 
 		MAG_INLINE static float hsum(const native_t v) noexcept { return vaddvq_f32(v); }
+		MAG_INLINE static float hmax(const native_t v) noexcept { return vmaxvq_f32(v); }
+		MAG_INLINE static float hmin(const native_t v) noexcept { return vminvq_f32(v); }
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_f32(a, b);
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_f32(a, b);
+		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept { return vnegq_f32(v); }
+		MAG_INLINE static native_t abs(const native_t v) noexcept { return vabsq_f32(v); }
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return vsqrtq_f32(v); }
 	};
 
 	template <>
@@ -297,8 +456,25 @@ namespace mag
 		}
 
 		MAG_INLINE static double hsum(const native_t v) noexcept { return vaddvq_f64(v); }
+		MAG_INLINE static double hmax(const native_t v) noexcept { return vmaxvq_f64(v); }
+		MAG_INLINE static double hmin(const native_t v) noexcept { return vminvq_f64(v); }
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_f64(a, b);
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_f64(a, b);
+		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept { return vnegq_f64(v); }
+		MAG_INLINE static native_t abs(const native_t v) noexcept { return vabsq_f64(v); }
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return vsqrtq_f64(v); }
 	};
-} // namespace mag
+} // namespace mag::simd
 
 // Restore to default state
 MAG_DIAG_POP

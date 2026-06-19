@@ -59,31 +59,78 @@ target_link_libraries(${PROJECT_NAME} PRIVATE mag::mag)
 target_compile_features(mag PRIVATE cxx_std_<cxx-version>) # You may need to set the target version
 ```
 
-```c++
-import mag;
+## Exemples d'utilisation
 
-mag::Vec4f vecA;
-mag::Vec<double, 4> vecB;
-```
-
-## Simd API
+### Vecteurs
 
 ```c++
 import mag;
 using namespace mag;
 
-const f32x4 dt{0.5f};
-const f32x4 gravity{9.8f};
+Vec4f a{1.0f, 2.0f, 3.0f, 4.0f};
+Vec4f b{3.0f, 4.0f, 5.0f, 6.0f};
 
-Vec4f posVec{1.0f, 2.0f, 3.0f, 4.0f};
-Vec4f velVec{0.1f, 0.2f, 0.3f, 0.4f};
+auto sum = a + b;
+auto scaled = 0.5f * a;
 
-f32x4 pos{posVec.v};   // {1.0f, 2.0f, 3.0f, 4.0f}
-f32x4 vel{velVec.v};   // {0.1f, 0.2f, 0.3f, 0.4f}
+Vec4f c = a;
+c += b;
+c -= 1.0f;
 
-vel += gravity * dt;  // {5.0f, 5.1f, 5.2f, 5.3f}
-pos += vel * dt;      // {6.0f, 7.1f. 8.2f, 9.3f}
+float len = a.length();
+float d = distance(a, b);
+auto lerped = lerp(a, b, 0.25f);
+```
 
-pos.store(posArr.v);
-vel.store(velArr.v);
+### Matrices
+
+```c++
+import mag;
+using namespace mag;
+
+Mat4f model =
+		Mat4f::translate(1.0f, 2.0f, 3.0f) *
+		Mat4f::rotateZ(pi<float> / 4.0f);
+
+Vec4f p{1.0f, 0.0f, 0.0f, 1.0f};
+Vec4f transformed = model * p;
+
+Mat4f invModel = model.inverse();
+Mat4f identity = model * invModel;
+
+Mat4f diag = Mat4f::diagonal(Vec4f{2.0f, 3.0f, 4.0f, 1.0f});
+```
+
+### API SIMD
+
+```c++
+#include <array>
+#include <span>
+
+import mag;
+using namespace mag;
+using namespace mag::simd;
+
+std::array<float, 4> data{5.0f, 6.0f, 7.0f, 8.0f};
+
+f32x4 a{2.0f, -4.0f, 8.0f, -16.0f};
+f32x4 b{1.0f, 2.0f, -4.0f, -8.0f};
+
+auto simdResult = (a + b) * 0.5f;   // Simd & scalar ops
+auto scalarLeft = 2.0f - b;
+
+f32x4 fromPtr{data.data()};
+f32x4 fromSpan{std::span<const float, 4>{data}};
+auto fixedLoaded = load<float, fixed_abi<4>>(data.data());
+auto splatted = splat<float, fixed_abi<4>>(9.0f);
+
+float sum = hsum(a);
+float minVal = hmin(a);
+float maxVal = hmax(a);
+
+auto lo = min(a, b);
+auto hi = max(a, b);
+
+std::array<float, 4> out{};
+simdResult.store(out.data());
 ```
