@@ -24,11 +24,13 @@ import :concepts;
 import :vector;
 
 #ifdef MAG_ENABLE_SIMD
-import :simd_ops;
+import :simd;
 #endif
 
 namespace mag
 {
+	using namespace simd;
+
 	/**
 	 * @brief Generic CxR-dimensional matrix for numerical computations.
 	 *

@@ -11,7 +11,7 @@ using namespace mag::simd;
 
 namespace
 {
-	constexpr Vec4f toVec(const f32x4& v)
+	Vec4f toVec(const f32x4& v)
 	{
 		Vec4f out{};
 		v.store(out.v);
