@@ -24,14 +24,13 @@ import :concepts;
 
 namespace mag::simd
 {
-	struct scalar_abi
+	export struct scalar_abi
 	{
 	};
-	struct native_abi
+	export struct native_abi
 	{
 	};
-
-	template <size_t N>
+	export template <size_t N>
 	struct fixed_abi
 	{
 		static constexpr size_t lanes = N;
@@ -81,6 +80,6 @@ namespace mag::simd
 	{
 	};
 
-	template <Numeric T, typename Abi = native_abi>
+	export template <Numeric T, typename Abi = native_abi>
 	inline constexpr size_t abi_lanes_v = abi_lanes<T, Abi>::value;
 } // namespace mag::simd

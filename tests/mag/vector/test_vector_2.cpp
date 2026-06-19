@@ -109,3 +109,103 @@ TEST_CASE("Vec2 comparison", "[Vec2]")
 	REQUIRE((a <=> b) == std::partial_ordering::equivalent);
 	REQUIRE((a <=> c) != std::partial_ordering::equivalent);
 }
+
+TEST_CASE("Vec2 compound arithmetic and scalar-first operations", "[Vec2]")
+{
+	SECTION("Compound vector operations")
+	{
+		Vec<float, 2> value{4.0f, 8.0f};
+		Vec<float, 2> delta{1.0f, 2.0f};
+
+		value += delta;
+		REQUIRE(value[0] == Catch::Approx(5.0f));
+		REQUIRE(value[1] == Catch::Approx(10.0f));
+
+		value -= delta;
+		REQUIRE(value[0] == Catch::Approx(4.0f));
+		REQUIRE(value[1] == Catch::Approx(8.0f));
+
+		value *= delta;
+		REQUIRE(value[0] == Catch::Approx(4.0f));
+		REQUIRE(value[1] == Catch::Approx(16.0f));
+
+		value /= delta;
+		REQUIRE(value[0] == Catch::Approx(4.0f));
+		REQUIRE(value[1] == Catch::Approx(8.0f));
+	}
+
+	SECTION("Compound scalar operations")
+	{
+		Vec<float, 2> value{2.0f, 4.0f};
+
+		value += 1.0f;
+		REQUIRE(value[0] == Catch::Approx(3.0f));
+		REQUIRE(value[1] == Catch::Approx(5.0f));
+
+		value -= 2.0f;
+		REQUIRE(value[0] == Catch::Approx(1.0f));
+		REQUIRE(value[1] == Catch::Approx(3.0f));
+
+		value *= 3.0f;
+		REQUIRE(value[0] == Catch::Approx(3.0f));
+		REQUIRE(value[1] == Catch::Approx(9.0f));
+
+		value /= 3.0f;
+		REQUIRE(value[0] == Catch::Approx(1.0f));
+		REQUIRE(value[1] == Catch::Approx(3.0f));
+	}
+
+	SECTION("Scalar-first operators")
+	{
+		Vec<float, 2> value{1.5f, 2.5f};
+
+		auto sum = 2.0f + value;
+		REQUIRE(sum[0] == Catch::Approx(3.5f));
+		REQUIRE(sum[1] == Catch::Approx(4.5f));
+
+		auto diff = 5.0f - value;
+		REQUIRE(diff[0] == Catch::Approx(3.5f));
+		REQUIRE(diff[1] == Catch::Approx(2.5f));
+
+		auto prod = 2.0f * value;
+		REQUIRE(prod[0] == Catch::Approx(3.0f));
+		REQUIRE(prod[1] == Catch::Approx(5.0f));
+	}
+}
+
+TEST_CASE("Vec2 utilities and aliases", "[Vec2]")
+{
+	SECTION("Distance and free normalize")
+	{
+		Vec<float, 2> a{1.0f, 2.0f};
+		Vec<float, 2> b{4.0f, 6.0f};
+		REQUIRE(distance(a, b) == Catch::Approx(5.0f));
+
+		auto normalized = normalize(Vec<float, 2>{3.0f, 4.0f});
+		REQUIRE(normalized[0] == Catch::Approx(0.6f));
+		REQUIRE(normalized[1] == Catch::Approx(0.8f));
+
+		auto zeroNormalized = normalize(Vec<float, 2>{0.0f, 0.0f});
+		REQUIRE(zeroNormalized[0] == Catch::Approx(0.0f));
+		REQUIRE(zeroNormalized[1] == Catch::Approx(0.0f));
+	}
+
+	SECTION("Aliases and iterators")
+	{
+		Vec<float, 2> color{1.0f, 2.0f};
+		color.r = 3.0f;
+		color.g = 4.0f;
+		REQUIRE(color.x == Catch::Approx(3.0f));
+		REQUIRE(color.y == Catch::Approx(4.0f));
+
+		float sum = 0.0f;
+		for (float c : color)
+			sum += c;
+		REQUIRE(sum == Catch::Approx(7.0f));
+
+		auto rev = color.rbegin();
+		REQUIRE(*rev == Catch::Approx(4.0f));
+		++rev;
+		REQUIRE(*rev == Catch::Approx(3.0f));
+	}
+}
