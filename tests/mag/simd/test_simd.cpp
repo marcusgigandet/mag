@@ -2,10 +2,10 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <array>
+#include <cmath>
 #include <concepts>
 #include <span>
 #include <utility>
-#include <cmath>
 
 import mag;
 using namespace mag;
