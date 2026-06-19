@@ -338,6 +338,16 @@ namespace mag
 			return result;
 		}
 
+		/**
+		 * @brief Returns the matrix as a formatted string.
+		 *
+		 * The resulting string contains the matrix width, height dimensions and all component
+		 * values, e.g. ```Mat3x3( [1, 2, 3], [4, 5, 6], [7, 8, 9]
+		 *		 )```.
+		 * Where column 0, row 1 is 4.
+		 *
+		 * @return A string in the form `VecN(...)`.
+		 */
 		[[nodiscard]] std::string toString() const noexcept
 		{
 			std::ostringstream oss;

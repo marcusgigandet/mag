@@ -338,6 +338,13 @@ namespace mag
 			return mag::dot(derived(), o);
 		}
 
+		/**
+		 * @brief Returns the vector as a formatted string.
+		 *
+		 * The resulting string contains the vector dimension and all component values,
+		 * e.g. `Vec3(1, 2, 3)`.
+		 * @return A string in the form `VecN(...)`.
+		 */
 		[[nodiscard]] std::string toString() const noexcept
 		{
 			std::ostringstream oss;
