@@ -18,6 +18,7 @@ module;
 #include "typedefs.hpp"
 #include <cstdint>
 #include <immintrin.h>
+#include <span>
 export module mag:x86_ops;
 
 import :simd_ops;
@@ -40,6 +41,10 @@ namespace mag::simd
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
 		}
+		MAG_INLINE static void store(std::span<int8_t, 16> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
+		}
 
 		MAG_INLINE static native_t splat(const int8_t s) noexcept { return _mm_set1_epi8(s); }
 
@@ -60,28 +65,33 @@ namespace mag::simd
 		MAG_INLINE static int8_t hmax(const native_t v) noexcept
 		{
 			__m128i max = v;
-
-			max = _mm_max_epu8(max, _mm_srli_si128(max, 8));
-			max = _mm_max_epu8(max, _mm_srli_si128(max, 4));
-			max = _mm_max_epu8(max, _mm_srli_si128(max, 2));
-			max = _mm_max_epu8(max, _mm_srli_si128(max, 1));
-
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 4));
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 2));
+			max = _mm_max_epi8(max, _mm_srli_si128(max, 1));
 			return static_cast<int8_t>(_mm_extract_epi8(max, 0));
 		}
 
 		MAG_INLINE static int8_t hmin(const native_t v) noexcept
 		{
 			__m128i min = v;
-
-			min = _mm_min_epu8(min, _mm_srli_si128(min, 8));
-			min = _mm_min_epu8(min, _mm_srli_si128(min, 4));
-			min = _mm_min_epu8(min, _mm_srli_si128(min, 2));
-			min = _mm_min_epu8(min, _mm_srli_si128(min, 1));
-
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 4));
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 2));
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 1));
 			return static_cast<int8_t>(_mm_extract_epi8(min, 0));
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epi8(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epi8(a, b);
+		}
+	};
 
 	template <>
 	struct ops<int16_t, 8>
@@ -95,6 +105,10 @@ namespace mag::simd
 		MAG_INLINE static void store(int16_t* p, const native_t v) noexcept
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
+		}
+		MAG_INLINE static void store(std::span<int16_t, 8> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
 		}
 
 		MAG_INLINE static native_t splat(const int16_t s) noexcept { return _mm_set1_epi16(s); }
@@ -116,26 +130,31 @@ namespace mag::simd
 		MAG_INLINE static int16_t hmax(const native_t v) noexcept
 		{
 			__m128i max = v;
-
 			max = _mm_max_epi16(max, _mm_srli_si128(max, 8));
 			max = _mm_max_epi16(max, _mm_srli_si128(max, 4));
 			max = _mm_max_epi16(max, _mm_srli_si128(max, 2));
-
 			return static_cast<int16_t>(_mm_extract_epi16(max, 0));
 		}
 
 		MAG_INLINE static int16_t hmin(const native_t v) noexcept
 		{
 			__m128i min = v;
-
 			min = _mm_min_epi16(min, _mm_srli_si128(min, 8));
 			min = _mm_min_epi16(min, _mm_srli_si128(min, 4));
 			min = _mm_min_epi16(min, _mm_srli_si128(min, 2));
-
 			return static_cast<int16_t>(_mm_extract_epi16(min, 0));
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epi16(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epi16(a, b);
+		}
+	};
 
 	template <>
 	struct ops<int32_t, 4>
@@ -149,6 +168,10 @@ namespace mag::simd
 		MAG_INLINE static void store(int32_t* p, const native_t v) noexcept
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
+		}
+		MAG_INLINE static void store(std::span<int32_t, 4> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
 		}
 
 		MAG_INLINE static native_t splat(const int32_t s) noexcept { return _mm_set1_epi32(s); }
@@ -170,24 +193,29 @@ namespace mag::simd
 		MAG_INLINE static int32_t hmax(const native_t v) noexcept
 		{
 			__m128i max = v;
-
 			max = _mm_max_epi32(max, _mm_srli_si128(max, 8));
 			max = _mm_max_epi32(max, _mm_srli_si128(max, 4));
-
 			return _mm_cvtsi128_si32(max);
 		}
 
 		MAG_INLINE static int32_t hmin(const native_t v) noexcept
 		{
 			__m128i min = v;
-
 			min = _mm_min_epi32(min, _mm_srli_si128(min, 8));
 			min = _mm_min_epi32(min, _mm_srli_si128(min, 4));
-
 			return _mm_cvtsi128_si32(min);
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epi32(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epi32(a, b);
+		}
+	};
 
 	template <>
 	struct ops<int64_t, 2>
@@ -201,6 +229,10 @@ namespace mag::simd
 		MAG_INLINE static void store(int64_t* p, const native_t v) noexcept
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
+		}
+		MAG_INLINE static void store(std::span<int64_t, 2> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
 		}
 
 		MAG_INLINE static native_t splat(const int64_t s) noexcept { return _mm_set1_epi64x(s); }
@@ -223,9 +255,7 @@ namespace mag::simd
 		{
 			const __m128i shifted = _mm_srli_si128(v, 8);
 			const __m128i mask = _mm_cmpgt_epi64(v, shifted);
-
 			const __m128i max = _mm_blendv_epi8(shifted, v, mask);
-
 			return _mm_cvtsi128_si64(max);
 		}
 
@@ -233,13 +263,20 @@ namespace mag::simd
 		{
 			const __m128i shifted = _mm_srli_si128(v, 8);
 			const __m128i mask = _mm_cmpgt_epi64(shifted, v);
-
 			const __m128i min = _mm_blendv_epi8(v, shifted, mask);
-
 			return _mm_cvtsi128_si64(min);
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epi64(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epi64(a, b);
+		}
+	};
 
 	template <>
 	struct ops<uint8_t, 16>
@@ -253,6 +290,10 @@ namespace mag::simd
 		MAG_INLINE static void store(uint8_t* p, const native_t v) noexcept
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
+		}
+		MAG_INLINE static void store(std::span<uint8_t, 16> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
 		}
 
 		MAG_INLINE static native_t splat(const uint8_t s) noexcept
@@ -277,28 +318,33 @@ namespace mag::simd
 		MAG_INLINE static uint8_t hmax(const native_t v) noexcept
 		{
 			__m128i max = v;
-
 			max = _mm_max_epi8(max, _mm_srli_si128(max, 8));
 			max = _mm_max_epi8(max, _mm_srli_si128(max, 4));
 			max = _mm_max_epi8(max, _mm_srli_si128(max, 2));
 			max = _mm_max_epi8(max, _mm_srli_si128(max, 1));
-
-			return static_cast<int8_t>(_mm_extract_epi8(max, 0));
+			return static_cast<uint8_t>(_mm_extract_epi8(max, 0));
 		}
 
 		MAG_INLINE static uint8_t hmin(const native_t v) noexcept
 		{
 			__m128i min = v;
-
-			min = _mm_max_epu8(min, _mm_srli_si128(min, 8));
-			min = _mm_max_epu8(min, _mm_srli_si128(min, 4));
-			min = _mm_max_epu8(min, _mm_srli_si128(min, 2));
-			min = _mm_max_epu8(min, _mm_srli_si128(min, 1));
-
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 4));
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 2));
+			min = _mm_min_epi8(min, _mm_srli_si128(min, 1));
 			return static_cast<uint8_t>(_mm_extract_epi8(min, 0));
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epu8(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epu8(a, b);
+		}
+	};
 
 	template <>
 	struct ops<uint16_t, 8>
@@ -312,6 +358,10 @@ namespace mag::simd
 		MAG_INLINE static void store(uint16_t* p, const native_t v) noexcept
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
+		}
+		MAG_INLINE static void store(std::span<uint16_t, 8> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
 		}
 
 		MAG_INLINE static native_t splat(const uint16_t s) noexcept
@@ -337,26 +387,31 @@ namespace mag::simd
 		MAG_INLINE static uint16_t hmax(const native_t v) noexcept
 		{
 			__m128i max = v;
-
-			max = _mm_max_epu16(max, _mm_srli_si128(max, 8));
-			max = _mm_max_epu16(max, _mm_srli_si128(max, 4));
-			max = _mm_max_epu16(max, _mm_srli_si128(max, 2));
-
+			max = _mm_max_epi16(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epi16(max, _mm_srli_si128(max, 4));
+			max = _mm_max_epi16(max, _mm_srli_si128(max, 2));
 			return static_cast<uint16_t>(_mm_extract_epi16(max, 0));
 		}
 
 		MAG_INLINE static uint16_t hmin(const native_t v) noexcept
 		{
 			__m128i min = v;
-
-			min = _mm_min_epu16(min, _mm_srli_si128(min, 8));
-			min = _mm_min_epu16(min, _mm_srli_si128(min, 4));
-			min = _mm_min_epu16(min, _mm_srli_si128(min, 2));
-
+			min = _mm_min_epi16(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epi16(min, _mm_srli_si128(min, 4));
+			min = _mm_min_epi16(min, _mm_srli_si128(min, 2));
 			return static_cast<uint16_t>(_mm_extract_epi16(min, 0));
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epu16(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epu16(a, b);
+		}
+	};
 
 	template <>
 	struct ops<uint32_t, 4>
@@ -370,6 +425,10 @@ namespace mag::simd
 		MAG_INLINE static void store(uint32_t* p, const native_t v) noexcept
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
+		}
+		MAG_INLINE static void store(std::span<uint32_t, 4> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
 		}
 
 		MAG_INLINE static native_t splat(const uint32_t s) noexcept
@@ -395,24 +454,29 @@ namespace mag::simd
 		MAG_INLINE static uint32_t hmax(const native_t v) noexcept
 		{
 			__m128i max = v;
-
-			max = _mm_max_epu32(max, _mm_srli_si128(max, 8));
-			max = _mm_max_epu32(max, _mm_srli_si128(max, 4));
-
+			max = _mm_max_epi32(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epi32(max, _mm_srli_si128(max, 4));
 			return static_cast<uint32_t>(_mm_cvtsi128_si32(max));
 		}
 
 		MAG_INLINE static uint32_t hmin(const native_t v) noexcept
 		{
 			__m128i min = v;
-
-			min = _mm_min_epu32(min, _mm_srli_si128(min, 8));
-			min = _mm_min_epu32(min, _mm_srli_si128(min, 4));
-
+			min = _mm_min_epi32(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epi32(min, _mm_srli_si128(min, 4));
 			return static_cast<uint32_t>(_mm_cvtsi128_si32(min));
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epu32(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epu32(a, b);
+		}
+	};
 
 	template <>
 	struct ops<uint64_t, 2>
@@ -426,6 +490,10 @@ namespace mag::simd
 		MAG_INLINE static void store(uint64_t* p, const native_t v) noexcept
 		{
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(p), v);
+		}
+		MAG_INLINE static void store(std::span<uint64_t, 2> dst, const native_t v) noexcept
+		{
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(dst.data()), v);
 		}
 
 		MAG_INLINE static native_t splat(const uint64_t s) noexcept
@@ -450,17 +518,25 @@ namespace mag::simd
 		MAG_INLINE static uint64_t hmax(const native_t v) noexcept
 		{
 			const __m128i shifted = _mm_srli_si128(v, 8);
-			const __m128i max = _mm_max_epu64(v, shifted);
-
+			const __m128i max = _mm_max_epi64(v, shifted);
 			return static_cast<uint64_t>(_mm_cvtsi128_si64(max));
 		}
 
 		MAG_INLINE static uint64_t hmin(const native_t v) noexcept
 		{
 			const __m128i shifted = _mm_srli_si128(v, 8);
-			const __m128i min = _mm_min_epu64(v, shifted);
-
+			const __m128i min = _mm_min_epi64(v, shifted);
 			return static_cast<uint64_t>(_mm_cvtsi128_si64(min));
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_epu64(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_epu64(a, b);
 		}
 	};
 #endif
@@ -472,6 +548,10 @@ namespace mag::simd
 
 		MAG_INLINE static native_t load(const float* p) noexcept { return _mm_loadu_ps(p); }
 		MAG_INLINE static void store(float* p, const native_t v) noexcept { _mm_storeu_ps(p, v); }
+		MAG_INLINE static void store(std::span<float, 4> dst, const native_t v) noexcept
+		{
+			_mm_storeu_ps(dst.data(), v);
+		}
 
 		MAG_INLINE static native_t splat(const float s) noexcept { return _mm_set1_ps(s); }
 
@@ -512,8 +592,17 @@ namespace mag::simd
 					_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1)));
 			return _mm_cvtss_f32(min2);
 		}
-	};
 
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_ps(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_ps(a, b);
+		}
+	};
 
 	template <>
 	struct ops<double, 2>
@@ -522,6 +611,10 @@ namespace mag::simd
 
 		MAG_INLINE static native_t load(const double* p) noexcept { return _mm_loadu_pd(p); }
 		MAG_INLINE static void store(double* p, const native_t v) noexcept { _mm_storeu_pd(p, v); }
+		MAG_INLINE static void store(std::span<double, 2> dst, const native_t v) noexcept
+		{
+			_mm_storeu_pd(dst.data(), v);
+		}
 
 		MAG_INLINE static native_t splat(const double s) noexcept { return _mm_set1_pd(s); }
 
@@ -560,7 +653,17 @@ namespace mag::simd
 			const __m128d min = _mm_min_sd(v, shifted);
 			return _mm_cvtsd_f64(min);
 		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_pd(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_pd(a, b);
+		}
 	};
-} // namespace mag
+} // namespace mag::simd
 
 // NOLINTEND(portability-simd-intrinsics)

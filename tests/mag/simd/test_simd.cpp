@@ -19,10 +19,10 @@ namespace
 	}
 } // namespace
 
-TEST_CASE("f32x4 basic arithmetic", "[simd]")
+TEST_CASE("f32x basic arithmetic", "[simd]")
 {
-	f32x4 a{1.0f};
-	f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+	f32x a{1.0f};
+	f32x b{1.0f, 2.0f, 3.0f, 4.0f};
 
 	SECTION("addition")
 	{
@@ -57,14 +57,14 @@ TEST_CASE("f32x4 basic arithmetic", "[simd]")
 	}
 }
 
-TEST_CASE("f32x4 compound arithmetic", "[simd]")
+TEST_CASE("f32x compound arithmetic", "[simd]")
 {
-	f32x4 a{1.0f};
-	f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+	f32x a{1.0f};
+	f32x b{1.0f, 2.0f, 3.0f, 4.0f};
 
 	SECTION("addition assignment")
 	{
-		f32x4 c = b;
+		f32x c = b;
 		c += a;
 
 		REQUIRE(toVec(c) == Vec4f{2.0f, 3.0f, 4.0f, 5.0f});
@@ -72,7 +72,7 @@ TEST_CASE("f32x4 compound arithmetic", "[simd]")
 
 	SECTION("subtraction assignment")
 	{
-		f32x4 c = b;
+		f32x c = b;
 		c -= a;
 
 		REQUIRE(toVec(c) == Vec4f{0.0f, 1.0f, 2.0f, 3.0f});
@@ -80,7 +80,7 @@ TEST_CASE("f32x4 compound arithmetic", "[simd]")
 
 	SECTION("multiplication assignment")
 	{
-		f32x4 c = b;
+		f32x c = b;
 		c *= a;
 
 		REQUIRE(toVec(c) == Vec4f{1.0f, 2.0f, 3.0f, 4.0f});
@@ -88,7 +88,7 @@ TEST_CASE("f32x4 compound arithmetic", "[simd]")
 
 	SECTION("division assignment")
 	{
-		f32x4 c = b;
+		f32x c = b;
 		c /= a;
 
 		Vec4f r = toVec(c);
@@ -102,12 +102,12 @@ TEST_CASE("f32x4 compound arithmetic", "[simd]")
 
 TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 {
-	f32x4 a{1.0f};
-	f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+	f32x a{1.0f};
+	f32x b{1.0f, 2.0f, 3.0f, 4.0f};
 
 	SECTION("load from args")
 	{
-		f32x4 c{5.0f, 6.0f, 7.0f, 8.0f};
+		f32x c{5.0f, 6.0f, 7.0f, 8.0f};
 
 		REQUIRE(toVec(c) == Vec4f{5.0f, 6.0f, 7.0f, 8.0f});
 	}
@@ -116,7 +116,7 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 	{
 		constexpr float data[4]{5.0f, 6.0f, 7.0f, 8.0f};
 
-		f32x4 c{data};
+		f32x c{data};
 
 		REQUIRE(toVec(c) == Vec4f{5.0f, 6.0f, 7.0f, 8.0f});
 	}
@@ -126,7 +126,7 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 		float data[4]{5.0f, 6.0f, 7.0f, 8.0f};
 		std::span s{data};
 
-		f32x4 c{s};
+		f32x c{s};
 
 		REQUIRE(toVec(c) == Vec4f{5.0f, 6.0f, 7.0f, 8.0f});
 	}
@@ -134,7 +134,7 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 	SECTION("store to pointer")
 	{
 		// Check that convertable types are allowed
-		f32x4 c{5.0f, 6.0f, 7.0, 8.0};
+		f32x c{5.0f, 6.0f, 7.0, 8.0};
 
 		std::array<float, 4> out{};
 		c.store(out.data());
@@ -146,43 +146,44 @@ TEST_CASE("f32x4 load/store/splat/hsum", "[simd]")
 
 	SECTION("horizontal min")
 	{
-		f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+		f32x b{1.0f, 2.0f, 3.0f, 4.0f};
 
 		REQUIRE(hmin(b) == Catch::Approx(1.0f));
 
-		f32x4 c{4.0f, -2.0f, 7.0f, 3.0f};
+		f32x c{4.0f, -2.0f, 7.0f, 3.0f};
 		REQUIRE(hmin(c) == Catch::Approx(-2.0f));
 
-		f32x4 d{-1.0f, -5.0f, -3.0f, -4.0f};
+		f32x d{-1.0f, -5.0f, -3.0f, -4.0f};
 		REQUIRE(hmin(d) == Catch::Approx(-5.0f));
 
-		f32x4 e{0.0f, 0.0f, 0.0f, 0.0f};
+		f32x e{0.0f, 0.0f, 0.0f, 0.0f};
 		REQUIRE(hmin(e) == Catch::Approx(0.0f));
 	}
 
 	SECTION("horizontal max")
 	{
-		f32x4 b{1.0f, 2.0f, 3.0f, 4.0f};
+		f32x b{1.0f, 2.0f, 3.0f, 4.0f};
 		REQUIRE(hmax(b) == Catch::Approx(4.0f));
 
-		f32x4 c{4.0f, -2.0f, 7.0f, 3.0f};
+		f32x c{4.0f, -2.0f, 7.0f, 3.0f};
 		REQUIRE(hmax(c) == Catch::Approx(7.0f));
 
-		f32x4 d{-1.0f, -5.0f, -3.0f, -4.0f};
+		f32x d{-1.0f, -5.0f, -3.0f, -4.0f};
 		REQUIRE(hmax(d) == Catch::Approx(-1.0f));
 
-		f32x4 e{0.0f, 0.0f, 0.0f, 0.0f};
+		f32x e{0.0f, 0.0f, 0.0f, 0.0f};
 		REQUIRE(hmax(e) == Catch::Approx(0.0f));
 	}
 
-	f32x4 c{5, 6, 8, 12};
-	f32x4 d{3, 6, 3, 9};
-	auto f = sqrt(max(c, d));
-	float array[4];
+	f32x c{5, 6, 8, 12};
+	f32x d{3, 6, 3, 9};
 
-	f.store(array);
+	// auto f = sqrt(max(c, d));
+	// float array[4];
 
-	for (size_t i = 0; i < 4; i++)
-		std::cout << array[i] << std::endl;
-	std::cout << std::endl;
+	// f.store(array);
+
+	// for (size_t i = 0; i < 4; i++)
+	// 	std::cout << array[i] << std::endl;
+	// std::cout << std::endl;
 }

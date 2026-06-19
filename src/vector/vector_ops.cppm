@@ -28,6 +28,8 @@ import :simd_ops;
 
 export namespace mag
 {
+	using namespace simd;
+
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator<=>(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{

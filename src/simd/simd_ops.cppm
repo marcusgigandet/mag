@@ -27,19 +27,6 @@ export namespace mag::simd
 	 *
 	 * Provides the primitive SIMD operations for a given type and width.
 	 *
-	 * Each specialization of `ops<T, N>` MUST define compatible operations in the following format:
-	 * @code
-	 * using native_t = <native-simd-type>;
-	 * MAG_INLINE static native_t load(const T* p)
-	 * MAG_INLINE static void store(T* p, const native_t v)
-	 * MAG_INLINE static native_t splat(const T v)
-	 * MAG_INLINE static native_t add(const native_t a, const native_t b)
-	 * MAG_INLINE static native_t sub(const native_t a, const native_t b)
-	 * MAG_INLINE static native_t mul(const native_t a, const native_t b)
-	 * MAG_INLINE static native_t div(const native_t a, const native_t b)
-	 * MAG_INLINE static T hsum(const native_t v)
-	 * @endcode
-	 *
 	 * @note Inline features that may benefit from it using MAG_INLINE.
 	 *
 	 * @tparam T Scalar element type.

@@ -20,6 +20,7 @@ module;
 #include <span>
 export module mag:simd;
 
+export import :simd_abi;
 export import :simd_concepts;
 export import :simd_ops;
 
@@ -44,65 +45,40 @@ namespace mag::simd
 	export template <Numeric T, size_t N>
 	class Simd
 	{
+		using native_type = typename ops<T, N>::native_t;
+
 		/// Underlying SIMD register storage
-		ops<T, N>::native_t m_native{};
+		native_type m_native{};
 
 	public:
+		using value_type = T;
+		static constexpr size_t lanes = N;
+
+		[[nodiscard]] static consteval size_t size() noexcept { return N; }
+
 		MAG_INLINE Simd() noexcept = default;
 
-		/**
-		 * @brief Broadcasts a scalar value across all SIMD lanes.
-		 *
-		 * @param s Scalar value to replicate.
-		 */
 		template <std::convertible_to<T> U>
-		MAG_INLINE explicit Simd(U s) : m_native(ops<T, N>::splat(static_cast<T>(s)))
+		MAG_INLINE explicit Simd(U s) noexcept : m_native(ops<T, N>::splat(static_cast<T>(s)))
 		{
 		}
 
-		/**
-		 * @brief Uploads a span of N elements to the SIMD register.
-		 *
-		 * @param data Data being uploaded.
-		 */
-		MAG_INLINE explicit Simd(const std::span<T, N> data) :
+		MAG_INLINE explicit Simd(const std::span<const T, N> data) noexcept :
 			m_native(ops<T, N>::load(data.data()))
 		{
 		}
 
-		/**
-		 * @brief Uploads N elements from memory into a SIMD register
-		 *
-		 * @param ptr Must be a valid pointer containing N elements of T.
-		 *
-		 * @note This method is unsafe and will result in an error if an incorrectly sized ptr is
-		 * provided.
-		 */
-		MAG_INLINE explicit Simd(const T* ptr) : m_native(ops<T, N>::load(ptr)) {}
+		MAG_INLINE explicit Simd(const T* ptr) noexcept : m_native(ops<T, N>::load(ptr)) {}
 
-		/**
-		 * @brief Loads N unique elements into a SIMD register.
-		 *
-		 * Initializes each lane of the SIMD register with the corresponding
-		 * argument value.
-		 *
-		 * @tparam Args Types of the values used to initialize the SIMD lanes.
-		 * @param args Values to load into the SIMD register lanes.
-		 */
 		template <typename... Args>
 			requires(sizeof...(Args) == N) && (std::convertible_to<Args, T> && ...)
 		MAG_INLINE explicit Simd(Args... args) noexcept
 		{
-			alignas(alignof(T)) T tmp[N]{static_cast<T>(args)...};
+			alignas(sizeof(native_type)) T tmp[N]{static_cast<T>(args)...};
 			m_native = ops<T, N>::load(tmp);
 		}
 
-		/**
-		 * @brief Copies data from a native simd type.
-		 *
-		 * @param data Native simd type being copied.
-		 */
-		MAG_INLINE explicit Simd(const ops<T, N>::native_t data) : m_native(data) {}
+		MAG_INLINE explicit Simd(native_type data) noexcept : m_native(data) {}
 
 		Simd(const Simd&) noexcept = default;
 		Simd(Simd&&) noexcept = default;
@@ -133,42 +109,42 @@ namespace mag::simd
 		MAG_INLINE friend Simd operator+(const Simd& a, T b)
 			requires supports_add<T, N>
 		{
-			return Simd{a.m_native + ops<T, N>::splat(b)};
+			return Simd{ops<T, N>::add(a.m_native, ops<T, N>::splat(b))};
 		}
 		MAG_INLINE friend Simd operator+(T a, const Simd& b)
 			requires supports_add<T, N>
 		{
-			return Simd{ops<T, N>::splat(a) + b.m_native};
+			return Simd{ops<T, N>::add(ops<T, N>::splat(a), b.m_native)};
 		}
 		MAG_INLINE friend Simd operator-(const Simd& a, T b)
 			requires supports_sub<T, N>
 		{
-			return Simd{a.m_native - ops<T, N>::splat(b)};
+			return Simd{ops<T, N>::sub(a.m_native, ops<T, N>::splat(b))};
 		}
 		MAG_INLINE friend Simd operator-(T a, const Simd& b)
 			requires supports_sub<T, N>
 		{
-			return Simd{ops<T, N>::splat(a) - b.m_native};
+			return Simd{ops<T, N>::sub(ops<T, N>::splat(a), b.m_native)};
 		}
 		MAG_INLINE friend Simd operator*(const Simd& a, T b)
 			requires supports_mul<T, N>
 		{
-			return Simd{a.m_native * ops<T, N>::splat(b)};
+			return Simd{ops<T, N>::mul(a.m_native, ops<T, N>::splat(b))};
 		}
 		MAG_INLINE friend Simd operator*(T a, const Simd& b)
 			requires supports_mul<T, N>
 		{
-			return Simd{ops<T, N>::splat(a) * b.m_native};
+			return Simd{ops<T, N>::mul(ops<T, N>::splat(a), b.m_native)};
 		}
 		MAG_INLINE friend Simd operator/(const Simd& a, T b)
 			requires supports_div<T, N>
 		{
-			return Simd{a.m_native / ops<T, N>::splat(b)};
+			return Simd{ops<T, N>::div(a.m_native, ops<T, N>::splat(b))};
 		}
 		MAG_INLINE friend Simd operator/(T a, const Simd& b)
 			requires supports_div<T, N>
 		{
-			return Simd{ops<T, N>::splat(a) / b.m_native};
+			return Simd{ops<T, N>::div(ops<T, N>::splat(a), b.m_native)};
 		}
 
 		MAG_INLINE Simd& operator+=(const Simd& o)
@@ -220,33 +196,39 @@ namespace mag::simd
 			return *this;
 		}
 
-		[[nodiscard]] constexpr ops<T, N>::native_t native() const noexcept { return m_native; }
+		[[nodiscard]] constexpr native_type native() const noexcept { return m_native; }
 
-		/**
-		 * @brief Stores SIMD register values back to memory.
-		 *
-		 * @param dst Span of data to write SIMD registers to.
-		 */
-		MAG_INLINE void store(std::span<T, N> dst) const { ops<T, N>::store(dst, m_native); }
-
-		/**
-		 * @brief Stores SIMD register values back to memory.
-		 *
-		 * @param dst Data to write SIMD registers to.
-		 */
-		MAG_INLINE void store(T* dst) const { ops<T, N>::store(dst, m_native); }
+		MAG_INLINE void store(std::span<T, N> dst) const noexcept
+		{
+			ops<T, N>::store(dst, m_native);
+		}
+		MAG_INLINE void store(T* dst) const noexcept { ops<T, N>::store(dst, m_native); }
 	};
 
-	/**
-	 * @brief Reduces all SIMD lanes to a single scalar by summing elements.
-	 *
-	 * @tparam T Scalar element type.
-	 * @tparam N SIMD lane count.
-	 *
-	 * @param s SIMD value to reduce.
-	 *
-	 * @return Sum of all elements in the SIMD register.
-	 */
+	export template <Numeric T, typename Abi = native_abi>
+	using basic_simd = Simd<T, abi_lanes_v<T, Abi>>;
+
+	export template <Numeric T>
+	using native_simd = basic_simd<T, native_abi>;
+
+	export template <Numeric T>
+	using scalar_simd = basic_simd<T, scalar_abi>;
+
+	export template <Numeric T, size_t N>
+	using fixed_simd = basic_simd<T, fixed_abi<N>>;
+
+	export template <Numeric T, typename Abi = native_abi>
+	[[nodiscard]] MAG_INLINE auto load(const T* ptr) noexcept -> basic_simd<T, Abi>
+	{
+		return basic_simd<T, Abi>{ptr};
+	}
+
+	export template <Numeric T, typename Abi = native_abi>
+	[[nodiscard]] MAG_INLINE auto splat(T value) noexcept -> basic_simd<T, Abi>
+	{
+		return basic_simd<T, Abi>{value};
+	}
+
 	export template <typename T, size_t N>
 	T hsum(const Simd<T, N>& s)
 		requires supports_reduction<T, N>
@@ -254,16 +236,6 @@ namespace mag::simd
 		return ops<T, N>::hsum(s.native());
 	}
 
-	/**
-	 * @brief Reduces all SIMD lanes to a single scalar by selecting the minimum value.
-	 *
-	 * @tparam T Scalar element type.
-	 * @tparam N SIMD lane count.
-	 *
-	 * @param s SIMD value to reduce.
-	 *
-	 * @return Smallest element in the SIMD register.
-	 */
 	export template <typename T, size_t N>
 	T hmin(const Simd<T, N>& s)
 		requires supports_reduction<T, N>
@@ -271,16 +243,6 @@ namespace mag::simd
 		return ops<T, N>::hmin(s.native());
 	}
 
-	/**
-	 * @brief Reduces all SIMD lanes to a single scalar by selecting the maximum value.
-	 *
-	 * @tparam T Scalar element type.
-	 * @tparam N SIMD lane count.
-	 *
-	 * @param s SIMD value to reduce.
-	 *
-	 * @return Largest element in the SIMD register.
-	 */
 	export template <typename T, size_t N>
 	T hmax(const Simd<T, N>& s)
 		requires supports_reduction<T, N>
