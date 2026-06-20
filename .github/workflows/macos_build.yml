@@ -4,6 +4,17 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+    - '.github/workflows/macos_build.yml'
+    - 'benchmarks/**'
+    - 'src/**'
+    - 'tests/**'
+    - 'vendor/**'
+    - '.clang-format'
+    - '.clang-tidy'
+    - '.gitmodules'
+    - 'CMakeLists.txt'
+    - 'CMakePresets.json'
 
 jobs:
   build-and-test:

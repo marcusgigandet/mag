@@ -88,27 +88,27 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		using f32x4 = Simd<float, 4>;
 		using f64x2 = Simd<double, 2>;
-		using f32x = mag::simd::native_simd<float>;
-		using f64x = mag::simd::native_simd<double>;
+		using f32x = native_simd<float>;
+		using f64x = native_simd<double>;
 
 #ifdef MAG_ENABLE_SIMD_EXTENDED
 		using i8x16 = Simd<int8_t, 16>;
 		using i16x8 = Simd<int16_t, 8>;
 		using i32x4 = Simd<int32_t, 4>;
 		using i64x2 = Simd<int64_t, 2>;
-		using i8x = mag::simd::native_simd<int8_t>;
-		using i16x = mag::simd::native_simd<int16_t>;
-		using i32x = mag::simd::native_simd<int32_t>;
-		using i64x = mag::simd::native_simd<int64_t>;
+		using i8x = native_simd<int8_t>;
+		using i16x = native_simd<int16_t>;
+		using i32x = native_simd<int32_t>;
+		using i64x = native_simd<int64_t>;
 
 		using u8x16 = Simd<uint8_t, 16>;
 		using u16x8 = Simd<uint16_t, 8>;
 		using u32x4 = Simd<uint32_t, 4>;
 		using u64x2 = Simd<uint64_t, 2>;
-		using u8x = mag::simd::native_simd<uint8_t>;
-		using u16x = mag::simd::native_simd<uint16_t>;
-		using u32x = mag::simd::native_simd<uint32_t>;
-		using u64x = mag::simd::native_simd<uint64_t>;
+		using u8x = native_simd<uint8_t>;
+		using u16x = native_simd<uint16_t>;
+		using u32x = native_simd<uint32_t>;
+		using u64x = native_simd<uint64_t>;
 #endif
 #endif
 	} // namespace simd
