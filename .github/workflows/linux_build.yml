@@ -22,12 +22,12 @@ jobs:
       fail-fast: false
       matrix:
         arch: [ x86_64, arm64 ]
+        compiler: [ clang, gcc ]
         include:
           - arch: x86_64
             runner: ubuntu-24.04
           - arch: arm64
             runner: ubuntu-24.04-arm
-        compiler: [ clang, gcc ]
 
     runs-on: ${{ matrix.runner }}
 
