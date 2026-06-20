@@ -1,7 +1,7 @@
 # Mathématiques et Graphiques (MAG)
 
-[![macOS Build and Test](https://github.com/SlyFryFrog/mag/actions/workflows/macos_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/macos_build.yml)
-[![Linux Build and Test](https://github.com/SlyFryFrog/mag/actions/workflows/linux_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/linux_build.yml)
+[![macOS Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/macos_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/macos_build.yml)
+[![Linux Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/linux_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/linux_build.yml)
 
 ### Prérequis
 
@@ -40,7 +40,7 @@ include(FetchContent)
 
 FetchContent_Declare(
         mag
-        GIT_REPOSITORY https://github.com/SlyFryFrog/mag.git
+        GIT_REPOSITORY https://github.com/marcusgigandet/mag.git
         GIT_TAG main
 )
 FetchContent_MakeAvailable(mag)
