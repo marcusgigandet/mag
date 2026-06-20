@@ -25,12 +25,11 @@ import :concepts;
 
 #ifdef MAG_ENABLE_SIMD
 import :simd;
+using namespace mag::simd;
 #endif
 
 namespace mag
 {
-	using namespace simd;
-
 	/**
 	 * @brief Generic N-dimensional vector for numerical computations.
 	 *
