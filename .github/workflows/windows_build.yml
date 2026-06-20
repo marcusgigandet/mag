@@ -15,9 +15,6 @@ on:
       - '.gitmodules'
       - 'CMakeLists.txt'
       - 'CMakePresets.json'
-  push:
-    branches: # Todo: Remove this before merging
-      - add-windows-support
 
 jobs:
   build-and-test:

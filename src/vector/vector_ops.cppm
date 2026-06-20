@@ -67,8 +67,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) + ops::load(b.v));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) + simd_ops::load(b.v));
 			return ret;
 		}
 #endif
@@ -87,8 +87,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_sub<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) - ops::load(b.v));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) - simd_ops::load(b.v));
 			return ret;
 		}
 #endif
@@ -107,8 +107,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) * ops::load(b.v));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) * simd_ops::load(b.v));
 			return ret;
 		}
 #endif
@@ -127,8 +127,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_div<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) / ops::load(b.v));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) / simd_ops::load(b.v));
 			return ret;
 		}
 #endif
@@ -147,8 +147,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) + ops::splat(s));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) + simd_ops::splat(s));
 			return ret;
 		}
 #endif
@@ -167,8 +167,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::splat(s) + ops::load(b.v));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::splat(s) + simd_ops::load(b.v));
 			return ret;
 		}
 #endif
@@ -187,8 +187,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) - ops::splat(s));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) - simd_ops::splat(s));
 			return ret;
 		}
 #endif
@@ -207,8 +207,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::splat(s) - ops::load(b.v));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::splat(s) - simd_ops::load(b.v));
 			return ret;
 		}
 #endif
@@ -227,8 +227,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) * ops::splat(s));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) * simd_ops::splat(s));
 			return ret;
 		}
 #endif
@@ -247,8 +247,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::splat(s) * ops::load(b.v));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::splat(s) * simd_ops::load(b.v));
 			return ret;
 		}
 #endif
@@ -267,8 +267,8 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_div<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) / ops::splat(s));
+			using simd_ops = ops<T, N>;
+			simd_ops::store(ret.v, simd_ops::load(a.v) / simd_ops::splat(s));
 			return ret;
 		}
 #endif
