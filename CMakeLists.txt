@@ -76,6 +76,7 @@ else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
         list(APPEND MAG_SIMD_COMPILE_OPTIONS -msse2 -msse3 -msse4.1)
     else ()
+        list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
         message(WARNING
                 "SIMD backends are not configured for processor '${CMAKE_SYSTEM_PROCESSOR}'. "
                 "MAG will fall back to scalar implementations."
