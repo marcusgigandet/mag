@@ -81,12 +81,7 @@ else ()
         set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
 
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
-
-        if (MSVC)
-            add_compile_options(/arch:AVX2)
-        else()
-            add_compile_options(-msse2 -msse3 -msse4.1)
-        endif()
+        add_compile_options(-msse2 -msse3 -msse4.1)
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
         set(MAG_ENABLE_SIMD OFF)

@@ -57,7 +57,7 @@ jobs:
 
       - name: Configure CMake
         shell: pwsh
-        run: cmake --preset $env:PRESET -DMAG_NO_DEV_TOOLS=ON -DMAG_ENABLE_SIMD=OFF
+        run: cmake --preset $env:PRESET -DMAG_NO_DEV_TOOLS=ON
 
       - name: Build
         shell: pwsh
