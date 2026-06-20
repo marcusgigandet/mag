@@ -66,17 +66,30 @@ set(MAG_SIMD_COMPILE_OPTIONS "")
 if (NOT MAG_ENABLE_SIMD)
     list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
 else ()
+    # Make arch consistent across platforms
+    string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" ARCH)
+
     # Filter based on x86 and arm
     # Add more architectures if we add future support for something like RISC-V
-    if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|arm)")
+    if (ARCH MATCHES "^(aarch64|arm64|arm|armv.*)")
         set(MAG_NEON_SIMD TRUE CACHE BOOL "" FORCE)
+
+        list(FILTER MODULES EXCLUDE REGEX ".*/x86_64/.*")
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
-    elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64|x86|i[3-6]86)$")
+
+    elseif (ARCH MATCHES "^(x86_64|amd64|i[3-6]86|x64)")
         set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
+
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
-        list(APPEND MAG_SIMD_COMPILE_OPTIONS -msse2 -msse3 -msse4.1)
+
+        if (MSVC)
+            add_compile_options(/arch:AVX2)
+        else()
+            add_compile_options(-msse2 -msse3 -msse4.1)
+        endif()
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
+        set(MAG_ENABLE_SIMD OFF)
         message(WARNING
                 "SIMD backends are not configured for processor '${CMAKE_SYSTEM_PROCESSOR}'. "
                 "MAG will fall back to scalar implementations."
