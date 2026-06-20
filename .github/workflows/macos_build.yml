@@ -21,9 +21,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        arch: [arm64]
         compiler: [clang]
+        include:
+          - arch: arm64
+            runner: macos-26
 
-    runs-on: macos-26
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: Checkout repository

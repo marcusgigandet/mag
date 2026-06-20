@@ -15,8 +15,8 @@
  */
 
 module;
+#include <cstddef>
 #include <type_traits>
-#include <valarray>
 export module mag:vector_ops;
 
 import :concepts;
@@ -24,12 +24,11 @@ import :vector;
 
 #ifdef MAG_ENABLE_SIMD
 import :simd;
+using namespace mag::simd;
 #endif
 
 export namespace mag
 {
-	using namespace simd;
-
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator<=>(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
@@ -69,7 +68,7 @@ export namespace mag
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) + ops::load(b.v));
+			ops::store(ret.v, ops::add(ops::load(a.v), ops::load(b.v)));
 			return ret;
 		}
 #endif
@@ -89,7 +88,7 @@ export namespace mag
 		if constexpr (std::is_same_v<T, U> && supports_sub<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) - ops::load(b.v));
+			ops::store(ret.v, ops::sub(ops::load(a.v), ops::load(b.v)));
 			return ret;
 		}
 #endif
@@ -109,7 +108,7 @@ export namespace mag
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) * ops::load(b.v));
+			ops::store(ret.v, ops::mul(ops::load(a.v), ops::load(b.v)));
 			return ret;
 		}
 #endif
@@ -129,7 +128,7 @@ export namespace mag
 		if constexpr (std::is_same_v<T, U> && supports_div<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) / ops::load(b.v));
+			ops::store(ret.v, ops::div(ops::load(a.v), ops::load(b.v)));
 			return ret;
 		}
 #endif
@@ -149,7 +148,7 @@ export namespace mag
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) + ops::splat(s));
+			ops::store(ret.v, ops::add(ops::load(a.v), ops::splat(s)));
 			return ret;
 		}
 #endif
@@ -169,7 +168,7 @@ export namespace mag
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::splat(s) + ops::load(b.v));
+			ops::store(ret.v, ops::add(ops::splat(s), ops::load(b.v)));
 			return ret;
 		}
 #endif
@@ -189,7 +188,7 @@ export namespace mag
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) - ops::splat(s));
+			ops::store(ret.v, ops::sub(ops::load(a.v), ops::splat(s)));
 			return ret;
 		}
 #endif
@@ -209,7 +208,7 @@ export namespace mag
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::splat(s) - ops::load(b.v));
+			ops::store(ret.v, ops::sub(ops::splat(s), ops::load(b.v)));
 			return ret;
 		}
 #endif
@@ -229,7 +228,7 @@ export namespace mag
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) * ops::splat(s));
+			ops::store(ret.v, ops::mul(ops::load(a.v), ops::splat(s)));
 			return ret;
 		}
 #endif
@@ -249,7 +248,7 @@ export namespace mag
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::splat(s) * ops::load(b.v));
+			ops::store(ret.v, ops::mul(ops::splat(s), ops::load(b.v)));
 			return ret;
 		}
 #endif
@@ -269,7 +268,7 @@ export namespace mag
 		if constexpr (supports_div<T, N> && supports_splat<T, N>)
 		{
 			using ops = ops<T, N>;
-			ops::store(ret.v, ops::load(a.v) / ops::splat(s));
+			ops::store(ret.v, ops::div(ops::load(a.v), ops::splat(s)));
 			return ret;
 		}
 #endif

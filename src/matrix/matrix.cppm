@@ -25,12 +25,11 @@ import :vector;
 
 #ifdef MAG_ENABLE_SIMD
 import :simd;
+using namespace mag::simd;
 #endif
 
 namespace mag
 {
-	using namespace simd;
-
 	/**
 	 * @brief Generic CxR-dimensional matrix for numerical computations.
 	 *
@@ -142,7 +141,8 @@ namespace mag
 				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c], ops::load(derived().m[c]) + ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::add(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -163,7 +163,8 @@ namespace mag
 				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c], ops::load(derived().m[c]) - ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::sub(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -184,7 +185,8 @@ namespace mag
 				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c], ops::load(derived().m[c]) * ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::mul(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -205,7 +207,8 @@ namespace mag
 				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c], ops::load(derived().m[c]) / ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::div(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -226,7 +229,8 @@ namespace mag
 				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c], ops::load(derived().m[c]) + ops::load(rhs.m[c]));
+					ops::store(derived().m[c],
+							   ops::add(ops::load(derived().m[c]), ops::load(rhs.m[c])));
 				}
 
 				return derived();
@@ -247,7 +251,8 @@ namespace mag
 				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c], ops::load(derived().m[c]) - ops::load(rhs.m[c]));
+					ops::store(derived().m[c],
+							   ops::sub(ops::load(derived().m[c]), ops::load(rhs.m[c])));
 				}
 
 				return derived();
@@ -268,7 +273,8 @@ namespace mag
 				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c], ops::load(derived().m[c]) * ops::load(rhs.m[c]));
+					ops::store(derived().m[c],
+							   ops::mul(ops::load(derived().m[c]), ops::load(rhs.m[c])));
 				}
 
 				return derived();

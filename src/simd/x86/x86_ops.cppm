@@ -21,7 +21,7 @@ module;
 #include <span>
 export module mag:x86_ops;
 
-import :simd_ops;
+import :ops;
 
 // NOLINTBEGIN(portability-simd-intrinsics)
 

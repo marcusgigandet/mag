@@ -1,7 +1,8 @@
 # Mathématiques et Graphiques (MAG)
 
-[![macOS Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/macos_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/macos_build.yml)
-[![Linux Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/linux_build.yml/badge.svg)](https://github.com/SlyFryFrog/mag/actions/workflows/linux_build.yml)
+[![macOS Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/macos_build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/macos_build.yml)
+[![Linux Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/linux_build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/linux_build.yml)
+[![Windows Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/linux_build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/windows_build.yml)
 
 ### Prérequis
 

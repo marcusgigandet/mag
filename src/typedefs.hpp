@@ -19,7 +19,7 @@
 #if defined(__clang__) || defined(__GNUC__)
 #define MAG_INLINE __attribute__((always_inline)) inline
 #elif defined(_MSC_VER)
-#define MAG_INLINE __forceinline inline
+#define MAG_INLINE __forceinline
 #else
 #define MAG_INLINE inline
 #endif

@@ -3,6 +3,11 @@
 #################################
 file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/mag/*.cpp")
 
+# Exclude simd tests if they weren't enabled
+if (NOT MAG_ENABLE_SIMD)
+    list(FILTER TEST_SOURCES EXCLUDE REGEX ".*/simd/.*")
+endif ()
+
 ###############
 # Build tests #
 ###############

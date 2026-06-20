@@ -59,6 +59,23 @@
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "g++"
       }
+    },
+
+    {
+      "inherits": "generic-debug",
+      "name": "msvc-debug",
+      "binaryDir": "${sourceDir}/build/msvc-debug",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "inherits": "generic-release",
+      "name": "msvc-release",
+      "binaryDir": "${sourceDir}/build/msvc-release",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl"
+      }
     }
   ],
 
@@ -78,6 +95,14 @@
     {
       "name": "gcc-debug",
       "configurePreset": "gcc-debug"
+    },
+    {
+      "name": "msvc-release",
+      "configurePreset": "msvc-release"
+    },
+    {
+      "name": "msvc-debug",
+      "configurePreset": "msvc-debug"
     }
   ],
 
@@ -106,6 +131,20 @@
     {
       "name": "gcc-release",
       "configurePreset": "gcc-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "msvc-debug",
+      "configurePreset": "msvc-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "msvc-release",
+      "configurePreset": "msvc-release",
       "output": {
         "outputOnFailure": true
       }

@@ -25,12 +25,11 @@ import :concepts;
 
 #ifdef MAG_ENABLE_SIMD
 import :simd;
+using namespace mag::simd;
 #endif
 
 namespace mag
 {
-	using namespace simd;
-
 	/**
 	 * @brief Generic N-dimensional vector for numerical computations.
 	 *
@@ -49,7 +48,7 @@ namespace mag
 			using ops = ops<T, N>;
 
 			auto simd_v = ops::load(v.v);
-			auto sq = simd_v * simd_v;
+			auto sq = ops::mul(simd_v, simd_v);
 
 			return std::sqrt(ops::hsum(sq));
 		}
@@ -78,7 +77,7 @@ namespace mag
 
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
-			return static_cast<T>(ops::hsum(va * vb));
+			return static_cast<T>(ops::hsum(ops::mul(va, vb)));
 		}
 #endif
 		using R = std::common_type_t<T, U>;
@@ -107,7 +106,7 @@ namespace mag
 			auto va = ops::load(a.v);
 			auto vb = ops::load(b.v);
 			auto vt = ops::splat(static_cast<T>(t));
-			auto vr = va + ((vb - va) * vt);
+			auto vr = ops::add(va, ops::mul(ops::sub(vb, va), vt));
 			ops::store(r.v, vr);
 			return r;
 		}
@@ -192,7 +191,7 @@ namespace mag
 			if constexpr (std::is_same_v<T, U> && supports_add<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) + ops::load(o.v));
+				ops::store(derived().v, ops::add(ops::load(derived().v), ops::load(o.v)));
 				return derived();
 			}
 #endif
@@ -208,7 +207,7 @@ namespace mag
 			if constexpr (std::is_same_v<T, U> && supports_sub<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) - ops::load(o.v));
+				ops::store(derived().v, ops::sub(ops::load(derived().v), ops::load(o.v)));
 				return derived();
 			}
 #endif
@@ -224,7 +223,7 @@ namespace mag
 			if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) * ops::load(o.v));
+				ops::store(derived().v, ops::mul(ops::load(derived().v), ops::load(o.v)));
 				return derived();
 			}
 #endif
@@ -240,7 +239,7 @@ namespace mag
 			if constexpr (std::is_same_v<T, U> && supports_div<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) / ops::load(o.v));
+				ops::store(derived().v, ops::div(ops::load(derived().v), ops::load(o.v)));
 				return derived();
 			}
 #endif
@@ -256,7 +255,7 @@ namespace mag
 			if constexpr (supports_add<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) + ops::splat(s));
+				ops::store(derived().v, ops::add(ops::load(derived().v), ops::splat(s)));
 				return derived();
 			}
 #endif
@@ -272,7 +271,7 @@ namespace mag
 			if constexpr (supports_sub<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) - ops::splat(s));
+				ops::store(derived().v, ops::sub(ops::load(derived().v), ops::splat(s)));
 				return derived();
 			}
 #endif
@@ -288,7 +287,7 @@ namespace mag
 			if constexpr (supports_mul<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) * ops::splat(s));
+				ops::store(derived().v, ops::mul(ops::load(derived().v), ops::splat(s)));
 				return derived();
 			}
 #endif
@@ -304,7 +303,7 @@ namespace mag
 			if constexpr (supports_div<T, N>)
 			{
 				using ops = ops<T, N>;
-				ops::store(derived().v, ops::load(derived().v) / ops::splat(s));
+				ops::store(derived().v, ops::div(ops::load(derived().v), ops::splat(s)));
 				return derived();
 			}
 #endif

@@ -1,0 +1,65 @@
+name: Windows Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/linux_build.yml'
+      - 'benchmarks/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'vendor/**'
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.gitmodules'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64, arm64]
+        compiler: [msvc]
+        include:
+          - arch: x64
+            runner: windows-2025
+          - arch: arm64
+            runner: windows-11-arm
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Configure MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
+      - name: Install dependencies
+        run: choco install ninja --yes
+
+      - name: Configure compiler
+        shell: pwsh
+        run: |
+          if ("${{ matrix.compiler }}" -eq "msvc") {
+            "PRESET=msvc-release" >> $env:GITHUB_ENV
+          }
+
+      - name: Configure CMake
+        shell: pwsh
+        run: cmake --preset $env:PRESET -DMAG_NO_DEV_TOOLS=ON
+
+      - name: Build
+        shell: pwsh
+        run: cmake --build --preset $env:PRESET
+
+      - name: Run tests
+        shell: pwsh
+        run: ctest --preset $env:PRESET --output-on-failure
