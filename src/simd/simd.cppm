@@ -22,7 +22,7 @@ export module mag:simd;
 
 export import :simd_abi;
 export import :simd_concepts;
-export import :simd_ops;
+export import :ops;
 
 #ifdef MAG_NEON_SIMD
 export import :neon_ops;

@@ -138,11 +138,11 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_add<T, R> && supports_splat<T, R>)
 			{
-				using simd_ops = ops<T, R>;
+				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					simd_ops::store(derived().m[c],
-									simd_ops::load(derived().m[c]) + simd_ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::add(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -160,11 +160,11 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R> && supports_splat<T, R>)
 			{
-				using simd_ops = ops<T, R>;
+				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					simd_ops::store(derived().m[c],
-									simd_ops::load(derived().m[c]) - simd_ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::sub(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -182,11 +182,11 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_mul<T, R> && supports_splat<T, R>)
 			{
-				using simd_ops = ops<T, R>;
+				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					simd_ops::store(derived().m[c],
-									simd_ops::load(derived().m[c]) * simd_ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::mul(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -204,11 +204,11 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_div<T, R> && supports_splat<T, R>)
 			{
-				using simd_ops = ops<T, R>;
+				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					simd_ops::store(derived().m[c],
-									simd_ops::load(derived().m[c]) / simd_ops::splat(val));
+					ops::store(derived().m[c],
+							   ops::div(ops::load(derived().m[c]), ops::splat(val)));
 				}
 
 				return derived();
@@ -226,11 +226,11 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_add<T, R>)
 			{
-				using simd_ops = ops<T, R>;
+				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					simd_ops::store(derived().m[c],
-									simd_ops::load(derived().m[c]) + simd_ops::load(rhs.m[c]));
+					ops::store(derived().m[c],
+							   ops::add(ops::load(derived().m[c]), ops::load(rhs.m[c])));
 				}
 
 				return derived();
@@ -248,11 +248,11 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R>)
 			{
-				using simd_ops = ops<T, R>;
+				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					simd_ops::store(derived().m[c],
-									simd_ops::load(derived().m[c]) - simd_ops::load(rhs.m[c]));
+					ops::store(derived().m[c],
+							   ops::sub(ops::load(derived().m[c]), ops::load(rhs.m[c])));
 				}
 
 				return derived();
@@ -270,11 +270,11 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R>)
 			{
-				using simd_ops = ops<T, R>;
+				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					simd_ops::store(derived().m[c],
-									simd_ops::load(derived().m[c]) * simd_ops::load(rhs.m[c]));
+					ops::store(derived().m[c],
+							   ops::mul(ops::load(derived().m[c]), ops::load(rhs.m[c])));
 				}
 
 				return derived();

@@ -21,8 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [ arm64 ]
-        compiler: [ clang ]
+        arch: [arm64]
+        compiler: [clang]
         include:
           - arch: arm64
             runner: macos-26

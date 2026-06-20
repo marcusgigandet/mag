@@ -19,7 +19,7 @@ module;
 #include <cstddef>
 export module mag:simd_concepts;
 
-import :simd_ops;
+import :ops;
 
 export namespace mag::simd
 {

@@ -21,8 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [ x86_64, arm64 ]
-        compiler: [ clang, gcc ]
+        arch: [x86_64, arm64]
+        compiler: [clang, gcc]
         include:
           - arch: x86_64
             runner: ubuntu-24.04
@@ -36,11 +36,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y software-properties-common
-
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
             sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
             sudo apt-get update
-
             sudo apt-get install -y \
               git \
               cmake \
@@ -55,7 +53,6 @@ jobs:
               clang-18 \
               clang-tools-18
           fi
-
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
@@ -72,12 +69,16 @@ jobs:
             echo "CXX=clang++-18" >> $GITHUB_ENV
             echo "PRESET=clang-release" >> $GITHUB_ENV
           fi
-
       - name: Configure CMake
         env:
           CC: ${{ env.CC }}
           CXX: ${{ env.CXX }}
-        run: cmake --preset $PRESET -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DMAG_NO_DEV_TOOLS=ON -DMAG_ENABLE_SIMD=ON
+        run: |
+          cmake --preset $PRESET \
+            -DCMAKE_C_COMPILER=${CC} \
+            -DCMAKE_CXX_COMPILER=${CXX} \
+            -DMAG_NO_DEV_TOOLS=ON \
+            -DMAG_ENABLE_SIMD=${{ matrix.simd }}
 
       - name: Build
         run: cmake --build --preset $PRESET
