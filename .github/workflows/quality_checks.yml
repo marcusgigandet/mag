@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-verify-copyright:
-    uses: SlyFryFrog/toolbox/.github/workflows/verify_copyright.yml@main
+    uses: marcusgigandet/toolbox/.github/workflows/verify_copyright.yml@664e5de7f0b6098b0d292053a3c4f4d57dc5f620
     with:
       config: "config.toml"
       directory: "src"
