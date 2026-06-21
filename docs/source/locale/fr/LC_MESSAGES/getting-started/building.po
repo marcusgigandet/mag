@@ -1,0 +1,158 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 18:38-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/getting-started/building.rst:2 dd67eaffe94f4d51af6a5267efcbef10
+msgid "Building from Source"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:4 36200ead66c64dd8ba078b48d390a3ae
+msgid "Build MAG step-by-step using CMake."
+msgstr ""
+
+#: ../../source/getting-started/building.rst:7 4535b02137304792b2481b0174473d21
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:9 a4e7d11db4cb454e8bfa18d4d46cc7f8
+msgid "Ensure you have installed:"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:11
+#: 9676f4cbecb04e60802e819306fb0e35
+msgid ""
+"A modern C++ compiler that supports C++ modules (GCC 15+, Clang 18+, or "
+"MSVC <xxx-todo-fix-this-version-number>)"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:12
+#: e8847f57cd614f4c8f9fbd40f3af6adb
+msgid "CMake 3.28.3 or higher"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:13
+#: b529391344e84141be6c2e127dfcd610
+msgid "Ninja"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:16
+#: fbc85d0611f041dd8f54c28096b2333c
+msgid "Detailed Build Process"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:19
+#: 8ed069f7f4f949cdb42517cb710f8cd0
+msgid "Build Options"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:22
+#: ba394d9ea318415fbb0873f084f93676
+msgid "Option"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:22
+#: 3ac12ede91e54083a3fb09ff36d7ea90
+msgid "Values"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:22
+#: b5b9720eae9642a983ade62d0407c867
+msgid "Default"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:24
+#: 51fbb8cac5a24e21817b8c388ab49db2
+msgid "CMAKE_BUILD_TYPE"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:24
+#: 1e7a1cdfc0b34cfe8113a026d7f02c9b
+msgid "Debug/Release"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:24
+#: 063fe84fcd21449189fb0181a4ca8b51
+msgid "Release"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:26
+#: 56047744dcce4feda02938cef4ed20f8
+msgid "BUILD_SHARED_LIBS"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:26
+#: ../../source/getting-started/building.rst:28
+#: ../../source/getting-started/building.rst:30
+#: ../../source/getting-started/building.rst:32
+#: ../../source/getting-started/building.rst:34
+#: ../../source/getting-started/building.rst:36
+#: ../../source/getting-started/building.rst:38
+#: 461c84d5694547108864c14b8a2948e4 7386f77edc2a4ba0a96377bbc113bb8a
+#: 766fdd5425ad4b44a07c6e801ea9a41c d917329eb3c74dccaf37ac616f8d341c
+#: de9ba2d29b084d6e80e2c57e9cb7fb07 ec9d5421b56241739122ba09782208ac
+#: f030c774e16145098e2b111d4c948152
+msgid "ON/OFF"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:26
+#: ../../source/getting-started/building.rst:28
+#: ../../source/getting-started/building.rst:30
+#: ../../source/getting-started/building.rst:32
+#: ../../source/getting-started/building.rst:34
+#: ../../source/getting-started/building.rst:36
+#: ../../source/getting-started/building.rst:38
+#: 129c6cd2680e455e878d3508d25a9da8 5447fabb7e614d11b53360d8e7940b4f
+#: 6fc9a2ddf5774dd6a2ee71b27d2738e7 8b6b6166b98048e59aab74c51319da1e
+#: a1051c64c9f747529a5e20e72add8f6b b487e5689e8241ae95509dd2308edb1e
+#: f7efa2c13758479c82b5ad1b146ca61f
+msgid "ON"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:28
+#: 7e51fd8a51da4fa384b6ac83ab083bd4
+msgid "MAG_BUILD_TESTS"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:30
+#: 3108d6377eef40ff85e7ace2ca46a5a0
+msgid "MAG_BUILD_BENCHMARKS"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:32
+#: 77fa2bc796ef4d278b6b912932086ec4
+msgid "MAG_ENABLE_SIMD"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:34
+#: bcd0d9ff5bb6499a9a0eda17f83051ca
+msgid "MAG_ENABLE_SIMD_EXTENDED"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:36
+#: ccf1f3a9673b4d68bf868571f06802f1
+msgid "MAG_NO_DEV_TOOLS"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:38
+#: 1c7b05b5e3a7466a8f91327bcdecd068
+msgid "MAG_CODE_ANALYSIS"
+msgstr ""
+

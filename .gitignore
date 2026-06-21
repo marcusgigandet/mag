@@ -13,7 +13,6 @@ CMakeCache.txt
 cmake_install.cmake
 out/
 build/
-Makefile
 compile_commands.json
 Testing/
 CTestTestfile.cmake
@@ -113,3 +112,7 @@ vcpkg_installed/
 # --- Coverage Reports ---
 coverage/
 lcov-report/
+
+# --- Documentation ---
+_build/
+pages/

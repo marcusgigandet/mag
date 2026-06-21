@@ -1,0 +1,10 @@
+sphinx
+
+sphinx-design
+sphinx-intl
+sphinx-issues
+sphinx-last-updated-by-git
+sphinx-multiversion
+sphinx-sitemap
+yamlloader
+sphinx-rtd-theme
