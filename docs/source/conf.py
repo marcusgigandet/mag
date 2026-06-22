@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import yaml
 import subprocess
 
@@ -88,13 +91,15 @@ todo_link_only = False
 # -- Config for sphinx_sitemap ------------------------------------------------
 # https://sphinx-sitemap.readthedocs.io/en/latest/
 
-html_baseurl = "https://marcusgigandet.github.io/mag"
+html_baseurl = "https://marcusgigandet.github.io/mag/"
+site_baseurl = html_baseurl.rstrip("/")
 
 # Logic for building multiple version tags and languages
 build_all_docs = True
 if build_all_docs:
-    current_language = "fr"
-    current_version = "0.1.0"
+    current_language = os.getenv("current_language", "en")
+    current_version = os.getenv("current_version", "latest")
+    language = current_language
 
     html_context = {
         'current_language': current_language,
@@ -104,20 +109,21 @@ if build_all_docs:
     }
 
     if current_version == 'latest':
-        html_context['languages'].append(['en', html_baseurl])
-        html_context['languages'].append(['fr', f"{html_baseurl}/fr"])
+        html_context['languages'].append(['en', site_baseurl])
+        html_context['languages'].append(['fr', f"{site_baseurl}/fr"])
 
     if current_language == 'en':
-        html_context['versions'].append(['latest', html_baseurl])
+        html_context['versions'].append(['latest', site_baseurl])
     if current_language == 'fr':
-        html_context['versions'].append(['latest', f"{html_baseurl}/fr"])
+        html_context['versions'].append(['latest', f"{site_baseurl}/fr"])
 
-    with open("versions.yaml", "r") as yaml_file:
+    versions_path = Path(__file__).resolve().parent / "versions.yaml"
+    with versions_path.open("r", encoding="utf-8") as yaml_file:
         docs = yaml.safe_load(yaml_file)
 
     if current_version != 'latest':
         for language in docs[current_version].get('languages', []):
-            html_context['languages'].append([language, f"{html_baseurl}/{current_version}/{language}"])
+            html_context['languages'].append([language, f"{site_baseurl}/{current_version}/{language}"])
 
     for version, details in docs.items():
-        html_context['versions'].append([version, f"{html_baseurl}/{version}/{current_language}"])
+        html_context['versions'].append([version, f"{site_baseurl}/{version}/{current_language}"])

@@ -36,7 +36,7 @@ def build_doc(version, language, tag, conf_backup, versions_backup) -> None:
     os.environ["current_language"] = language
     # subprocess.run(["git", "checkout", tag], cwd=DOCS_DIR, check=True)
     restore_docs_files(conf_backup, versions_backup)
-    os.environ["SPHINXOPTS"] = f"-D language={language}"
+    os.environ["SPHINX_OPTS"] = f"-D language={language}"
     subprocess.run(["make", "html"], cwd=DOCS_DIR, check=True)
 
 
