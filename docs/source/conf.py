@@ -1,6 +1,7 @@
 import yaml
-import os
 import subprocess
+
+
 def get_git_tag() -> str:
     """
     Return the most recent Git tag.
@@ -26,7 +27,6 @@ release = get_git_tag()
 version = ".".join(release.split(".")[:2])
 
 # -- Internationalization ----------------------------------------------------
-language = 'fr'
 locale_dirs = ["locale/"]
 gettext_compact = False
 gettext_uuid = True
@@ -60,19 +60,15 @@ exclude_patterns = [
     '.DS_Store',
 ]
 
-templates_path = ['_templates']
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
-html_theme_options = {
-}
-
 # -- Options for sphinx_last_updated_by_git ----------------
 # https://pypi.org/project/sphinx-last-updated-by-git/0.3.8/
+
 git_untracked_check_dependencies = True
 git_untracked_show_sourcelink = True
 git_last_updated_metatags = True
@@ -89,34 +85,39 @@ todo_include_todos = True
 todo_emit_warnings = False
 todo_link_only = False
 
+# -- Config for sphinx_sitemap ------------------------------------------------
+# https://sphinx-sitemap.readthedocs.io/en/latest/
+
+html_baseurl = "https://marcusgigandet.github.io/mag"
+
+# Logic for building multiple version tags and languages
 build_all_docs = True
-pages_root = "https://marcusgigandet.github.io/mag/"
 if build_all_docs:
-    current_language = os.environ.get("current_language", "fr")
-    current_version = os.environ.get("current_version", "0.1.0")
+    current_language = "fr"
+    current_version = "0.1.0"
 
     html_context = {
-        'current_language' : current_language,
-        'languages' : [],
-        'current_version' : current_version,
-        'versions' : [],
+        'current_language': current_language,
+        'languages': [],
+        'current_version': current_version,
+        'versions': [],
     }
 
     if current_version == 'latest':
-        html_context['languages'].append(['en', pages_root])
-        html_context['languages'].append(['fr', pages_root+'/fr'])
+        html_context['languages'].append(['en', html_baseurl])
+        html_context['languages'].append(['fr', f"{html_baseurl}/fr"])
 
     if current_language == 'en':
-        html_context['versions'].append(['latest', pages_root])
+        html_context['versions'].append(['latest', html_baseurl])
     if current_language == 'fr':
-        html_context['versions'].append(['latest', pages_root+'/fr'])
+        html_context['versions'].append(['latest', f"{html_baseurl}/fr"])
 
     with open("versions.yaml", "r") as yaml_file:
         docs = yaml.safe_load(yaml_file)
 
     if current_version != 'latest':
         for language in docs[current_version].get('languages', []):
-            html_context['languages'].append([language, pages_root+'/'+current_version+'/'+language])
+            html_context['languages'].append([language, f"{html_baseurl}/{current_version}/{language}"])
 
     for version, details in docs.items():
-        html_context['versions'].append([version, pages_root+'/'+version+'/'+current_language])
+        html_context['versions'].append([version, f"{html_baseurl}/{version}/{current_language}"])

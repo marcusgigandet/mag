@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 18:38-0400\n"
+"POT-Creation-Date: 2026-06-21 21:29-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -20,19 +20,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../source/index.rst:2 4c99b6e446c2495598ac95a3077b657e
+#: ../../source/index.rst:2 ad89a28c62fb49feb825fbe41a505b2e
 msgid "Welcome to MAG"
 msgstr ""
 
-#: ../../source/index.rst:4 779bc1f84afa4c47be42e0807523da42
+#: ../../source/index.rst:4 90645e743bef436aac287b642df59343
 msgid "**MAG (Mathematics and Graphics)** is ..."
 msgstr ""
 
-#: ../../source/index.rst:7 b4ed125d281d423597b3c36124f9a6cb
+#: ../../source/index.rst:7 49a1c57e6e60447ebfd0486563770cca
 msgid "Quick Links"
-msgstr ""
+msgstr "Liens rapides"
 
-#: ../../source/index.rst:9 09c5b16d19334da8b7adca5157a33609
+#: ../../source/index.rst:9 10fffff2873448a6b52757152b415411
 msgid ":doc:`getting-started/building` — Build from source"
-msgstr ""
+msgstr ":doc:`getting-started/building` — Compiler à partir du source code"
 

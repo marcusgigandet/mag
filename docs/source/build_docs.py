@@ -51,9 +51,6 @@ def move_dir(src_dir: Path, dst_dir: Path) -> None:
                 target.unlink()
         shutil.move(str(item), str(target))
 
-
-os.environ["build_all_docs"] = "true"
-
 try:
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_dir = Path(temp_dir)
