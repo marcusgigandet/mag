@@ -83,9 +83,11 @@ else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
 
         # MSVC does not support GCC/Clang -m* SIMD flags.
-        target_compile_options(mag PUBLIC
+        add_compile_options(
                 $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
-                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2 -msse3 -msse4.1>
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2>
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse3>
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse4.1>
         )
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
