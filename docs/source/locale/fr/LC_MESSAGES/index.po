@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-22 18:22-0400\n"
+"POT-Creation-Date: 2026-06-25 21:45-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -20,25 +20,75 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../source/index.rst:2 672acc33f92d4abaa953a64a608b0da1
+#: ../../source/index.rst:2 7f67166bfbde4397bd6b80bb65ca7c5c
 msgid "Welcome to MAG"
 msgstr ""
 
-#: ../../source/index.rst:4 6a524f0488e241aca873e9e84b1f6360
+#: ../../source/index.rst:4 c1fc004d64204f25922899afc5dc050d
 msgid ""
 "**MAG (Mathematics and Graphics)** is a modern-cpp math library built for"
-" use in 3D graphics. The library is compatible for C++-20 or higher, and "
-"requires a compilers that supports cpp-modules."
+" use in 3D graphics. The library targets **C++20 and newer**, uses **C++ "
+"modules**, and ships a compact API for vector math, matrix math, "
+"transform helpers, constants, and optional SIMD acceleration."
 msgstr ""
 
-#: ../../source/index.rst:8 40464288a6fb49798ec08c4190ccf16c
-msgid "Quick Links"
-msgstr "Liens rapides"
+#: ../../source/index.rst:9 fafbec63d0dc47a1991686f520fb0378
+msgid "What you get"
+msgstr ""
 
-#: ../../source/index.rst:10 2e45ee1ee70f4e0fbc3458a802ebfbc9
-msgid ":doc:`getting-started/building` — Build from source"
+#: ../../source/index.rst:11 e8b5bce434eb451fa1f9bc6e31de1c68
+msgid "A single public module import: ``import mag;``"
+msgstr ""
+
+#: ../../source/index.rst:12 ad6daf4d1d864c6c8c524773398aac63
+msgid "Vector types for 2D, 3D, and 4D math"
+msgstr ""
+
+#: ../../source/index.rst:13 5a3148c66cd94dde82c74be4049546ed
+msgid "Matrix types and transform helpers for graphics workflows"
+msgstr ""
+
+#: ../../source/index.rst:14 07485a09db7c4f20a6ed074a1849bc39
+msgid "Optional SIMD types and helpers when SIMD support is enabled at build time"
+msgstr ""
+
+#: ../../source/index.rst:15 288a50d72cb642de814784183902c5a6
+msgid "CMake integration for both in-tree and dependency-based builds"
+msgstr ""
+
+#: ../../source/index.rst:18 35386a99248a43a4a8e24c462947434d
+msgid "Start here"
+msgstr ""
+
+#: ../../source/index.rst:20 51f288a84bdd4d69b3d82bf31c8f95ef
+msgid ":doc:`getting-started/overview` - Library overview and module layout"
+msgstr ""
+
+#: ../../source/index.rst:21 03dc6f4b80944f30b260be7f5192bc09
+#, fuzzy
+msgid ":doc:`getting-started/building` - Configure, build, and test MAG"
 msgstr ":doc:`getting-started/building` — Compiler à partir du source code"
+
+#: ../../source/index.rst:22 b6144f35edd84f3db13aed265723e5c2
+msgid ":doc:`getting-started/integration` - Add MAG to another CMake project"
+msgstr ""
+
+#: ../../source/index.rst:23 8eeabda0ef1d47a0b6c75531577c7e0e
+msgid ":doc:`getting-started/using-mag` - Basic vector, matrix, and SIMD examples"
+msgstr ""
 
 #~ msgid "**MAG (Mathematics and Graphics)** is ..."
 #~ msgstr ""
+
+#~ msgid ""
+#~ "**MAG (Mathematics and Graphics)** is a"
+#~ " modern-cpp math library built for"
+#~ " use in 3D graphics. The library "
+#~ "is compatible for C++-20 or higher, "
+#~ "and requires a compilers that supports"
+#~ " cpp-modules."
+#~ msgstr ""
+
+#~ msgid "Quick Links"
+#~ msgstr "Liens rapides"
 
