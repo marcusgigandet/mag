@@ -20,6 +20,12 @@
             {% endfor %}
         </dl>
         {% endif %}
+        {% if repository_url %}
+        <dl>
+            <dt>{{ _('Repository') }}</dt>
+            <dd><a href="{{ repository_url }}">GitHub</a></dd>
+        </dl>
+        {% endif %}
         <br>
         </dl>
     </div>

@@ -15,6 +15,7 @@ DOCS_ROOT: Final[Path] = Path(__file__).resolve().parent.parent
 VERSIONS_PATH: Final[Path] = DOCS_ROOT / "versions.yaml"
 PROJECT_NAME: Final[str] = "MAG - Mathématiques et Graphiques"
 PROJECT_AUTHOR: Final[str] = "Marcus Gigandet"
+REPOSITORY_URL: Final[str] = "https://github.com/marcusgigandet/mag"
 REMOTE_HTML_BASE_URL: Final[str] = "https://marcusgigandet.github.io/mag/"
 LOCAL_BUILD: Final[bool] = os.getenv("DOCS_LOCAL_BUILD", "0") == "1"
 HTML_BASE_URL: Final[str] = "" if LOCAL_BUILD else REMOTE_HTML_BASE_URL
@@ -90,6 +91,7 @@ def build_local_html_context(current_language: str) -> dict[str, object]:
             ("fr", french_link),
         ],
         "current_version": "local",
+        "repository_url": REPOSITORY_URL,
         "versions": [("local", root_link)],
     }
 
@@ -133,6 +135,7 @@ def build_html_context(current_version: str, current_language: str, local_build:
         "current_language": current_language,
         "languages": languages,
         "current_version": current_version,
+        "repository_url": REPOSITORY_URL,
         "versions": version_links,
     }
 
