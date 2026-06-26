@@ -68,4 +68,6 @@ venv:
 
 all: clean venv translate pages
 
-.PHONY: all venv clean html gettext i18n-update i18n-build translate pages local-pages
+all-local: clean venv translate local-pages
+
+.PHONY: all all-local venv clean html gettext i18n-update i18n-build translate pages local-pages
