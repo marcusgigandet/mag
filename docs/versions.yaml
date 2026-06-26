@@ -1,5 +1,18 @@
-"0.1.0":
-  tag: '0.1.0'
+site:
+  project_name: "MAG - Mathématiques et Graphiques"
+  project_author: "Marcus Gigandet"
+  default_language: "en"
   languages:
     - "en"
     - "fr"
+  latest_ref: "origin/main"
+  repository_url: "https://github.com/marcusgigandet/mag"
+  html_base_url: "https://marcusgigandet.github.io/mag/"
+  issues_github_path: "marcusgigandet/mag"
+
+versions:
+  "0.1.0":
+    tag: "0.1.0"
+    languages:
+      - "en"
+      - "fr"

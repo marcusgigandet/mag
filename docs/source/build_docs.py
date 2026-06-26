@@ -12,7 +12,9 @@ from docs_config import (
     DEFAULT_LANGUAGE,
     DOCS_DIR,
     DOCS_RELATIVE_PATH,
+    LATEST_REF,
     REPO_ROOT,
+    SITE_LANGUAGES,
     VERSIONS_YAML_PATH,
     VersionDetails,
     discover_languages,
@@ -81,13 +83,11 @@ def resolve_latest_ref() -> str:
 
     :return: ``origin/main`` when available, otherwise ``main``.
     """
-    configured_ref = os.getenv("DOCS_LATEST_REF")
+    configured_ref = LATEST_REF
     if configured_ref:
         if git_ref_exists(configured_ref):
             return configured_ref
-        raise RuntimeError(
-            f"DOCS_LATEST_REF is set to '{configured_ref}', but that ref does not exist."
-        )
+        raise RuntimeError(f"Configured latest ref '{configured_ref}' does not exist.")
 
     for command in (
         ["git", "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD"],
@@ -109,7 +109,7 @@ def resolve_latest_ref() -> str:
             return fallback_ref
 
     raise RuntimeError(
-        "Unable to resolve the latest docs ref automatically. Set DOCS_LATEST_REF explicitly."
+        "Unable to resolve the latest docs ref automatically. Set site.latest_ref or DOCS_LATEST_REF explicitly."
     )
 
 
@@ -144,7 +144,11 @@ def build_local_plan() -> BuildPlan:
 
     :return: The local preview build plan.
     """
-    languages = discover_languages(DOCS_DIR)
+    languages = discover_languages(
+        DOCS_DIR,
+        default_language=DEFAULT_LANGUAGE,
+        configured_languages=SITE_LANGUAGES,
+    )
     return BuildPlan(
         output_dir=LOCAL_PAGES_DIR,
         targets=[
@@ -176,7 +180,11 @@ def build_remote_plan(
     :param worktree_dirs: Mapping of Git refs to checked-out worktree directories.
     :return: The deployable docs build plan.
     """
-    latest_languages = discover_languages(latest_docs_dir)
+    latest_languages = discover_languages(
+        latest_docs_dir,
+        default_language=DEFAULT_LANGUAGE,
+        configured_languages=SITE_LANGUAGES,
+    )
     targets = [
         BuildTarget(
             version="latest",

@@ -1,5 +1,7 @@
 import os
 import subprocess
+from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Final, Iterable, TypedDict
 from urllib.parse import urlparse
@@ -12,9 +14,32 @@ class VersionDetails(TypedDict, total=False):
     languages: list[str]
 
 
+class SiteDetails(TypedDict, total=False):
+    default_language: str
+    languages: list[str]
+    project_name: str
+    project_author: str
+    latest_ref: str
+    repository_url: str
+    html_base_url: str
+    issues_github_path: str
+
+
+@dataclass(frozen=True)
+class DocsConfig:
+    default_language: str
+    languages: list[str]
+    project_name: str
+    project_author: str
+    latest_ref: str
+    repository_url: str
+    html_base_url: str
+    issues_github_path: str
+    versions: dict[str, VersionDetails]
+
+
 SOURCE_DIR: Final[Path] = Path(__file__).resolve().parent
 DOCS_DIR: Final[Path] = SOURCE_DIR.parent
-DEFAULT_LANGUAGE: Final[str] = os.getenv("DOCS_DEFAULT_LANGUAGE", "en")
 
 
 def run_git_command(args: list[str], cwd: Path) -> str | None:
@@ -58,6 +83,85 @@ DOCS_RELATIVE_PATH: Final[Path] = DOCS_DIR.relative_to(REPO_ROOT)
 VERSIONS_YAML_PATH: Final[Path] = DOCS_DIR / "versions.yaml"
 
 
+def load_raw_docs_yaml(path: Path) -> dict[str, object]:
+    """
+    Load the raw docs YAML payload.
+
+    :param path: Path to the docs YAML file.
+    :return: Parsed YAML mapping.
+    """
+    with path.open("r", encoding="utf-8") as yaml_file:
+        raw_config = yaml.safe_load(yaml_file) or {}
+
+    if not isinstance(raw_config, dict):
+        raise TypeError("versions.yaml must contain a mapping.")
+
+    return raw_config
+
+
+def split_docs_yaml(raw_config: dict[str, object]) -> tuple[SiteDetails, dict[str, object]]:
+    """
+    Split docs YAML into site and version sections.
+
+    :param raw_config: Parsed YAML mapping.
+    :return: Site metadata and raw version metadata.
+    """
+    raw_site = raw_config.get("site")
+    raw_versions = raw_config.get("versions")
+
+    if raw_site is None and raw_versions is None:
+        return {}, raw_config
+
+    if raw_site is None:
+        raw_site = {}
+    if not isinstance(raw_site, dict):
+        raise TypeError("versions.yaml 'site' section must be a mapping.")
+
+    if raw_versions is None:
+        raw_versions = {}
+    if not isinstance(raw_versions, dict):
+        raise TypeError("versions.yaml 'versions' section must be a mapping.")
+
+    return raw_site, raw_versions
+
+
+def validate_site_details(raw_site: SiteDetails) -> SiteDetails:
+    """
+    Validate site-level docs configuration.
+
+    :param raw_site: Raw site metadata loaded from YAML.
+    :return: Validated site metadata.
+    """
+    validated: SiteDetails = {}
+
+    string_fields = (
+        "default_language",
+        "project_name",
+        "project_author",
+        "latest_ref",
+        "repository_url",
+        "html_base_url",
+        "issues_github_path",
+    )
+    for field_name in string_fields:
+        field_value = raw_site.get(field_name)
+        if field_value is None:
+            continue
+        if not isinstance(field_value, str):
+            raise TypeError(f"versions.yaml site.{field_name} must be a string.")
+        validated[field_name] = field_value
+
+    languages = raw_site.get("languages")
+    if languages is not None:
+        if not isinstance(languages, list) or not all(
+            isinstance(language_name, str) for language_name in languages
+        ):
+            raise TypeError("versions.yaml site.languages must be a list of strings.")
+        validated["languages"] = languages
+
+    return validated
+
+
 def load_versions(path: Path) -> dict[str, VersionDetails]:
     """
     Load version metadata from ``versions.yaml``.
@@ -65,13 +169,7 @@ def load_versions(path: Path) -> dict[str, VersionDetails]:
     :param path: Path to the versions YAML file.
     :return: A mapping of version names to validated version metadata.
     """
-    with path.open("r", encoding="utf-8") as yaml_file:
-        raw_versions = yaml.safe_load(yaml_file) or {}
-
-    if not isinstance(raw_versions, dict):
-        raise TypeError(
-            "versions.yaml must contain a mapping of version names to metadata."
-        )
+    _, raw_versions = split_docs_yaml(load_raw_docs_yaml(path))
 
     versions: dict[str, VersionDetails] = {}
     for version_name, details in raw_versions.items():
@@ -101,7 +199,7 @@ def load_versions(path: Path) -> dict[str, VersionDetails]:
 
 
 def normalize_languages(
-    languages: Iterable[str], default_language: str = DEFAULT_LANGUAGE
+    languages: Iterable[str], default_language: str
 ) -> list[str]:
     """
     Normalize a language list with the default language first.
@@ -123,7 +221,8 @@ def normalize_languages(
 def discover_languages(
     docs_dir: Path,
     versions: dict[str, VersionDetails] | None = None,
-    default_language: str = DEFAULT_LANGUAGE,
+    default_language: str | None = None,
+    configured_languages: list[str] | None = None,
 ) -> list[str]:
     """
     Discover the languages supported by a docs tree.
@@ -133,6 +232,12 @@ def discover_languages(
     :param default_language: Language code that should be treated as the root language.
     :return: Normalized language codes supported by the docs tree.
     """
+    if default_language is None:
+        default_language = DEFAULT_LANGUAGE
+
+    if configured_languages:
+        return normalize_languages(configured_languages, default_language=default_language)
+
     languages = {default_language}
     locale_dir = docs_dir / "source" / "locale"
     if locale_dir.exists():
@@ -147,14 +252,17 @@ def discover_languages(
     return normalize_languages(languages, default_language=default_language)
 
 
-def resolve_repository_url(repo_root: Path) -> str:
+def resolve_repository_url(repo_root: Path, configured_url: str = "") -> str:
     """
     Resolve a repository URL suitable for docs metadata.
 
     :param repo_root: Repository root directory.
+    :param configured_url: Explicit repository URL from configuration.
     :return: Repository URL, or an empty string when it cannot be determined.
     """
-    configured_url = os.getenv("DOCS_REPOSITORY_URL")
+    env_url = os.getenv("DOCS_REPOSITORY_URL")
+    if env_url:
+        return env_url.rstrip("/")
     if configured_url:
         return configured_url.rstrip("/")
 
@@ -198,14 +306,17 @@ def resolve_github_repo_path(repository_url: str) -> str:
     return f"{owner}/{repo.removesuffix('.git')}"
 
 
-def resolve_remote_html_base_url(repository_url: str) -> str:
+def resolve_remote_html_base_url(repository_url: str, configured_url: str = "") -> str:
     """
     Resolve the deployable HTML base URL for the docs site.
 
     :param repository_url: Repository URL associated with the docs site.
+    :param configured_url: Explicit HTML base URL from configuration.
     :return: HTML base URL, or an empty string when it cannot be derived.
     """
-    configured_url = os.getenv("DOCS_HTML_BASE_URL")
+    env_url = os.getenv("DOCS_HTML_BASE_URL")
+    if env_url:
+        return env_url.rstrip("/") + "/"
     if configured_url:
         return configured_url.rstrip("/") + "/"
 
@@ -215,3 +326,79 @@ def resolve_remote_html_base_url(repository_url: str) -> str:
 
     owner, repo = github_repo_path.split("/", maxsplit=1)
     return f"https://{owner}.github.io/{repo}/"
+
+
+def resolve_issues_github_path(repository_url: str, configured_path: str = "") -> str:
+    """
+    Resolve the GitHub repository path used by ``sphinx_issues``.
+
+    :param repository_url: Repository URL associated with the docs site.
+    :param configured_path: Explicit GitHub repository path from configuration.
+    :return: ``owner/repo`` path, or an empty string when it cannot be determined.
+    """
+    env_path = os.getenv("DOCS_ISSUES_GITHUB_PATH")
+    if env_path:
+        return env_path
+    if configured_path:
+        return configured_path
+
+    return resolve_github_repo_path(repository_url)
+
+
+@lru_cache(maxsize=None)
+def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
+    """
+    Load and resolve the full docs configuration from YAML plus runtime defaults.
+
+    :param path: Path to the docs YAML file.
+    :param repo_root: Repository root used for derived defaults.
+    :return: Resolved docs configuration.
+    """
+    raw_site, _ = split_docs_yaml(load_raw_docs_yaml(path))
+    site = validate_site_details(raw_site)
+    versions = load_versions(path)
+
+    default_language = os.getenv("DOCS_DEFAULT_LANGUAGE", site.get("default_language", "en"))
+    configured_languages = site.get("languages", [])
+    languages = (
+        normalize_languages(configured_languages, default_language=default_language)
+        if configured_languages
+        else []
+    )
+    repository_url = resolve_repository_url(
+        repo_root, configured_url=site.get("repository_url", "")
+    )
+    html_base_url = resolve_remote_html_base_url(
+        repository_url, configured_url=site.get("html_base_url", "")
+    )
+    issues_github_path = resolve_issues_github_path(
+        repository_url, configured_path=site.get("issues_github_path", "")
+    )
+
+    return DocsConfig(
+        default_language=default_language,
+        languages=languages,
+        project_name=os.getenv(
+            "DOCS_PROJECT_NAME", site.get("project_name", repo_root.name)
+        ),
+        project_author=os.getenv(
+            "DOCS_PROJECT_AUTHOR",
+            site.get("project_author", run_git_command(["git", "config", "user.name"], cwd=repo_root) or ""),
+        ),
+        latest_ref=os.getenv("DOCS_LATEST_REF", site.get("latest_ref", "")).strip(),
+        repository_url=repository_url,
+        html_base_url=html_base_url,
+        issues_github_path=issues_github_path,
+        versions=versions,
+    )
+
+
+DOCS_CONFIG: Final[DocsConfig] = load_docs_config(VERSIONS_YAML_PATH, REPO_ROOT)
+DEFAULT_LANGUAGE: Final[str] = DOCS_CONFIG.default_language
+SITE_LANGUAGES: Final[list[str]] = DOCS_CONFIG.languages
+PROJECT_NAME: Final[str] = DOCS_CONFIG.project_name
+PROJECT_AUTHOR: Final[str] = DOCS_CONFIG.project_author
+LATEST_REF: Final[str] = DOCS_CONFIG.latest_ref
+REPOSITORY_URL: Final[str] = DOCS_CONFIG.repository_url
+REMOTE_HTML_BASE_URL: Final[str] = DOCS_CONFIG.html_base_url
+ISSUES_GITHUB_PATH: Final[str] = DOCS_CONFIG.issues_github_path

@@ -10,22 +10,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from docs_config import (
     DEFAULT_LANGUAGE,
     DOCS_DIR,
-    REPO_ROOT,
+    ISSUES_GITHUB_PATH,
+    PROJECT_AUTHOR,
+    PROJECT_NAME,
+    REMOTE_HTML_BASE_URL,
+    REPOSITORY_URL,
+    SITE_LANGUAGES,
     VERSIONS_YAML_PATH,
     VersionDetails,
     discover_languages,
     load_versions,
-    resolve_github_repo_path,
-    resolve_remote_html_base_url,
-    resolve_repository_url,
 )
 
-PROJECT_NAME: Final[str] = os.getenv(
-    "DOCS_PROJECT_NAME", "MAG - Mathématiques et Graphiques"
-)
-PROJECT_AUTHOR: Final[str] = os.getenv("DOCS_PROJECT_AUTHOR", "Marcus Gigandet")
-REPOSITORY_URL: Final[str] = resolve_repository_url(REPO_ROOT)
-REMOTE_HTML_BASE_URL: Final[str] = resolve_remote_html_base_url(REPOSITORY_URL)
 LOCAL_BUILD: Final[bool] = os.getenv("DOCS_LOCAL_BUILD", "0") == "1"
 HTML_BASE_URL: Final[str] = "" if LOCAL_BUILD else REMOTE_HTML_BASE_URL
 SITE_BASE_URL: Final[str] = HTML_BASE_URL.rstrip("/")
@@ -100,7 +96,11 @@ def build_local_html_context(current_language: str) -> dict[str, object]:
     :param current_language: The language code for the current build, such as ``"en"`` or ``"fr"``.
     :return: A dictionary containing only local relative links for the current preview build.
     """
-    languages = discover_languages(DOCS_DIR)
+    languages = discover_languages(
+        DOCS_DIR,
+        default_language=DEFAULT_LANGUAGE,
+        configured_languages=SITE_LANGUAGES,
+    )
     return {
         "current_language": current_language,
         "languages": [
@@ -132,7 +132,12 @@ def build_html_context(
     version_links: list[tuple[str, str]] = []
 
     if current_version == "latest":
-        for language_name in discover_languages(DOCS_DIR):
+        for language_name in discover_languages(
+            DOCS_DIR,
+            versions=versions,
+            default_language=DEFAULT_LANGUAGE,
+            configured_languages=SITE_LANGUAGES,
+        ):
             languages.append(
                 (language_name, build_version_url("latest", language_name))
             )
@@ -201,7 +206,7 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx_multiversion",
 ]
-issues_github_path = resolve_github_repo_path(REPOSITORY_URL)
+issues_github_path = ISSUES_GITHUB_PATH
 if issues_github_path:
     extensions.append("sphinx_issues")
 if not LOCAL_BUILD and HTML_BASE_URL:
