@@ -1,25 +1,164 @@
 import os
 import subprocess
+import sys
+from datetime import datetime
 from pathlib import Path
-from typing import Final, TypedDict
+from typing import Final
 
-import yaml
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from docs_config import (
+    DEFAULT_LANGUAGE,
+    DOCS_DIR,
+    REPO_ROOT,
+    VERSIONS_YAML_PATH,
+    VersionDetails,
+    discover_languages,
+    load_versions,
+    resolve_github_repo_path,
+    resolve_remote_html_base_url,
+    resolve_repository_url,
+)
 
-class VersionDetails(TypedDict, total=False):
-    tag: str
-    languages: list[str]
-
-
-DOCS_ROOT: Final[Path] = Path(__file__).resolve().parent.parent
-VERSIONS_PATH: Final[Path] = DOCS_ROOT / "versions.yaml"
-PROJECT_NAME: Final[str] = "MAG - Mathématiques et Graphiques"
-PROJECT_AUTHOR: Final[str] = "Marcus Gigandet"
-REPOSITORY_URL: Final[str] = "https://github.com/marcusgigandet/mag"
-REMOTE_HTML_BASE_URL: Final[str] = "https://marcusgigandet.github.io/mag/"
+PROJECT_NAME: Final[str] = os.getenv(
+    "DOCS_PROJECT_NAME", "MAG - Mathématiques et Graphiques"
+)
+PROJECT_AUTHOR: Final[str] = os.getenv("DOCS_PROJECT_AUTHOR", "Marcus Gigandet")
+REPOSITORY_URL: Final[str] = resolve_repository_url(REPO_ROOT)
+REMOTE_HTML_BASE_URL: Final[str] = resolve_remote_html_base_url(REPOSITORY_URL)
 LOCAL_BUILD: Final[bool] = os.getenv("DOCS_LOCAL_BUILD", "0") == "1"
 HTML_BASE_URL: Final[str] = "" if LOCAL_BUILD else REMOTE_HTML_BASE_URL
 SITE_BASE_URL: Final[str] = HTML_BASE_URL.rstrip("/")
+
+
+def build_local_language_link(current_language: str, target_language: str) -> str:
+    """
+    Build the relative local-preview link from one language tree to another.
+
+    :param current_language: Language currently being rendered.
+    :param target_language: Language to link to.
+    :return: Relative link rooted at the target language tree.
+    """
+    if target_language == current_language:
+        return "."
+    if target_language == DEFAULT_LANGUAGE:
+        return ".." if current_language != DEFAULT_LANGUAGE else "."
+    if current_language == DEFAULT_LANGUAGE:
+        return target_language
+    return f"../{target_language}"
+
+
+def build_version_url(version_name: str, language_name: str) -> str:
+    """
+    Build the published URL for a version/language pair.
+
+    :param version_name: Version segment such as ``"latest"`` or ``"0.1.0"``.
+    :param language_name: Language segment for that version.
+    :return: URL base for the selected version/language pair.
+    """
+    if version_name == "latest":
+        if language_name == DEFAULT_LANGUAGE:
+            return SITE_BASE_URL or "/"
+        return (
+            f"{SITE_BASE_URL}/{language_name}" if SITE_BASE_URL else f"/{language_name}"
+        )
+
+    return (
+        f"{SITE_BASE_URL}/{version_name}/{language_name}"
+        if SITE_BASE_URL
+        else f"/{version_name}/{language_name}"
+    )
+
+
+def resolve_version_language(
+    version_name: str,
+    preferred_language: str,
+    versions: dict[str, VersionDetails],
+) -> str:
+    """
+    Choose the best language link for a version switcher entry.
+
+    :param version_name: Version whose published languages should be inspected.
+    :param preferred_language: Language currently being viewed.
+    :param versions: Version metadata loaded from ``versions.yaml``.
+    :return: Language code that exists for the requested version.
+    """
+    available_languages = versions.get(version_name, {}).get("languages", [])
+    if not isinstance(available_languages, list) or not available_languages:
+        return preferred_language
+    if preferred_language in available_languages:
+        return preferred_language
+    if DEFAULT_LANGUAGE in available_languages:
+        return DEFAULT_LANGUAGE
+    return available_languages[0]
+
+
+def build_local_html_context(current_language: str) -> dict[str, object]:
+    """
+    Build version/language navigation for a local-only docs preview.
+
+    :param current_language: The language code for the current build, such as ``"en"`` or ``"fr"``.
+    :return: A dictionary containing only local relative links for the current preview build.
+    """
+    languages = discover_languages(DOCS_DIR)
+    return {
+        "current_language": current_language,
+        "languages": [
+            (language_name, build_local_language_link(current_language, language_name))
+            for language_name in languages
+        ],
+        "current_version": "local",
+        "repository_url": REPOSITORY_URL,
+        "versions": [("local", "." if current_language == DEFAULT_LANGUAGE else "..")],
+    }
+
+
+def build_html_context(
+    current_version: str, current_language: str, local_build: bool
+) -> dict[str, object]:
+    """
+    Build the version/language switcher context used by the docs template.
+
+    :param current_version: The docs version currently being built, such as ``"latest"`` or ``"0.1.0"``.
+    :param current_language: The language code for the current build, such as ``"en"`` or ``"fr"``.
+    :param local_build: Whether the current build is a local preview rather than a GitHub Pages build.
+    :return: A dictionary containing the current selection plus version and language navigation entries.
+    """
+    if local_build:
+        return build_local_html_context(current_language)
+
+    versions = load_versions(VERSIONS_YAML_PATH)
+    languages: list[tuple[str, str]] = []
+    version_links: list[tuple[str, str]] = []
+
+    if current_version == "latest":
+        for language_name in discover_languages(DOCS_DIR):
+            languages.append(
+                (language_name, build_version_url("latest", language_name))
+            )
+    else:
+        for language_name in versions.get(current_version, {}).get("languages", []):
+            languages.append(
+                (language_name, build_version_url(current_version, language_name))
+            )
+
+    version_links.append(("latest", build_version_url("latest", current_language)))
+
+    for version_name in versions:
+        version_language = resolve_version_language(
+            version_name, current_language, versions
+        )
+        version_links.append(
+            (version_name, build_version_url(version_name, version_language))
+        )
+
+    return {
+        "current_language": current_language,
+        "languages": languages,
+        "current_version": current_version,
+        "repository_url": REPOSITORY_URL,
+        "versions": version_links,
+    }
 
 
 def get_git_tag() -> str:
@@ -38,112 +177,10 @@ def get_git_tag() -> str:
         return "0.0.0"
 
 
-def load_versions(path: Path) -> dict[str, VersionDetails]:
-    """
-    Load version metadata from ``versions.yaml``.
-
-    :param path: Path to the versions YAML file.
-    :return: A mapping of version names to validated version metadata.
-    """
-    with path.open("r", encoding="utf-8") as yaml_file:
-        raw_versions = yaml.safe_load(yaml_file) or {}
-
-    if not isinstance(raw_versions, dict):
-        raise TypeError("versions.yaml must contain a mapping of version names to metadata.")
-
-    versions: dict[str, VersionDetails] = {}
-    for version_name, details in raw_versions.items():
-        if not isinstance(version_name, str):
-            raise TypeError("versions.yaml version keys must be strings.")
-        if not isinstance(details, dict):
-            raise TypeError(f"Version '{version_name}' metadata must be a mapping.")
-
-        languages = details.get("languages", [])
-        if not isinstance(languages, list) or not all(isinstance(language_name, str) for language_name in languages):
-            raise TypeError(f"Version '{version_name}' languages must be a list of strings.")
-
-        tag = details.get("tag", version_name)
-        if not isinstance(tag, str):
-            raise TypeError(f"Version '{version_name}' tag must be a string.")
-
-        versions[version_name] = {
-            "tag": tag,
-            "languages": languages,
-        }
-
-    return versions
-
-
-def build_local_html_context(current_language: str) -> dict[str, object]:
-    """
-    Build version/language navigation for a local-only docs preview.
-
-    :param current_language: The language code for the current build, such as ``"en"`` or ``"fr"``.
-    :return: A dictionary containing only local relative links for the current preview build.
-    """
-    root_link = "." if current_language == "en" else ".."
-    french_link = "fr" if current_language == "en" else "."
-
-    return {
-        "current_language": current_language,
-        "languages": [
-            ("en", root_link),
-            ("fr", french_link),
-        ],
-        "current_version": "local",
-        "repository_url": REPOSITORY_URL,
-        "versions": [("local", root_link)],
-    }
-
-
-def build_html_context(current_version: str, current_language: str, local_build: bool) -> dict[str, object]:
-    """
-    Build the version/language switcher context used by the docs template.
-
-    :param current_version: The docs version currently being built, such as ``"latest"`` or ``"0.1.0"``.
-    :param current_language: The language code for the current build, such as ``"en"`` or ``"fr"``.
-    :param local_build: Whether the current build is a local preview rather than a GitHub Pages build.
-    :return: A dictionary containing the current selection plus version and language navigation entries.
-    """
-    if local_build:
-        return build_local_html_context(current_language)
-
-    versions = load_versions(VERSIONS_PATH)
-    languages: list[tuple[str, str]] = []
-    version_links: list[tuple[str, str]] = []
-
-    if current_version == "latest":
-        languages.extend(
-            [
-                ("en", SITE_BASE_URL),
-                ("fr", f"{SITE_BASE_URL}/fr"),
-            ]
-        )
-    else:
-        for language_name in versions.get(current_version, {}).get("languages", []):
-            languages.append((language_name, f"{SITE_BASE_URL}/{current_version}/{language_name}"))
-
-    if current_language == "en":
-        version_links.append(("latest", SITE_BASE_URL))
-    elif current_language == "fr":
-        version_links.append(("latest", f"{SITE_BASE_URL}/fr"))
-
-    for version_name in versions:
-        version_links.append((version_name, f"{SITE_BASE_URL}/{version_name}/{current_language}"))
-
-    return {
-        "current_language": current_language,
-        "languages": languages,
-        "current_version": current_version,
-        "repository_url": REPOSITORY_URL,
-        "versions": version_links,
-    }
-
-
 # -- Project information -----------------------------------------------------
 project = PROJECT_NAME
 author = PROJECT_AUTHOR
-copyright = f"2026, {PROJECT_AUTHOR}"
+copyright = f"{datetime.now().year}, {PROJECT_AUTHOR}"
 
 release = get_git_tag()
 version = ".".join(release.split(".")[:2])
@@ -152,19 +189,22 @@ version = ".".join(release.split(".")[:2])
 locale_dirs = ["locale/"]
 gettext_compact = False
 gettext_uuid = True
-language = os.getenv("current_language", "en")
+language = os.getenv("current_language", DEFAULT_LANGUAGE)
 
 # -- General configuration ---------------------------------------------------
 templates_path = ["_templates"]
 extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.intersphinx",
+    "sphinx_copybutton",
     "sphinx_design",
-    "sphinx_issues",
     "sphinx_last_updated_by_git",
     "sphinx_multiversion",
 ]
-if not LOCAL_BUILD:
+issues_github_path = resolve_github_repo_path(REPOSITORY_URL)
+if issues_github_path:
+    extensions.append("sphinx_issues")
+if not LOCAL_BUILD and HTML_BASE_URL:
     extensions.append("sphinx_sitemap")
 exclude_patterns = [
     "_build",
@@ -182,9 +222,6 @@ site_baseurl = SITE_BASE_URL
 git_untracked_check_dependencies = True
 git_untracked_show_sourcelink = True
 git_last_updated_metatags = True
-
-# -- Options for sphinx_issues -----------------------------------------------
-issues_github_path = "marcusgigandet/mag"
 
 # -- Options for todo --------------------------------------------------------
 todo_include_todos = True

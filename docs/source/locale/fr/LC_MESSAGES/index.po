@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-25 23:14-0400\n"
+"POT-Creation-Date: 2026-06-26 16:39-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -20,11 +20,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../source/index.rst:2 4449cb3483d9402486337e119bb46b6f
+#: ../../source/index.rst:2 fd5c95422a3e48e8b3ae2c18b02e0adb
 msgid "Welcome to MAG"
 msgstr "Bienvenue à MAG"
 
-#: ../../source/index.rst:4 6a3882a0f7e048eeb3f7693dc4654570
+#: ../../source/index.rst:4 7f5d80a84c1541d3a23ba41f6ed54fdb
 msgid ""
 "**MAG (Mathematics and Graphics)** is a modern-cpp math library built for"
 " use in 3D graphics. The library targets **C++20 and newer**, uses **C++ "
@@ -32,47 +32,51 @@ msgid ""
 "transform helpers, constants, and optional SIMD acceleration."
 msgstr ""
 
-#: ../../source/index.rst:9 9d3a5a69ea594541b34036caa0ff56a4
+#: ../../source/index.rst:9 dcdd01fd9f6f4041b5f0b4e3888462e7
 msgid "Features"
 msgstr "Fonctionnalités"
 
-#: ../../source/index.rst:11 bc5e8aea92574a1fb08f3dd9f0e960f4
+#: ../../source/index.rst:11 a7a2fdea0c214e3596bf4727f7339c26
 msgid "A single public module import: ``import mag;``"
 msgstr ""
 
-#: ../../source/index.rst:12 ba4b78cef57341c287cee08cc28cd075
+#: ../../source/index.rst:12 f38d2eb80990477e91793138a2276aed
 msgid "Vector types for 2D, 3D, and 4D math"
 msgstr ""
 
-#: ../../source/index.rst:13 8c83b2a32d9c48678e0361de12cb5729
+#: ../../source/index.rst:13 6c5ed0b237fb4a688e417f39272177af
 msgid "Matrix types and transform helpers for graphics workflows"
 msgstr ""
 
-#: ../../source/index.rst:14 58d4ba955ffe42e18bb0dfc1c32add74
+#: ../../source/index.rst:14 4855dc0aa22d413fbc45f9c54d15ddfd
 msgid "Optional SIMD types and helpers when SIMD support is enabled at build time"
 msgstr ""
 
-#: ../../source/index.rst:15 9848f398f8bd46f59e75a7a35e8fef3f
+#: ../../source/index.rst:15 3c27782408aa4a6c8ac2bf2ed5022768
 msgid "CMake integration for both in-tree and dependency-based builds"
 msgstr ""
 
-#: ../../source/index.rst:18 aeed15c24eab4d749f093f3ea2cd35e1
+#: ../../source/index.rst:18 264b0d99749e4bdc829612e23ee55ad9
 msgid "Start here"
 msgstr "Pour commencer"
 
-#: ../../source/index.rst:20 263ebdb6818a41e48342e9ca6206090d
-msgid ":doc:`getting-started/overview` - Library overview"
+#: ../../source/index.rst:20 51fd8ec71fa14a1b8bd7463fca96770a
+#, fuzzy
+msgid ":doc:`getting-started/overview` - Library overview and module layout"
 msgstr ":doc:`getting-started/overview` - Vue d’ensemble de la bibliothèque"
 
-#: ../../source/index.rst:21 af5bc7314fd24261a29edb6f105adf47
+#: ../../source/index.rst:21 234cce49defa462196b9195cedc6859e
 #, fuzzy
 msgid ":doc:`getting-started/building` - Configure, build, and test MAG"
 msgstr ":doc:`getting-started/building` — Compiler à partir du source code"
 
-#: ../../source/index.rst:22 51fd8adab28645f4a17145e673ce0757
+#: ../../source/index.rst:22 ed68ae3078124eea88844c33ade31a7d
 msgid ":doc:`getting-started/integration` - Add MAG to another CMake project"
 msgstr ":doc:`getting-started/integration` - Ajouter MAG à un autre projet CMake"
 
-#: ../../source/index.rst:23 0f7ea9dadeb74d609d558cec7f048ac2
+#: ../../source/index.rst:23 00f6d0e7d6cb4adeb4bc605750f47fe6
 msgid ":doc:`getting-started/using-mag` - Basic vector, matrix, and SIMD examples"
-msgstr ":doc:`getting-started/using-mag` - Exemples de base de vecteurs, de matrices et de SIMD"
+msgstr ""
+":doc:`getting-started/using-mag` - Exemples de base de vecteurs, de "
+"matrices et de SIMD"
+

@@ -6,14 +6,18 @@ import tempfile
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Final, Iterator, TypedDict
+from typing import Final, Iterator
 
-import yaml
-
-
-class VersionDetails(TypedDict, total=False):
-    tag: str
-    languages: list[str]
+from docs_config import (
+    DEFAULT_LANGUAGE,
+    DOCS_DIR,
+    DOCS_RELATIVE_PATH,
+    REPO_ROOT,
+    VERSIONS_YAML_PATH,
+    VersionDetails,
+    discover_languages,
+    load_versions,
+)
 
 
 @dataclass(frozen=True)
@@ -30,48 +34,9 @@ class BuildPlan:
     targets: list[BuildTarget]
 
 
-REPO_ROOT: Final[Path] = Path(__file__).resolve().parent.parent.parent
-DOCS_DIR: Final[Path] = Path(__file__).resolve().parent.parent
 PAGES_DIR: Final[Path] = DOCS_DIR / "pages"
 LOCAL_PAGES_DIR: Final[Path] = DOCS_DIR / "pages-local"
-VERSIONS_YAML_PATH: Final[Path] = DOCS_DIR / "versions.yaml"
 VENV_PYTHON: Final[Path] = DOCS_DIR / ".venv" / "bin" / "python"
-
-
-def load_versions(path: Path) -> dict[str, VersionDetails]:
-    """
-    Load version metadata from ``versions.yaml``.
-
-    :param path: Path to the versions YAML file.
-    :return: A mapping of version names to validated version metadata.
-    """
-    with path.open("r", encoding="utf-8") as yaml_file:
-        raw_versions = yaml.safe_load(yaml_file) or {}
-
-    if not isinstance(raw_versions, dict):
-        raise TypeError("versions.yaml must contain a mapping of version names to metadata.")
-
-    versions: dict[str, VersionDetails] = {}
-    for version_name, details in raw_versions.items():
-        if not isinstance(version_name, str):
-            raise TypeError("versions.yaml version keys must be strings.")
-        if not isinstance(details, dict):
-            raise TypeError(f"Version '{version_name}' metadata must be a mapping.")
-
-        languages = details.get("languages", [])
-        if not isinstance(languages, list) or not all(isinstance(language_name, str) for language_name in languages):
-            raise TypeError(f"Version '{version_name}' languages must be a list of strings.")
-
-        tag = details.get("tag", version_name)
-        if not isinstance(tag, str):
-            raise TypeError(f"Version '{version_name}' tag must be a string.")
-
-        versions[version_name] = {
-            "tag": tag,
-            "languages": languages,
-        }
-
-    return versions
 
 
 def parse_args() -> argparse.Namespace:
@@ -80,7 +45,9 @@ def parse_args() -> argparse.Namespace:
 
     :return: Parsed command-line arguments.
     """
-    parser = argparse.ArgumentParser(description="Build versioned MAG documentation.")
+    parser = argparse.ArgumentParser(
+        description="Build versioned Sphinx documentation."
+    )
     parser.add_argument(
         "--local",
         action="store_true",
@@ -114,11 +81,36 @@ def resolve_latest_ref() -> str:
 
     :return: ``origin/main`` when available, otherwise ``main``.
     """
-    if git_ref_exists("origin/main"):
-        return "origin/main"
-    if git_ref_exists("main"):
-        return "main"
-    raise RuntimeError("Neither 'origin/main' nor 'main' exists, so the latest docs ref cannot be resolved.")
+    configured_ref = os.getenv("DOCS_LATEST_REF")
+    if configured_ref:
+        if git_ref_exists(configured_ref):
+            return configured_ref
+        raise RuntimeError(
+            f"DOCS_LATEST_REF is set to '{configured_ref}', but that ref does not exist."
+        )
+
+    for command in (
+        ["git", "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD"],
+        ["git", "symbolic-ref", "--quiet", "--short", "HEAD"],
+    ):
+        resolved_ref = subprocess.run(
+            command,
+            cwd=REPO_ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).stdout.strip()
+        if resolved_ref and git_ref_exists(resolved_ref):
+            return resolved_ref
+
+    for fallback_ref in ("origin/main", "main", "origin/master", "master"):
+        if git_ref_exists(fallback_ref):
+            return fallback_ref
+
+    raise RuntimeError(
+        "Unable to resolve the latest docs ref automatically. Set DOCS_LATEST_REF explicitly."
+    )
 
 
 @contextmanager
@@ -131,11 +123,19 @@ def temporary_worktree(ref: str, temp_dir: Path) -> Iterator[Path]:
     :return: The filesystem path to the temporary worktree.
     """
     worktree_dir = temp_dir / ref.replace("/", "-")
-    subprocess.run(["git", "worktree", "add", "--detach", str(worktree_dir), ref], cwd=REPO_ROOT, check=True)
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(worktree_dir), ref],
+        cwd=REPO_ROOT,
+        check=True,
+    )
     try:
         yield worktree_dir
     finally:
-        subprocess.run(["git", "worktree", "remove", "--force", str(worktree_dir)], cwd=REPO_ROOT, check=True)
+        subprocess.run(
+            ["git", "worktree", "remove", "--force", str(worktree_dir)],
+            cwd=REPO_ROOT,
+            check=True,
+        )
 
 
 def build_local_plan() -> BuildPlan:
@@ -144,11 +144,21 @@ def build_local_plan() -> BuildPlan:
 
     :return: The local preview build plan.
     """
+    languages = discover_languages(DOCS_DIR)
     return BuildPlan(
         output_dir=LOCAL_PAGES_DIR,
         targets=[
-            BuildTarget(version="local", language="en", destination=LOCAL_PAGES_DIR, docs_dir=DOCS_DIR),
-            BuildTarget(version="local", language="fr", destination=LOCAL_PAGES_DIR / "fr", docs_dir=DOCS_DIR),
+            BuildTarget(
+                version="local",
+                language=language_name,
+                destination=(
+                    LOCAL_PAGES_DIR
+                    if language_name == DEFAULT_LANGUAGE
+                    else LOCAL_PAGES_DIR / language_name
+                ),
+                docs_dir=DOCS_DIR,
+            )
+            for language_name in languages
         ],
     )
 
@@ -166,14 +176,24 @@ def build_remote_plan(
     :param worktree_dirs: Mapping of Git refs to checked-out worktree directories.
     :return: The deployable docs build plan.
     """
+    latest_languages = discover_languages(latest_docs_dir)
     targets = [
-        BuildTarget(version="latest", language="en", destination=PAGES_DIR, docs_dir=latest_docs_dir),
-        BuildTarget(version="latest", language="fr", destination=PAGES_DIR / "fr", docs_dir=latest_docs_dir),
+        BuildTarget(
+            version="latest",
+            language=language_name,
+            destination=(
+                PAGES_DIR
+                if language_name == DEFAULT_LANGUAGE
+                else PAGES_DIR / language_name
+            ),
+            docs_dir=latest_docs_dir,
+        )
+        for language_name in latest_languages
     ]
 
     for version_name, details in versions.items():
         ref = details.get("tag", version_name)
-        docs_dir = worktree_dirs[ref] / "docs"
+        docs_dir = worktree_dirs[ref] / DOCS_RELATIVE_PATH
         for language_name in details.get("languages", []):
             targets.append(
                 BuildTarget(
@@ -206,8 +226,9 @@ def ensure_docs_source_exists(ref: str, docs_dir: Path) -> None:
     :return: ``None``.
     """
     if not has_docs_source(docs_dir):
+        docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
         raise RuntimeError(
-            f"Git ref '{ref}' does not contain docs/source/index.rst, so it cannot back the deployable docs build."
+            f"Git ref '{ref}' does not contain '{docs_source_path}', so it cannot back the deployable docs build."
         )
 
 
@@ -219,18 +240,20 @@ def resolve_latest_docs_dir(latest_ref: str, worktree_dirs: dict[str, Path]) -> 
     :param worktree_dirs: Mapping of Git refs to checked-out worktree directories.
     :return: Docs directory to use for the ``latest`` build.
     """
-    latest_docs_dir = worktree_dirs[latest_ref] / "docs"
+    latest_docs_dir = worktree_dirs[latest_ref] / DOCS_RELATIVE_PATH
     if has_docs_source(latest_docs_dir):
         return latest_docs_dir
 
     if has_docs_source(DOCS_DIR):
+        docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
         print(
-            f"Falling back to the current checkout for latest because '{latest_ref}' does not contain docs/source/index.rst yet."
+            f"Falling back to the current checkout for latest because '{latest_ref}' does not contain '{docs_source_path}' yet."
         )
         return DOCS_DIR
 
+    docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
     raise RuntimeError(
-        f"Neither '{latest_ref}' nor the current checkout contains docs/source/index.rst, so latest cannot be built."
+        f"Neither '{latest_ref}' nor the current checkout contains '{docs_source_path}', so latest cannot be built."
     )
 
 
@@ -249,11 +272,14 @@ def filter_buildable_versions(
 
     for version_name, details in versions.items():
         ref = details.get("tag", version_name)
-        if has_docs_source(worktree_dirs[ref] / "docs"):
+        if has_docs_source(worktree_dirs[ref] / DOCS_RELATIVE_PATH):
             buildable_versions[version_name] = details
             continue
 
-        print(f"Skipping docs version '{version_name}' from ref '{ref}' because it has no docs/source/index.rst.")
+        docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
+        print(
+            f"Skipping docs version '{version_name}' from ref '{ref}' because it has no '{docs_source_path}'."
+        )
 
     return buildable_versions
 
@@ -334,7 +360,10 @@ def main() -> None:
         temp_dir = Path(temp_dir_name)
         latest_ref = resolve_latest_ref()
         refs = {latest_ref}
-        refs.update(details.get("tag", version_name) for version_name, details in versions.items())
+        refs.update(
+            details.get("tag", version_name)
+            for version_name, details in versions.items()
+        )
 
         worktree_dirs: dict[str, Path] = {}
         for ref in sorted(refs):
