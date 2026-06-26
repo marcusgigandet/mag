@@ -1,0 +1,79 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-25 22:45-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/getting-started/integration.rst:2
+#: 2539fccf247045c59d088e5ad7f4d181
+msgid "Integrating MAG"
+msgstr ""
+
+#: ../../source/getting-started/integration.rst:4
+#: a67d1930d7f24acdaa33b34ab590d026
+msgid ""
+"MAG is built with CMake and exposes the ``mag::mag`` target. The easiest "
+"integration paths are either ``FetchContent`` or ``add_subdirectory``."
+msgstr ""
+
+#: ../../source/getting-started/integration.rst:8
+#: 6603d804880945d583c7d6bf60ef5657
+msgid "Using FetchContent"
+msgstr ""
+
+#: ../../source/getting-started/integration.rst:28
+#: 2a6a7aec6f1f405ab673ef982edfc6e3
+msgid ""
+"**Note**: Using FetchContent will also fetch all subdirectories by "
+"default."
+msgstr ""
+
+#: ../../source/getting-started/integration.rst:31
+#: 0f25a1712781422591d626f0d023280c
+msgid "Using add_subdirectory"
+msgstr ""
+
+#~ msgid "Integration notes"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``BUILD_SHARED_LIBS`` controls whether MAG is"
+#~ " built as a shared or static "
+#~ "library."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``MAG_ENABLE_SIMD`` enables SIMD backends when"
+#~ " the current architecture supports them."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``MAG_ENABLE_SIMD_EXTENDED`` extends SIMD support"
+#~ " to additional integer paths and "
+#~ "depends on ``MAG_ENABLE_SIMD``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "If you need to configure MAG "
+#~ "itself before bringing it into your "
+#~ "build, pass cache variables in the "
+#~ "same way you would for any other"
+#~ " CMake dependency."
+#~ msgstr ""
+

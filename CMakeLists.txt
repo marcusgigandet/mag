@@ -81,7 +81,14 @@ else ()
         set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
 
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
-        add_compile_options(-msse2 -msse3 -msse4.1)
+
+        # MSVC does not support GCC/Clang -m* SIMD flags.
+        add_compile_options(
+                $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2>
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse3>
+                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse4.1>
+        )
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
         set(MAG_ENABLE_SIMD OFF)
@@ -129,6 +136,13 @@ target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_ENABLE_SIMD_EXTENDED}>:MAG_ENABLE_SIMD_EXTENDED>
         $<$<BOOL:${MAG_NEON_SIMD}>:MAG_NEON_SIMD>
         $<$<BOOL:${MAG_X86_SIMD}>:MAG_X86_SIMD>
+)
+
+# Why can't microsoft be normal >:(
+# https://learn.microsoft.com/en-us/cpp/build/reference/compiler-option-warning-level?view=msvc-170
+target_compile_options(mag PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W4>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
 )
 
 #####################

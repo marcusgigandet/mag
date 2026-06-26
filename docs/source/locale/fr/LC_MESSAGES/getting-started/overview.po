@@ -1,0 +1,219 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-25 22:45-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/getting-started/overview.rst:2 ab0fe92e50cf46a895545515d3ba6d53
+msgid "Library Overview"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:4 ff1591feba224806a05ab637ac8c56aa
+msgid ""
+"MAG is a C++20 math library for graphics-related development such as "
+"rendering engines."
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:6 ea58748a3a4049af92aa5ff584512aa2
+msgid "The public API is exposed through a single module shown below:"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:13
+#: 39fbdd7e1d524730af274ed7a192b016
+msgid "Common types"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:15
+#: 7604c912abe8428a8d249fbb978d789e
+msgid ""
+"You will typically work with aliases such as the following exposed in the"
+" ``mag`` namespace:"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:17
+#: c41d5eae14d04f58b82b2b9bb8aff55a
+msgid "``Vec2f``, ``Vec3f``, ``Vec4f``"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:18
+#: d0263d361e1a4738a1b11f1e5daef296
+msgid "``Mat3f``, ``Mat4f``"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:20
+#: a11b041f5aca4282a6934a8444917e3f
+msgid "All simd-related aliases/types are exposed in the ``mag::simd`` namespace."
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:23
+#: 84fc88a97e274045b19782897aa8c062
+msgid "Build requirements"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:25
+#: 38c9d15043264cfe83e0ff915f347aeb
+msgid ""
+"MAG depends on a compiler with usable C++20 module support. The top-level"
+" build currently checks for these minimum versions:"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:29
+#: 5b1afce920dd4a5b935b7957b907ef21
+msgid "Tool"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:29
+#: bf97c1f7e48042de8d5f255eef5ac21e
+msgid "Minimum version"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:31
+#: 642eb55a1998436ab579797fa2089b27
+msgid "Clang"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:31
+#: 08a1b554287346f88daf1dcc7356bee3
+msgid "18"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:33
+#: da1dafdebca5483d99d505cedb459cca
+msgid "GCC"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:33
+#: ae3325bafcf74788b567f0ca731d7edc
+msgid "15"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:35
+#: 4201468333b342ed8f79c2262330a5c6
+msgid "MSVC"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:35
+#: 280879cb5eb54acc8c33179091fe1b7e
+msgid "Visual Studio 2022 17.10 / MSVC 19.40"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:37
+#: c4b6d44545b748ecb201444b6ed27e34
+msgid "CMake"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:37
+#: 770975ad372b4624b92d288989829fdd
+msgid "3.28.3"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:39
+#: f99ff233de5d46dda0c78254f91887df
+msgid "Ninja"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:39
+#: 5060aa3b7bbf4bb0a091e908e45af999
+msgid "Recommended generator used by presets"
+msgstr ""
+
+#: ../../source/getting-started/overview.rst:42
+#: 373573278ceb4987a2da7df59dbbc82a
+msgid "For a full setup walkthrough, continue with :doc:`building`."
+msgstr ""
+
+#~ msgid ""
+#~ "MAG is a C++20 math library for"
+#~ " graphics-oriented codebases. The public"
+#~ " API is exposed through the top-"
+#~ "level module:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "From that import, MAG re-exports "
+#~ "its core vector, matrix, constants, and"
+#~ " concepts modules. When SIMD is "
+#~ "enabled for the target platform, the "
+#~ "public SIMD module is exported too."
+#~ msgstr ""
+
+#~ msgid "Core functionality"
+#~ msgstr ""
+
+#~ msgid "MAG currently provides:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Vectors** for 2D, 3D, and 4D "
+#~ "math, including arithmetic, normalization, dot"
+#~ " products, clamping, interpolation, and "
+#~ "comparisons."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Matrices** for 3x3 and 4x4 math, "
+#~ "including arithmetic, transpose, inverse, "
+#~ "identity, translation, rotation, and diagonal"
+#~ " constructors."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Constants and helpers** used in "
+#~ "graphics-heavy code, such as ``pi<T>``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**SIMD support** for native and "
+#~ "fixed-width vector operations on supported"
+#~ " platforms."
+#~ msgstr ""
+
+#~ msgid "Public module layout"
+#~ msgstr ""
+
+#~ msgid "The ``mag`` module re-exports the following public areas:"
+#~ msgstr ""
+
+#~ msgid "aliases"
+#~ msgstr ""
+
+#~ msgid "concepts"
+#~ msgstr ""
+
+#~ msgid "constants"
+#~ msgstr ""
+
+#~ msgid "matrix, matrix_3x3, matrix_4x4, matrix_ops"
+#~ msgstr ""
+
+#~ msgid "vector, vector_2, vector_3, vector_4, vector_ops"
+#~ msgstr ""
+
+#~ msgid "simd (only when ``MAG_ENABLE_SIMD`` is enabled)"
+#~ msgstr ""
+
+#~ msgid "You will typically work with aliases such as:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``mag::simd::f32x4``, ``f64x2``, ``i32x4``, and "
+#~ "related SIMD aliases when SIMD is "
+#~ "available"
+#~ msgstr ""
+

@@ -16,7 +16,7 @@
 
 module;
 #include <cstddef>
-export module mag:ops;
+export module mag:simd_ops;
 
 import :concepts;
 

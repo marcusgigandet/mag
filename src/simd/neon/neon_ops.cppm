@@ -20,7 +20,7 @@ module;
 #include <cstdint>
 export module mag:neon_ops;
 
-import :ops;
+import :simd_ops;
 
 // Suppress "TU local entity ___ is exposed" errors on some compilers. This warning can be ignored
 // since inlining the functions calling native simd functions result in the exposure.
