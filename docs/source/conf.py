@@ -10,12 +10,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from docs_config import (
     DEFAULT_LANGUAGE,
     DOCS_DIR,
+    ENABLE_GITHUB_ISSUES,
+    ENABLE_SITEMAP,
+    EXCLUDE_PATTERNS,
+    HTML_STATIC_PATHS,
+    HTML_THEME,
     ISSUES_GITHUB_PATH,
+    LOCALE_RELATIVE_PATH,
     PROJECT_AUTHOR,
     PROJECT_NAME,
     REMOTE_HTML_BASE_URL,
     REPOSITORY_URL,
     SITE_LANGUAGES,
+    SPHINX_EXTENSIONS,
     VERSIONS_YAML_PATH,
     VersionDetails,
     discover_languages,
@@ -66,6 +73,24 @@ def build_version_url(version_name: str, language_name: str) -> str:
     )
 
 
+def build_version_label(version_name: str, details: VersionDetails | None = None) -> str:
+    """
+    Build the display label for a docs version entry.
+
+    :param version_name: Version name such as ``"latest"`` or ``"0.1.0"``.
+    :param details: Optional metadata for the version.
+    :return: Display label for the version switcher.
+    """
+    if version_name == "latest":
+        return "latest"
+    if details is None:
+        return version_name
+
+    title = details.get("title", version_name)
+    status = details.get("status", "")
+    return f"{title} ({status})" if status else title
+
+
 def resolve_version_language(
     version_name: str,
     preferred_language: str,
@@ -103,10 +128,13 @@ def build_local_html_context(current_language: str) -> dict[str, object]:
     )
     return {
         "current_language": current_language,
+        "default_language": DEFAULT_LANGUAGE,
+        "local_build": True,
         "languages": [
             (language_name, build_local_language_link(current_language, language_name))
             for language_name in languages
         ],
+        "current_version_label": "local",
         "current_version": "local",
         "repository_url": REPOSITORY_URL,
         "versions": [("local", "." if current_language == DEFAULT_LANGUAGE else "..")],
@@ -147,19 +175,29 @@ def build_html_context(
                 (language_name, build_version_url(current_version, language_name))
             )
 
-    version_links.append(("latest", build_version_url("latest", current_language)))
+    version_links.append(
+        (build_version_label("latest"), build_version_url("latest", current_language))
+    )
 
     for version_name in versions:
         version_language = resolve_version_language(
             version_name, current_language, versions
         )
         version_links.append(
-            (version_name, build_version_url(version_name, version_language))
+            (
+                build_version_label(version_name, versions.get(version_name)),
+                build_version_url(version_name, version_language),
+            )
         )
 
     return {
         "current_language": current_language,
+        "default_language": DEFAULT_LANGUAGE,
+        "local_build": False,
         "languages": languages,
+        "current_version_label": build_version_label(
+            current_version, versions.get(current_version)
+        ),
         "current_version": current_version,
         "repository_url": REPOSITORY_URL,
         "versions": version_links,
@@ -191,35 +229,24 @@ release = get_git_tag()
 version = ".".join(release.split(".")[:2])
 
 # -- Internationalization ----------------------------------------------------
-locale_dirs = ["locale/"]
+locale_dirs = [f"{LOCALE_RELATIVE_PATH.as_posix()}/"]
 gettext_compact = False
 gettext_uuid = True
 language = os.getenv("current_language", DEFAULT_LANGUAGE)
 
 # -- General configuration ---------------------------------------------------
 templates_path = ["_templates"]
-extensions = [
-    "sphinx.ext.githubpages",
-    "sphinx.ext.intersphinx",
-    "sphinx_copybutton",
-    "sphinx_design",
-    "sphinx_last_updated_by_git",
-    "sphinx_multiversion",
-]
+extensions = SPHINX_EXTENSIONS.copy()
 issues_github_path = ISSUES_GITHUB_PATH
-if issues_github_path:
+if ENABLE_GITHUB_ISSUES and issues_github_path and "sphinx_issues" not in extensions:
     extensions.append("sphinx_issues")
-if not LOCAL_BUILD and HTML_BASE_URL:
+if ENABLE_SITEMAP and not LOCAL_BUILD and HTML_BASE_URL and "sphinx_sitemap" not in extensions:
     extensions.append("sphinx_sitemap")
-exclude_patterns = [
-    "_build",
-    "Thumbs.db",
-    ".DS_Store",
-]
+exclude_patterns = EXCLUDE_PATTERNS.copy()
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = "sphinx_rtd_theme"
-html_static_path = ["_static"]
+html_theme = HTML_THEME
+html_static_path = [path_name.as_posix() for path_name in HTML_STATIC_PATHS]
 html_baseurl = HTML_BASE_URL
 site_baseurl = SITE_BASE_URL
 

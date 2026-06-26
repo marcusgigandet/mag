@@ -9,10 +9,14 @@ from pathlib import Path
 from typing import Final, Iterator
 
 from docs_config import (
+    BUILD_HTML_RELATIVE_PATH,
     DEFAULT_LANGUAGE,
     DOCS_DIR,
     DOCS_RELATIVE_PATH,
+    DOCS_SOURCE_RELATIVE_PATH,
     LATEST_REF,
+    LOCAL_PAGES_RELATIVE_PATH,
+    PAGES_RELATIVE_PATH,
     REPO_ROOT,
     SITE_LANGUAGES,
     VERSIONS_YAML_PATH,
@@ -36,8 +40,8 @@ class BuildPlan:
     targets: list[BuildTarget]
 
 
-PAGES_DIR: Final[Path] = DOCS_DIR / "pages"
-LOCAL_PAGES_DIR: Final[Path] = DOCS_DIR / "pages-local"
+PAGES_DIR: Final[Path] = DOCS_DIR / PAGES_RELATIVE_PATH
+LOCAL_PAGES_DIR: Final[Path] = DOCS_DIR / LOCAL_PAGES_RELATIVE_PATH
 VENV_PYTHON: Final[Path] = DOCS_DIR / ".venv" / "bin" / "python"
 
 
@@ -222,7 +226,7 @@ def has_docs_source(docs_dir: Path) -> bool:
     :param docs_dir: Docs directory expected to contain the Sphinx source tree.
     :return: ``True`` when the docs source tree exists, otherwise ``False``.
     """
-    return (docs_dir / "source" / "index.rst").exists()
+    return (docs_dir / DOCS_SOURCE_RELATIVE_PATH / "index.rst").exists()
 
 
 def ensure_docs_source_exists(ref: str, docs_dir: Path) -> None:
@@ -234,7 +238,7 @@ def ensure_docs_source_exists(ref: str, docs_dir: Path) -> None:
     :return: ``None``.
     """
     if not has_docs_source(docs_dir):
-        docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
+        docs_source_path = DOCS_RELATIVE_PATH / DOCS_SOURCE_RELATIVE_PATH / "index.rst"
         raise RuntimeError(
             f"Git ref '{ref}' does not contain '{docs_source_path}', so it cannot back the deployable docs build."
         )
@@ -253,13 +257,13 @@ def resolve_latest_docs_dir(latest_ref: str, worktree_dirs: dict[str, Path]) -> 
         return latest_docs_dir
 
     if has_docs_source(DOCS_DIR):
-        docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
+        docs_source_path = DOCS_RELATIVE_PATH / DOCS_SOURCE_RELATIVE_PATH / "index.rst"
         print(
             f"Falling back to the current checkout for latest because '{latest_ref}' does not contain '{docs_source_path}' yet."
         )
         return DOCS_DIR
 
-    docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
+    docs_source_path = DOCS_RELATIVE_PATH / DOCS_SOURCE_RELATIVE_PATH / "index.rst"
     raise RuntimeError(
         f"Neither '{latest_ref}' nor the current checkout contains '{docs_source_path}', so latest cannot be built."
     )
@@ -284,7 +288,7 @@ def filter_buildable_versions(
             buildable_versions[version_name] = details
             continue
 
-        docs_source_path = DOCS_RELATIVE_PATH / "source" / "index.rst"
+        docs_source_path = DOCS_RELATIVE_PATH / DOCS_SOURCE_RELATIVE_PATH / "index.rst"
         print(
             f"Skipping docs version '{version_name}' from ref '{ref}' because it has no '{docs_source_path}'."
         )
@@ -305,8 +309,8 @@ def build_doc(target: BuildTarget, local_build: bool) -> None:
     build_env["current_language"] = target.language
     build_env["DOCS_LOCAL_BUILD"] = "1" if local_build else "0"
 
-    source_dir = (target.docs_dir / "source").resolve()
-    build_dir = (target.docs_dir / "_build" / "html").resolve()
+    source_dir = (target.docs_dir / DOCS_SOURCE_RELATIVE_PATH).resolve()
+    build_dir = (target.docs_dir / BUILD_HTML_RELATIVE_PATH).resolve()
 
     subprocess.run(
         [
@@ -361,7 +365,7 @@ def main() -> None:
         shutil.rmtree(plan.output_dir, ignore_errors=True)
         for target in plan.targets:
             build_doc(target, local_build=True)
-            move_dir_contents(target.docs_dir / "_build" / "html", target.destination)
+            move_dir_contents(target.docs_dir / BUILD_HTML_RELATIVE_PATH, target.destination)
         return
 
     with tempfile.TemporaryDirectory() as temp_dir_name, ExitStack() as stack:
@@ -383,7 +387,7 @@ def main() -> None:
         shutil.rmtree(plan.output_dir, ignore_errors=True)
         for target in plan.targets:
             build_doc(target, local_build=False)
-            move_dir_contents(target.docs_dir / "_build" / "html", target.destination)
+            move_dir_contents(target.docs_dir / BUILD_HTML_RELATIVE_PATH, target.destination)
 
 
 if __name__ == "__main__":

@@ -9,10 +9,33 @@ site:
   repository_url: "https://github.com/marcusgigandet/mag"
   html_base_url: "https://marcusgigandet.github.io/mag/"
   issues_github_path: "marcusgigandet/mag"
+  docs_source_dir: "source"
+  build_dir: "_build"
+  pages_dir: "pages"
+  local_pages_dir: "pages-local"
+  locale_dir: "locale"
+  html_theme: "sphinx_rtd_theme"
+  html_static_path:
+    - "_static"
+  extensions:
+    - "sphinx.ext.githubpages"
+    - "sphinx.ext.intersphinx"
+    - "sphinx_copybutton"
+    - "sphinx_design"
+    - "sphinx_last_updated_by_git"
+    - "sphinx_multiversion"
+  exclude_patterns:
+    - "_build"
+    - "Thumbs.db"
+    - ".DS_Store"
+  enable_sitemap: true
+  enable_github_issues: true
 
 versions:
   "0.1.0":
     tag: "0.1.0"
+    title: "0.1.0"
+    status: "stable"
     languages:
       - "en"
       - "fr"

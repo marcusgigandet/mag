@@ -1,6 +1,7 @@
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  {% set page_path = pagename ~ '.html' %}
   <span class="rst-current-version" data-toggle="rst-current-version">
-    Version: {{ current_version }}
+    Version: {{ current_version_label|default(current_version) }}
     <span class="fa fa-caret-down"></span>
   </span>
     <div class="rst-other-versions">
@@ -8,7 +9,18 @@
         <dl>
             <dt>{{ _('Languages') }}</dt>
             {% for the_language, url in languages %}
-            <dd><a href="{{ url }}/index.html">{{ the_language }}</a></dd>
+            {% if local_build %}
+            {% set page_depth = pagename.count('/') %}
+            {% set site_root_prefix = '../' * (page_depth + (0 if current_language == default_language else 1)) %}
+            {% set language_root = '' if the_language == default_language else the_language ~ '/' %}
+            <dd><a href="{{ site_root_prefix ~ language_root ~ page_path }}">{{ the_language }}</a></dd>
+            {% elif not url %}
+            <dd><a href="{{ page_path }}">{{ the_language }}</a></dd>
+            {% elif url == '/' %}
+            <dd><a href="/{{ page_path }}">{{ the_language }}</a></dd>
+            {% else %}
+            <dd><a href="{{ url.rstrip('/') }}/{{ page_path }}">{{ the_language }}</a></dd>
+            {% endif %}
             {% endfor %}
         </dl>
         {% endif %}
@@ -16,7 +28,15 @@
         <dl>
             <dt>{{ _('Versions') }}</dt>
             {% for the_version, url in versions %}
+            {% if local_build %}
             <dd><a href="{{ url }}/index.html">{{ the_version }}</a></dd>
+            {% elif not url %}
+            <dd><a href="{{ page_path }}">{{ the_version }}</a></dd>
+            {% elif url == '/' %}
+            <dd><a href="/{{ page_path }}">{{ the_version }}</a></dd>
+            {% else %}
+            <dd><a href="{{ url.rstrip('/') }}/{{ page_path }}">{{ the_version }}</a></dd>
+            {% endif %}
             {% endfor %}
         </dl>
         {% endif %}

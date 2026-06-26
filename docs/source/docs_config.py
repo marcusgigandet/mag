@@ -11,6 +11,8 @@ import yaml
 
 class VersionDetails(TypedDict, total=False):
     tag: str
+    title: str
+    status: str
     languages: list[str]
 
 
@@ -23,6 +25,17 @@ class SiteDetails(TypedDict, total=False):
     repository_url: str
     html_base_url: str
     issues_github_path: str
+    docs_source_dir: str
+    build_dir: str
+    pages_dir: str
+    local_pages_dir: str
+    locale_dir: str
+    html_theme: str
+    html_static_path: list[str]
+    extensions: list[str]
+    exclude_patterns: list[str]
+    enable_sitemap: bool
+    enable_github_issues: bool
 
 
 @dataclass(frozen=True)
@@ -35,6 +48,17 @@ class DocsConfig:
     repository_url: str
     html_base_url: str
     issues_github_path: str
+    docs_source_dir: Path
+    build_dir: Path
+    pages_dir: Path
+    local_pages_dir: Path
+    locale_dir: Path
+    html_theme: str
+    html_static_path: list[Path]
+    extensions: list[str]
+    exclude_patterns: list[str]
+    enable_sitemap: bool
+    enable_github_issues: bool
     versions: dict[str, VersionDetails]
 
 
@@ -125,6 +149,50 @@ def split_docs_yaml(raw_config: dict[str, object]) -> tuple[SiteDetails, dict[st
     return raw_site, raw_versions
 
 
+def validate_string_list(values: object, field_name: str) -> list[str]:
+    """
+    Validate that a config field is a list of strings.
+
+    :param values: Raw config value.
+    :param field_name: Fully-qualified config field name.
+    :return: Validated list of strings.
+    """
+    if not isinstance(values, list) or not all(isinstance(value, str) for value in values):
+        raise TypeError(f"{field_name} must be a list of strings.")
+
+    return values
+
+
+def validate_bool(value: object, field_name: str) -> bool:
+    """
+    Validate that a config field is a boolean.
+
+    :param value: Raw config value.
+    :param field_name: Fully-qualified config field name.
+    :return: Validated boolean value.
+    """
+    if not isinstance(value, bool):
+        raise TypeError(f"{field_name} must be a boolean.")
+
+    return value
+
+
+def validate_relative_path(path_value: object, field_name: str) -> str:
+    """
+    Validate that a config field is a relative path string.
+
+    :param path_value: Raw config value.
+    :param field_name: Fully-qualified config field name.
+    :return: Validated relative path string.
+    """
+    if not isinstance(path_value, str):
+        raise TypeError(f"{field_name} must be a string.")
+    if Path(path_value).is_absolute():
+        raise TypeError(f"{field_name} must be a relative path.")
+
+    return path_value
+
+
 def validate_site_details(raw_site: SiteDetails) -> SiteDetails:
     """
     Validate site-level docs configuration.
@@ -142,6 +210,7 @@ def validate_site_details(raw_site: SiteDetails) -> SiteDetails:
         "repository_url",
         "html_base_url",
         "issues_github_path",
+        "html_theme",
     )
     for field_name in string_fields:
         field_value = raw_site.get(field_name)
@@ -151,13 +220,40 @@ def validate_site_details(raw_site: SiteDetails) -> SiteDetails:
             raise TypeError(f"versions.yaml site.{field_name} must be a string.")
         validated[field_name] = field_value
 
-    languages = raw_site.get("languages")
-    if languages is not None:
-        if not isinstance(languages, list) or not all(
-            isinstance(language_name, str) for language_name in languages
-        ):
-            raise TypeError("versions.yaml site.languages must be a list of strings.")
-        validated["languages"] = languages
+    if raw_site.get("languages") is not None:
+        validated["languages"] = validate_string_list(
+            raw_site["languages"], "versions.yaml site.languages"
+        )
+
+    for field_name in (
+        "docs_source_dir",
+        "build_dir",
+        "pages_dir",
+        "local_pages_dir",
+        "locale_dir",
+    ):
+        field_value = raw_site.get(field_name)
+        if field_value is None:
+            continue
+        validated[field_name] = validate_relative_path(
+            field_value, f"versions.yaml site.{field_name}"
+        )
+
+    for field_name in ("html_static_path", "extensions", "exclude_patterns"):
+        field_value = raw_site.get(field_name)
+        if field_value is None:
+            continue
+        validated[field_name] = validate_string_list(
+            field_value, f"versions.yaml site.{field_name}"
+        )
+
+    for field_name in ("enable_sitemap", "enable_github_issues"):
+        field_value = raw_site.get(field_name)
+        if field_value is None:
+            continue
+        validated[field_name] = validate_bool(
+            field_value, f"versions.yaml site.{field_name}"
+        )
 
     return validated
 
@@ -190,8 +286,18 @@ def load_versions(path: Path) -> dict[str, VersionDetails]:
         if not isinstance(tag, str):
             raise TypeError(f"Version '{version_name}' tag must be a string.")
 
+        title = details.get("title", version_name)
+        if not isinstance(title, str):
+            raise TypeError(f"Version '{version_name}' title must be a string.")
+
+        status = details.get("status", "")
+        if not isinstance(status, str):
+            raise TypeError(f"Version '{version_name}' status must be a string.")
+
         versions[version_name] = {
             "tag": tag,
+            "title": title,
+            "status": status,
             "languages": languages,
         }
 
@@ -223,6 +329,8 @@ def discover_languages(
     versions: dict[str, VersionDetails] | None = None,
     default_language: str | None = None,
     configured_languages: list[str] | None = None,
+    docs_source_dir: Path | None = None,
+    locale_dir: Path | None = None,
 ) -> list[str]:
     """
     Discover the languages supported by a docs tree.
@@ -230,18 +338,27 @@ def discover_languages(
     :param docs_dir: Documentation root that contains the Sphinx source tree.
     :param versions: Optional versions metadata whose language lists should also be included.
     :param default_language: Language code that should be treated as the root language.
+    :param configured_languages: Explicit language list from configuration.
+    :param docs_source_dir: Source directory relative to ``docs_dir``.
+    :param locale_dir: Locale directory relative to the docs source directory.
     :return: Normalized language codes supported by the docs tree.
     """
     if default_language is None:
         default_language = DEFAULT_LANGUAGE
+    if docs_source_dir is None:
+        docs_source_dir = DOCS_SOURCE_RELATIVE_PATH
+    if locale_dir is None:
+        locale_dir = LOCALE_RELATIVE_PATH
 
     if configured_languages:
-        return normalize_languages(configured_languages, default_language=default_language)
+        return normalize_languages(
+            configured_languages, default_language=default_language
+        )
 
     languages = {default_language}
-    locale_dir = docs_dir / "source" / "locale"
-    if locale_dir.exists():
-        for candidate in locale_dir.iterdir():
+    locale_root = docs_dir / docs_source_dir / locale_dir
+    if locale_root.exists():
+        for candidate in locale_root.iterdir():
             if candidate.is_dir() and (candidate / "LC_MESSAGES").exists():
                 languages.add(candidate.name)
 
@@ -277,9 +394,9 @@ def resolve_repository_url(repo_root: Path, configured_url: str = "") -> str:
 
     parsed_url = urlparse(remote_url)
     if parsed_url.hostname and parsed_url.path:
-        return f"https://{parsed_url.hostname}{parsed_url.path.removesuffix('.git')}".rstrip(
-            "/"
-        )
+        return (
+            f"https://{parsed_url.hostname}{parsed_url.path.removesuffix('.git')}"
+        ).rstrip("/")
 
     return remote_url.rstrip("/")
 
@@ -306,7 +423,9 @@ def resolve_github_repo_path(repository_url: str) -> str:
     return f"{owner}/{repo.removesuffix('.git')}"
 
 
-def resolve_remote_html_base_url(repository_url: str, configured_url: str = "") -> str:
+def resolve_remote_html_base_url(
+    repository_url: str, configured_url: str = ""
+) -> str:
     """
     Resolve the deployable HTML base URL for the docs site.
 
@@ -328,7 +447,9 @@ def resolve_remote_html_base_url(repository_url: str, configured_url: str = "") 
     return f"https://{owner}.github.io/{repo}/"
 
 
-def resolve_issues_github_path(repository_url: str, configured_path: str = "") -> str:
+def resolve_issues_github_path(
+    repository_url: str, configured_path: str = ""
+) -> str:
     """
     Resolve the GitHub repository path used by ``sphinx_issues``.
 
@@ -345,6 +466,17 @@ def resolve_issues_github_path(repository_url: str, configured_path: str = "") -
     return resolve_github_repo_path(repository_url)
 
 
+def as_relative_path(configured_path: str, default_path: str) -> Path:
+    """
+    Resolve a docs config path value into a relative ``Path``.
+
+    :param configured_path: Configured path value.
+    :param default_path: Default path value.
+    :return: Relative path.
+    """
+    return Path(configured_path or default_path)
+
+
 @lru_cache(maxsize=None)
 def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
     """
@@ -358,7 +490,9 @@ def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
     site = validate_site_details(raw_site)
     versions = load_versions(path)
 
-    default_language = os.getenv("DOCS_DEFAULT_LANGUAGE", site.get("default_language", "en"))
+    default_language = os.getenv(
+        "DOCS_DEFAULT_LANGUAGE", site.get("default_language", "en")
+    )
     configured_languages = site.get("languages", [])
     languages = (
         normalize_languages(configured_languages, default_language=default_language)
@@ -374,6 +508,34 @@ def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
     issues_github_path = resolve_issues_github_path(
         repository_url, configured_path=site.get("issues_github_path", "")
     )
+    docs_source_dir = as_relative_path(
+        site.get("docs_source_dir", ""), SOURCE_DIR.name
+    )
+    build_dir = as_relative_path(site.get("build_dir", ""), "_build")
+    pages_dir = as_relative_path(site.get("pages_dir", ""), "pages")
+    local_pages_dir = as_relative_path(
+        site.get("local_pages_dir", ""), "pages-local"
+    )
+    locale_dir = as_relative_path(site.get("locale_dir", ""), "locale")
+
+    html_static_path = [
+        Path(path_name)
+        for path_name in site.get("html_static_path", ["_static"])
+    ]
+    extensions = site.get(
+        "extensions",
+        [
+            "sphinx.ext.githubpages",
+            "sphinx.ext.intersphinx",
+            "sphinx_copybutton",
+            "sphinx_design",
+            "sphinx_last_updated_by_git",
+            "sphinx_multiversion",
+        ],
+    )
+    exclude_patterns = site.get(
+        "exclude_patterns", [build_dir.as_posix(), "Thumbs.db", ".DS_Store"]
+    )
 
     return DocsConfig(
         default_language=default_language,
@@ -383,12 +545,26 @@ def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
         ),
         project_author=os.getenv(
             "DOCS_PROJECT_AUTHOR",
-            site.get("project_author", run_git_command(["git", "config", "user.name"], cwd=repo_root) or ""),
+            site.get(
+                "project_author",
+                run_git_command(["git", "config", "user.name"], cwd=repo_root) or "",
+            ),
         ),
         latest_ref=os.getenv("DOCS_LATEST_REF", site.get("latest_ref", "")).strip(),
         repository_url=repository_url,
         html_base_url=html_base_url,
         issues_github_path=issues_github_path,
+        docs_source_dir=docs_source_dir,
+        build_dir=build_dir,
+        pages_dir=pages_dir,
+        local_pages_dir=local_pages_dir,
+        locale_dir=locale_dir,
+        html_theme=site.get("html_theme", "sphinx_rtd_theme"),
+        html_static_path=html_static_path,
+        extensions=extensions,
+        exclude_patterns=exclude_patterns,
+        enable_sitemap=site.get("enable_sitemap", True),
+        enable_github_issues=site.get("enable_github_issues", True),
         versions=versions,
     )
 
@@ -402,3 +578,15 @@ LATEST_REF: Final[str] = DOCS_CONFIG.latest_ref
 REPOSITORY_URL: Final[str] = DOCS_CONFIG.repository_url
 REMOTE_HTML_BASE_URL: Final[str] = DOCS_CONFIG.html_base_url
 ISSUES_GITHUB_PATH: Final[str] = DOCS_CONFIG.issues_github_path
+DOCS_SOURCE_RELATIVE_PATH: Final[Path] = DOCS_CONFIG.docs_source_dir
+BUILD_RELATIVE_PATH: Final[Path] = DOCS_CONFIG.build_dir
+BUILD_HTML_RELATIVE_PATH: Final[Path] = BUILD_RELATIVE_PATH / "html"
+PAGES_RELATIVE_PATH: Final[Path] = DOCS_CONFIG.pages_dir
+LOCAL_PAGES_RELATIVE_PATH: Final[Path] = DOCS_CONFIG.local_pages_dir
+LOCALE_RELATIVE_PATH: Final[Path] = DOCS_CONFIG.locale_dir
+HTML_THEME: Final[str] = DOCS_CONFIG.html_theme
+HTML_STATIC_PATHS: Final[list[Path]] = DOCS_CONFIG.html_static_path
+SPHINX_EXTENSIONS: Final[list[str]] = DOCS_CONFIG.extensions
+EXCLUDE_PATTERNS: Final[list[str]] = DOCS_CONFIG.exclude_patterns
+ENABLE_SITEMAP: Final[bool] = DOCS_CONFIG.enable_sitemap
+ENABLE_GITHUB_ISSUES: Final[bool] = DOCS_CONFIG.enable_github_issues
