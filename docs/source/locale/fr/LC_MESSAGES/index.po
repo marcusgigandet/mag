@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 21:29-0400\n"
+"POT-Creation-Date: 2026-06-22 18:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -20,19 +20,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../source/index.rst:2 ad89a28c62fb49feb825fbe41a505b2e
+#: ../../source/index.rst:2 672acc33f92d4abaa953a64a608b0da1
 msgid "Welcome to MAG"
 msgstr ""
 
-#: ../../source/index.rst:4 90645e743bef436aac287b642df59343
-msgid "**MAG (Mathematics and Graphics)** is ..."
+#: ../../source/index.rst:4 6a524f0488e241aca873e9e84b1f6360
+msgid ""
+"**MAG (Mathematics and Graphics)** is a modern-cpp math library built for"
+" use in 3D graphics. The library is compatible for C++-20 or higher, and "
+"requires a compilers that supports cpp-modules."
 msgstr ""
 
-#: ../../source/index.rst:7 49a1c57e6e60447ebfd0486563770cca
+#: ../../source/index.rst:8 40464288a6fb49798ec08c4190ccf16c
 msgid "Quick Links"
 msgstr "Liens rapides"
 
-#: ../../source/index.rst:9 10fffff2873448a6b52757152b415411
+#: ../../source/index.rst:10 2e45ee1ee70f4e0fbc3458a802ebfbc9
 msgid ":doc:`getting-started/building` — Build from source"
 msgstr ":doc:`getting-started/building` — Compiler à partir du source code"
+
+#~ msgid "**MAG (Mathematics and Graphics)** is ..."
+#~ msgstr ""
 

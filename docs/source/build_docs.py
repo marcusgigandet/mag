@@ -11,7 +11,7 @@ from typing import Final
 DOCS_DIR: Final[Path] = Path(__file__).resolve().parent.parent
 PAGES_DIR: Final[Path] = DOCS_DIR / "pages"
 CONF_PY_PATH: Final[Path] = DOCS_DIR / "source" / "conf.py"
-VERSIONS_YAML_PATH: Final[Path] = DOCS_DIR / "source" / "versions.yaml"
+VERSIONS_YAML_PATH: Final[Path] = DOCS_DIR / "versions.yaml"
 ORIGINAL_REF = subprocess.check_output(
     ["git", "rev-parse", "--abbrev-ref", "HEAD"],
     cwd=DOCS_DIR,

@@ -22,7 +22,7 @@ export module mag:simd;
 
 export import :simd_abi;
 export import :simd_concepts;
-export import :ops;
+export import :simd_ops;
 
 #ifdef MAG_NEON_SIMD
 export import :neon_ops;
@@ -45,7 +45,7 @@ namespace mag::simd
 	export template <Numeric T, size_t N>
 	class Simd
 	{
-		using native_type = typename ops<T, N>::native_t;
+		using native_type = ops<T, N>::native_t;
 
 		/// Underlying SIMD register storage
 		native_type m_native{};

@@ -131,6 +131,8 @@ target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_X86_SIMD}>:MAG_X86_SIMD>
 )
 
+target_compile_options(mag PRIVATE -Wall -Wextra -Werror)
+
 #####################
 # Build-tree export #
 #####################

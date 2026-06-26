@@ -117,7 +117,7 @@ if build_all_docs:
     if current_language == 'fr':
         html_context['versions'].append(['latest', f"{site_baseurl}/fr"])
 
-    versions_path = Path(__file__).resolve().parent / "versions.yaml"
+    versions_path = Path(__file__).resolve().parent.parent / "versions.yaml"
     with versions_path.open("r", encoding="utf-8") as yaml_file:
         docs = yaml.safe_load(yaml_file)
 
