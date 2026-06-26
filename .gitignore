@@ -116,3 +116,4 @@ lcov-report/
 # --- Documentation ---
 _build/
 pages/
+pages-local/

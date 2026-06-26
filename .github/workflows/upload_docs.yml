@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - add-docs-page
 
 permissions:
   contents: read

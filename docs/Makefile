@@ -53,6 +53,11 @@ pages:
 	$(VS)$(VENV_DIR)/bin/python "$(BUILD_PAGES_SCRIPT)"
 	@echo "Versioned pages built."
 
+local-pages:
+	@echo "Building local docs preview..."
+	$(VS)$(VENV_DIR)/bin/python "$(BUILD_PAGES_SCRIPT)" --local
+	@echo "Local docs preview built."
+
 venv:
 	@echo "Setting up virtual environment..."
 	$(VS)test -d $(VENV_DIR) || $(PYTHON) -m venv $(VENV_DIR)
@@ -63,4 +68,4 @@ venv:
 
 all: clean venv translate pages
 
-.PHONY: all venv clean html gettext i18n-update i18n-build translate pages
+.PHONY: all venv clean html gettext i18n-update i18n-build translate pages local-pages

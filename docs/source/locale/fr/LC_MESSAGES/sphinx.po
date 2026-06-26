@@ -22,7 +22,7 @@ msgstr ""
 
 #: ../../source/_templates/versions.html:9 1a3196ebe9c74dad97ccdffe35c1d50e
 msgid "Languages"
-msgstr ""
+msgstr "Langues"
 
 #: ../../source/_templates/versions.html:17 55e330801edf4ba091fb91cb3078e132
 msgid "Versions"

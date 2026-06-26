@@ -5,7 +5,7 @@ Welcome to MAG
 The library targets **C++20 and newer**, uses **C++ modules**, and ships a compact API for
 vector math, matrix math, transform helpers, constants, and optional SIMD acceleration.
 
-What you get
+Features
 ------------
 
 - A single public module import: ``import mag;``
