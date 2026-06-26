@@ -131,7 +131,12 @@ target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_X86_SIMD}>:MAG_X86_SIMD>
 )
 
-target_compile_options(mag PRIVATE -Wall -Wextra -Werror)
+# Why can't microsoft be normal >:(
+# https://learn.microsoft.com/en-us/cpp/build/reference/compiler-option-warning-level?view=msvc-170
+target_compile_options(mag PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
+)
 
 #####################
 # Build-tree export #
