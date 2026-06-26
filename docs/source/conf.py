@@ -10,15 +10,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from docs_config import (
     DEFAULT_LANGUAGE,
     DOCS_DIR,
+    DOCS_RELATIVE_PATH,
+    DOCS_SOURCE_RELATIVE_PATH,
     ENABLE_GITHUB_ISSUES,
     ENABLE_SITEMAP,
     EXCLUDE_PATTERNS,
     HTML_STATIC_PATHS,
     HTML_THEME,
     ISSUES_GITHUB_PATH,
+    LATEST_REF,
     LOCALE_RELATIVE_PATH,
     PROJECT_AUTHOR,
     PROJECT_NAME,
+    REPO_ROOT,
     REMOTE_HTML_BASE_URL,
     REPOSITORY_URL,
     SITE_LANGUAGES,
@@ -27,6 +31,7 @@ from docs_config import (
     VersionDetails,
     discover_languages,
     load_versions,
+    run_git_command,
 )
 
 LOCAL_BUILD: Final[bool] = os.getenv("DOCS_LOCAL_BUILD", "0") == "1"
@@ -91,6 +96,65 @@ def build_version_label(version_name: str, details: VersionDetails | None = None
     return f"{title} ({status})" if status else title
 
 
+def normalize_vcs_ref(ref: str) -> str:
+    """
+    Normalize a Git ref for GitHub edit URLs.
+
+    :param ref: Git ref such as ``origin/main`` or ``v0.1.0``.
+    :return: Web-safe ref name.
+    """
+    return ref.removeprefix("origin/")
+
+
+def resolve_local_edit_ref() -> str:
+    """
+    Resolve the most useful ref for local-preview edit links.
+
+    :return: Current branch when available, otherwise the configured latest ref.
+    """
+    current_branch = run_git_command(
+        ["git", "symbolic-ref", "--quiet", "--short", "HEAD"], REPO_ROOT
+    )
+    if current_branch:
+        return current_branch
+
+    return LATEST_REF or "main"
+
+
+def build_edit_context(
+    current_version: str, versions: dict[str, VersionDetails], local_build: bool
+) -> dict[str, object]:
+    """
+    Build GitHub edit-link context for the current page.
+
+    :param current_version: Docs version currently being built.
+    :param versions: Version metadata loaded from configuration.
+    :param local_build: Whether the current build is a local preview.
+    :return: HTML context entries enabling RTD theme edit links.
+    """
+    if not ISSUES_GITHUB_PATH:
+        return {}
+
+    github_user, github_repo = ISSUES_GITHUB_PATH.split("/", maxsplit=1)
+    if local_build:
+        github_version = resolve_local_edit_ref()
+    elif current_version == "latest":
+        github_version = LATEST_REF or resolve_local_edit_ref()
+    else:
+        github_version = versions.get(current_version, {}).get("tag", current_version)
+
+    source_path = f"/{(DOCS_RELATIVE_PATH / DOCS_SOURCE_RELATIVE_PATH).as_posix()}/"
+    return {
+        "display_github": True,
+        "display_vcs_links": True,
+        "github_user": github_user,
+        "github_repo": github_repo,
+        "github_version": normalize_vcs_ref(github_version),
+        "conf_py_path": source_path,
+        "theme_vcs_pageview_mode": "edit",
+    }
+
+
 def resolve_version_language(
     version_name: str,
     preferred_language: str,
@@ -138,7 +202,7 @@ def build_local_html_context(current_language: str) -> dict[str, object]:
         "current_version": "local",
         "repository_url": REPOSITORY_URL,
         "versions": [("local", "." if current_language == DEFAULT_LANGUAGE else "..")],
-    }
+    } | build_edit_context("local", load_versions(VERSIONS_YAML_PATH), local_build=True)
 
 
 def build_html_context(
@@ -201,7 +265,7 @@ def build_html_context(
         "current_version": current_version,
         "repository_url": REPOSITORY_URL,
         "versions": version_links,
-    }
+    } | build_edit_context(current_version, versions, local_build=False)
 
 
 def get_git_tag() -> str:
