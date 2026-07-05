@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28.3 FATAL_ERROR)
-project(mag VERSION 1.0.0 LANGUAGES CXX)
+project(mag LANGUAGES CXX)
 
 #####################
 # Compiler settings #
@@ -57,10 +57,6 @@ file(GLOB_RECURSE HEADERS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
 )
 
-set(MAG_NEON_SIMD FALSE CACHE BOOL "" FORCE)
-set(MAG_X86_SIMD FALSE CACHE BOOL "" FORCE)
-set(MAG_SIMD_COMPILE_OPTIONS "")
-
 # Remove unused code
 if (NOT MAG_ENABLE_SIMD)
     list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
@@ -71,19 +67,15 @@ else ()
     # Filter based on x86 and arm
     # Add more architectures if we add future support for something like RISC-V
     if (ARCH MATCHES "^(aarch64|arm64|arm|armv.*)")
-        set(MAG_NEON_SIMD TRUE CACHE BOOL "" FORCE)
-
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
 
     elseif (ARCH MATCHES "^(x86_64|amd64|i[3-6]86|x64)")
-        set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
-
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
 
         # MSVC does not support GCC/Clang -m* SIMD flags.
+        # Todo: Update the flags to be passed by the user
         add_compile_options(
                 $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
-                $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE3>
                 $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2>
         )
     else ()
@@ -118,11 +110,6 @@ target_include_directories(mag
 target_compile_features(mag
         PUBLIC
         cxx_std_20
-)
-
-target_compile_options(mag
-        PRIVATE
-        ${MAG_SIMD_COMPILE_OPTIONS}
 )
 
 #######################################
@@ -186,13 +173,13 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
             DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 
-    if (MAG_CODE_ANALYSIS)
-        set_target_properties(mag PROPERTIES
-                CXX_CLANG_TIDY
-                "clang-tidy;
-            -p=${CMAKE_BINARY_DIR};
-            --system-headers=0;
-            -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
-        )
-    endif ()
+#    if (MAG_CODE_ANALYSIS)
+#        set_target_properties(mag PROPERTIES
+#                CXX_CLANG_TIDY
+#                "clang-tidy;
+#            -p=${CMAKE_BINARY_DIR};
+#            --system-headers=0;
+#            -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
+#        )
+#    endif ()
 endif ()

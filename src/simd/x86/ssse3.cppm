@@ -19,7 +19,7 @@ module;
 #include <cstdint>
 #include <immintrin.h>
 #include <span>
-export module mag.simd:sse3;
+export module mag.simd:ssse3;
 
 import :ops;
 export import :sse2;
@@ -28,17 +28,22 @@ export import :sse2;
 
 namespace mag::simd
 {
+	template <typename T, std::size_t N>
+	struct ops_impl<T, N, simd_isa::ssse3> : ops_impl<T, N, simd_isa::sse2>
+	{
+	};
+
 	template <>
-	struct ops_impl<float, 4, simd_isa::sse3> : ops_impl<float, 4, simd_isa::sse2>
+	struct ops_impl<float, 4, simd_isa::ssse3> : ops_impl<float, 4, simd_isa::sse2>
 	{
 		MAG_INLINE static float hsum(const native_t v) noexcept
 		{
-			return _mm_cvtss_f32(_mm_hadd_ps(v, v));
+			return _mm_cvtss_f32(_mm_hadd_ps(_mm_hadd_ps(v, v), v));
 		}
 	};
 
 	template <>
-	struct ops_impl<double, 2, simd_isa::sse3> : ops_impl<double, 2, simd_isa::sse2>
+	struct ops_impl<double, 2, simd_isa::ssse3> : ops_impl<double, 2, simd_isa::sse2>
 	{
 		MAG_INLINE static double hsum(const native_t v) noexcept
 		{
@@ -47,43 +52,22 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops_impl<int8_t, 16, simd_isa::sse3> : ops_impl<int8_t, 16, simd_isa::sse2>
+	struct ops_impl<int32_t, 4, simd_isa::ssse3> : ops_impl<int32_t, 4, simd_isa::sse2>
 	{
+		MAG_INLINE static int32_t hsum(const native_t v) noexcept
+		{
+			return _mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v));
+		}
 	};
 
 	template <>
-	struct ops_impl<int16_t, 8, simd_isa::sse3> : ops_impl<int16_t, 8, simd_isa::sse2>
+	struct ops_impl<uint32_t, 4, simd_isa::ssse3> : ops_impl<uint32_t, 4, simd_isa::sse2>
 	{
-	};
-
-	template <>
-	struct ops_impl<int32_t, 4, simd_isa::sse3> : ops_impl<int32_t, 4, simd_isa::sse2>
-	{
-	};
-
-	template <>
-	struct ops_impl<int64_t, 2, simd_isa::sse3> : ops_impl<int64_t, 2, simd_isa::sse2>
-	{
-	};
-
-	template <>
-	struct ops_impl<uint8_t, 16, simd_isa::sse3> : ops_impl<uint8_t, 16, simd_isa::sse2>
-	{
-	};
-
-	template <>
-	struct ops_impl<uint16_t, 8, simd_isa::sse3> : ops_impl<uint16_t, 8, simd_isa::sse2>
-	{
-	};
-
-	template <>
-	struct ops_impl<uint32_t, 4, simd_isa::sse3> : ops_impl<uint32_t, 4, simd_isa::sse2>
-	{
-	};
-
-	template <>
-	struct ops_impl<uint64_t, 2, simd_isa::sse3> : ops_impl<uint64_t, 2, simd_isa::sse2>
-	{
+		MAG_INLINE static uint32_t hsum(const native_t v) noexcept
+		{
+			return static_cast<uint32_t>(
+					_mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v)));
+		}
 	};
 } // namespace mag::simd
 

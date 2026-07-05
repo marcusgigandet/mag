@@ -32,8 +32,8 @@ export import :ops;
 #ifdef __SSE2__
 export import :sse2;
 #endif
-#ifdef __SSE3__
-export import :sse3;
+#ifdef __SSSE3__
+export import :ssse3;
 #endif
 #ifdef __SSE4_1__
 export import :sse4_1;

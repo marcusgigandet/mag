@@ -36,3 +36,9 @@ target_link_libraries(run_all_tests
 )
 
 add_test(NAME mag_all_tests COMMAND run_all_tests)
+
+add_executable(demo ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp)
+target_link_libraries(demo
+        PRIVATE
+        mag
+)

@@ -18,11 +18,11 @@ module;
 #include <iomanip>
 #include <span>
 #include <sstream>
+#include <string>
 export module mag.matrix:matrix;
 
 import mag.core;
 import mag.vector;
-
 #ifdef MAG_ENABLE_SIMD
 import mag.simd;
 using namespace mag::simd;
@@ -359,7 +359,7 @@ namespace mag
 		 *		 )```.
 		 * Where column 0, row 1 is 4.
 		 *
-		 * @return A string in the form `VecN(...)`.
+		 * @return A string in the form `MatNxM(...)`.
 		 */
 		[[nodiscard]] std::string toString() const noexcept
 		{
@@ -387,7 +387,7 @@ namespace mag
 		}
 	};
 
-	export template <Numeric T, size_t C, size_t R>
+	template <Numeric T, size_t C, size_t R>
 	struct Mat : IMat<Mat<T, C, R>, T, C, R>
 	{
 		T m[C][R];

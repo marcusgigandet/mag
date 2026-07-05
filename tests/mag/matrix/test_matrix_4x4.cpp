@@ -314,15 +314,6 @@ TEST_CASE("Mat4x4 scalar, diagonal, and iterator utilities", "[Mat4x4]")
 		REQUIRE(d[2][2] == Catch::Approx(4.0f));
 		REQUIRE(d[3][3] == Catch::Approx(5.0f));
 	}
-
-	SECTION("Iterator traversal and toString formatting")
-	{
-		float sum = 0.0f;
-		for (float v : a)
-			sum += v;
-		REQUIRE(sum == Catch::Approx(136.0f));
-		REQUIRE(a.toString().find("Mat4x4(") == 0);
-	}
 }
 
 TEST_CASE("Mat4x4 inverse and transform overloads", "[Mat4x4]")

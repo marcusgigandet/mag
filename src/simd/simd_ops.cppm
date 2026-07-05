@@ -25,11 +25,9 @@ export namespace mag::simd
 	enum class simd_isa
 	{
 		sse2,
-		sse3,
+		ssse3,
 		sse4_1,
-		sse4_2,
 		neon,
-		scalar ///< Fallback for unsupported ISA
 	};
 
 	/**
@@ -49,13 +47,13 @@ export namespace mag::simd
 	// Conditionally select the default ISA based on compilation
 #if defined(__AVX512F__)
 #elif defined(__AVX2__)
-#elif defined(__SSE3__)
-	constexpr simd_isa default_isa = simd_isa::sse3;
+#elif defined(__SSE4_1__)
+	constexpr simd_isa default_isa = simd_isa::sse4_1;
+#elif defined(__SSSE3__)
+	constexpr simd_isa default_isa = simd_isa::ssse3;
 #elif defined(__SSE2__)
 	constexpr simd_isa default_isa = simd_isa::sse2;
 #elif defined(__ARM_NEON)
 	constexpr auto default_isa = simd_isa::neon;
-#else
-	constexpr auto default_isa = simd_isa::scalar;
 #endif
 } // namespace mag::simd

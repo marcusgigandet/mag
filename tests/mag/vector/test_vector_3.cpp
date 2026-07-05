@@ -2,7 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cmath>
 
-import mag.vector;
+import mag;
 using namespace mag;
 
 TEST_CASE("Vec3 basic arithmetic", "[Vec3]")

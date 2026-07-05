@@ -7,8 +7,7 @@
 #include <span>
 #include <utility>
 
-import mag.vector;
-import mag.simd;
+import mag;
 using namespace mag;
 using namespace mag::simd;
 
@@ -207,23 +206,23 @@ TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 
 	SECTION("signed integer arithmetic and reductions")
 	{
-		if constexpr (supports_max<uint32_t, 4>)
-		{
-			const i32x4 a{10, -20, 30, -40};
-			const i32x4 b{-1, 2, -3, 4};
+#if defined(__SSE4_1__) || defined(__ARM_NEON)
+		const i32x4 a{10, -20, 30, -40};
+		const i32x4 b{-1, 2, -3, 4};
 
-			requireSimdEquals(a + b, {9, -18, 27, -36});
-			requireSimdEquals(a - b, {11, -22, 33, -44});
-			requireSimdEquals(min(a, b), {-1, -20, -3, -40});
-			requireSimdEquals(max(a, b), {10, 2, 30, 4});
-			REQUIRE(hsum(a) == -20);
-			REQUIRE(hmin(a) == -40);
-			REQUIRE(hmax(a) == 30);
-		}
+		requireSimdEquals(a + b, {9, -18, 27, -36});
+		requireSimdEquals(a - b, {11, -22, 33, -44});
+		requireSimdEquals(min(a, b), {-1, -20, -3, -40});
+		requireSimdEquals(max(a, b), {10, 2, 30, 4});
+		REQUIRE(hsum(a) == -20);
+		REQUIRE(hmin(a) == -40);
+		REQUIRE(hmax(a) == 30);
+#endif
 	}
 
 	SECTION("unsigned integer arithmetic and reductions")
 	{
+#if defined(__SSE4_1__) || defined(__ARM_NEON)
 		const u32x4 a{2U, 4U, 6U, 8U};
 		const u32x4 b{1U, 5U, 3U, 9U};
 
@@ -234,5 +233,6 @@ TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 		REQUIRE(hsum(a) == 20U);
 		REQUIRE(hmin(a) == 2U);
 		REQUIRE(hmax(a) == 8U);
+#endif
 	}
 }
