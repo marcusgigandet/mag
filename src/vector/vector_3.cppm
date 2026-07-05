@@ -16,9 +16,9 @@
 
 module;
 #include <type_traits>
-export module mag:vector_3;
+export module mag.vector:vector_3;
 
-import :concepts;
+import mag.core;
 import :vector;
 
 namespace mag

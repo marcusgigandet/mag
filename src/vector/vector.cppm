@@ -19,12 +19,12 @@ module;
 #include <cmath>
 #include <sstream>
 #include <string>
-export module mag:vector;
+export module mag.vector:vector;
 
-import :concepts;
+import mag.core;
 
 #ifdef MAG_ENABLE_SIMD
-import :simd;
+import mag.simd;
 using namespace mag::simd;
 #endif
 
@@ -45,12 +45,8 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_mul<T, N> && supports_reduction<T, N>)
 		{
-			using ops = ops<T, N>;
-
-			auto simd_v = ops::load(v.v);
-			auto sq = ops::mul(simd_v, simd_v);
-
-			return std::sqrt(ops::hsum(sq));
+			Simd<T, N> va{v.v};
+			return std::sqrt(hsum(va * va));
 		}
 #endif
 		T ret{0};
@@ -73,11 +69,9 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_reduction<T, N>)
 		{
-			using ops = ops<T, N>;
-
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			return static_cast<T>(ops::hsum(ops::mul(va, vb)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{b.v};
+			return hsum(va * vb);
 		}
 #endif
 		using R = std::common_type_t<T, U>;
@@ -100,14 +94,14 @@ namespace mag
 		if constexpr (std::is_same_v<T, U> && supports_splat<T, N> && supports_add<T, N> &&
 					  supports_sub<T, N> && supports_mul<T, N>)
 		{
-			using ops = ops<T, N>;
-
 			Vec<T, N> r;
-			auto va = ops::load(a.v);
-			auto vb = ops::load(b.v);
-			auto vt = ops::splat(static_cast<T>(t));
-			auto vr = ops::add(va, ops::mul(ops::sub(vb, va), vt));
-			ops::store(r.v, vr);
+
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{b.v};
+			Simd<T, N> vt{t};
+
+			auto vr{va + (vb - va) * vt};
+			vr.store(r.v);
 			return r;
 		}
 #endif
@@ -190,8 +184,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (std::is_same_v<T, U> && supports_add<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::add(ops::load(derived().v), ops::load(o.v)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{o.v};
+
+				auto vr{va + vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -206,8 +204,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (std::is_same_v<T, U> && supports_sub<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::sub(ops::load(derived().v), ops::load(o.v)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{o.v};
+
+				auto vr{va - vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -222,8 +224,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::mul(ops::load(derived().v), ops::load(o.v)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{o.v};
+
+				auto vr{va * vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -238,8 +244,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (std::is_same_v<T, U> && supports_div<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::div(ops::load(derived().v), ops::load(o.v)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{o.v};
+
+				auto vr{va / vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -254,8 +264,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_add<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::add(ops::load(derived().v), ops::splat(s)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{s};
+
+				auto vr{va + vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -270,8 +284,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::sub(ops::load(derived().v), ops::splat(s)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{s};
+
+				auto vr{va - vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -286,8 +304,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_mul<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::mul(ops::load(derived().v), ops::splat(s)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{s};
+
+				auto vr{va * vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -302,8 +324,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_div<T, N>)
 			{
-				using ops = ops<T, N>;
-				ops::store(derived().v, ops::div(ops::load(derived().v), ops::splat(s)));
+				Simd<T, N> va{derived().v};
+				Simd<T, N> vb{s};
+
+				auto vr{va / vb};
+				vr.store(derived().v);
+
 				return derived();
 			}
 #endif
@@ -373,4 +399,4 @@ namespace mag
 				v[i] = val;
 		}
 	};
-} // namespace mag
+}; // namespace mag

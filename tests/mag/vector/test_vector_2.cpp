@@ -1,7 +1,7 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
-import mag;
+import mag.vector;
 using namespace mag;
 
 TEST_CASE("Vec2 basic arithmetic", "[Vec2]")

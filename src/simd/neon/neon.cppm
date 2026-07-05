@@ -18,9 +18,9 @@ module;
 #include "typedefs.hpp"
 #include <arm_neon.h>
 #include <cstdint>
-export module mag:neon_ops;
+export module mag.simd:neon;
 
-import :simd_ops;
+import :ops;
 
 // Suppress "TU local entity ___ is exposed" errors on some compilers. This warning can be ignored
 // since inlining the functions calling native simd functions result in the exposure.
@@ -29,9 +29,103 @@ MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
 namespace mag::simd
 {
-#ifdef MAG_ENABLE_SIMD_EXTENDED
 	template <>
-	struct ops<int8_t, 16>
+	struct ops<float, 4, simd_isa::neon>
+	{
+		using native_t = float32x4_t;
+
+		MAG_INLINE static native_t load(const float* p) noexcept { return vld1q_f32(p); }
+		MAG_INLINE static void store(float* p, const native_t v) noexcept { vst1q_f32(p, v); }
+
+		MAG_INLINE static native_t splat(const float s) noexcept { return vdupq_n_f32(s); }
+
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return vaddq_f32(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return vsubq_f32(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return vmulq_f32(a, b);
+		}
+		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
+		{
+			return vdivq_f32(a, b);
+		}
+
+		MAG_INLINE static float hsum(const native_t v) noexcept { return vaddvq_f32(v); }
+		MAG_INLINE static float hmax(const native_t v) noexcept { return vmaxvq_f32(v); }
+		MAG_INLINE static float hmin(const native_t v) noexcept { return vminvq_f32(v); }
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_f32(a, b);
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_f32(a, b);
+		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept { return vnegq_f32(v); }
+		MAG_INLINE static native_t abs(const native_t v) noexcept { return vabsq_f32(v); }
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return vsqrtq_f32(v); }
+	};
+
+	template <>
+	struct ops<double, 2, simd_isa::neon>
+	{
+		using native_t = float64x2_t;
+
+		MAG_INLINE static native_t load(const double* p) noexcept { return vld1q_f64(p); }
+		MAG_INLINE static void store(double* p, const native_t v) noexcept { vst1q_f64(p, v); }
+
+		MAG_INLINE static native_t splat(const double s) noexcept { return vdupq_n_f64(s); }
+
+
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return vaddq_f64(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return vsubq_f64(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return vmulq_f64(a, b);
+		}
+		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
+		{
+			return vdivq_f64(a, b);
+		}
+
+		MAG_INLINE static double hsum(const native_t v) noexcept { return vaddvq_f64(v); }
+		MAG_INLINE static double hmax(const native_t v) noexcept { return vmaxvq_f64(v); }
+		MAG_INLINE static double hmin(const native_t v) noexcept { return vminvq_f64(v); }
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return vminq_f64(a, b);
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return vmaxq_f64(a, b);
+		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept { return vnegq_f64(v); }
+		MAG_INLINE static native_t abs(const native_t v) noexcept { return vabsq_f64(v); }
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return vsqrtq_f64(v); }
+	};
+
+	template <>
+	struct ops<int8_t, 16, simd_isa::neon>
 	{
 		using native_t = int8x16_t;
 
@@ -70,7 +164,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<int16_t, 8>
+	struct ops<int16_t, 8, simd_isa::neon>
 	{
 		using native_t = int16x8_t;
 
@@ -109,7 +203,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<int32_t, 4>
+	struct ops<int32_t, 4, simd_isa::neon>
 	{
 		using native_t = int32x4_t;
 
@@ -148,7 +242,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<int64_t, 2>
+	struct ops<int64_t, 2, simd_isa::neon>
 	{
 		using native_t = int64x2_t;
 
@@ -206,7 +300,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint8_t, 16>
+	struct ops<uint8_t, 16, simd_isa::neon>
 	{
 		using native_t = uint8x16_t;
 
@@ -245,7 +339,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint16_t, 8>
+	struct ops<uint16_t, 8, simd_isa::neon>
 	{
 		using native_t = uint16x8_t;
 
@@ -284,7 +378,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint32_t, 4>
+	struct ops<uint32_t, 4, simd_isa::neon>
 	{
 		using native_t = uint32x4_t;
 
@@ -323,7 +417,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint64_t, 2>
+	struct ops<uint64_t, 2, simd_isa::neon>
 	{
 		using native_t = uint64x2_t;
 
@@ -377,102 +471,6 @@ namespace mag::simd
 
 			return vcombine_u64(vdup_n_u64(a0 > b0 ? a0 : b0), vdup_n_u64(a1 > b1 ? a1 : b1));
 		}
-	};
-#endif
-
-	template <>
-	struct ops<float, 4>
-	{
-		using native_t = float32x4_t;
-
-		MAG_INLINE static native_t load(const float* p) noexcept { return vld1q_f32(p); }
-		MAG_INLINE static void store(float* p, const native_t v) noexcept { vst1q_f32(p, v); }
-
-		MAG_INLINE static native_t splat(const float s) noexcept { return vdupq_n_f32(s); }
-
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
-		{
-			return vaddq_f32(a, b);
-		}
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
-		{
-			return vsubq_f32(a, b);
-		}
-		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
-		{
-			return vmulq_f32(a, b);
-		}
-		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
-		{
-			return vdivq_f32(a, b);
-		}
-
-		MAG_INLINE static float hsum(const native_t v) noexcept { return vaddvq_f32(v); }
-		MAG_INLINE static float hmax(const native_t v) noexcept { return vmaxvq_f32(v); }
-		MAG_INLINE static float hmin(const native_t v) noexcept { return vminvq_f32(v); }
-
-		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
-		{
-			return vminq_f32(a, b);
-		}
-
-		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
-		{
-			return vmaxq_f32(a, b);
-		}
-
-		MAG_INLINE static native_t neg(const native_t v) noexcept { return vnegq_f32(v); }
-		MAG_INLINE static native_t abs(const native_t v) noexcept { return vabsq_f32(v); }
-
-		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return vsqrtq_f32(v); }
-	};
-
-	template <>
-	struct ops<double, 2>
-	{
-		using native_t = float64x2_t;
-
-		MAG_INLINE static native_t load(const double* p) noexcept { return vld1q_f64(p); }
-		MAG_INLINE static void store(double* p, const native_t v) noexcept { vst1q_f64(p, v); }
-
-		MAG_INLINE static native_t splat(const double s) noexcept { return vdupq_n_f64(s); }
-
-
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
-		{
-			return vaddq_f64(a, b);
-		}
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
-		{
-			return vsubq_f64(a, b);
-		}
-		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
-		{
-			return vmulq_f64(a, b);
-		}
-		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
-		{
-			return vdivq_f64(a, b);
-		}
-
-		MAG_INLINE static double hsum(const native_t v) noexcept { return vaddvq_f64(v); }
-		MAG_INLINE static double hmax(const native_t v) noexcept { return vmaxvq_f64(v); }
-		MAG_INLINE static double hmin(const native_t v) noexcept { return vminvq_f64(v); }
-
-		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
-		{
-			return vminq_f64(a, b);
-		}
-
-		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
-		{
-			return vmaxq_f64(a, b);
-		}
-
-		MAG_INLINE static native_t neg(const native_t v) noexcept { return vnegq_f64(v); }
-		MAG_INLINE static native_t abs(const native_t v) noexcept { return vabsq_f64(v); }
-
-		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return vsqrtq_f64(v); }
 	};
 } // namespace mag::simd
 

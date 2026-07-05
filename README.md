@@ -57,6 +57,33 @@ MAG requires a compiler with usable C++20 module support.
 
 - [Documentation home](https://marcusgigandet.github.io/mag/)
 
+## Module Overview
+
+Mag exposes several modules as part of the API, however, it is recommended to use `mag` over the exposed submodules like `mag.simd`.
+
+The module hierarchy is shown below:
+
+```mermaid
+erDiagram
+    core["mag.core"]
+    simd["mag.simd"]
+    vec["mag.vector"]
+    mat["mag.matrix"]
+
+    mag ||..o| core : exports
+    mag ||..o| mat : exports
+    mag ||..o| simd : exports
+    mag ||..o| vec : exports
+
+    simd ||..|| core : uses
+
+    vec ||..|| core : uses
+    vec ||..|| simd : uses
+
+    mat ||..|| core : uses
+    mat ||..|| simd : uses
+```
+
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE).

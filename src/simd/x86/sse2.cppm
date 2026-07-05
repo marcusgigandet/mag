@@ -19,17 +19,161 @@ module;
 #include <cstdint>
 #include <immintrin.h>
 #include <span>
-export module mag:x86_ops;
+export module mag.simd:sse2;
 
-import :simd_ops;
+import :ops;
 
 // NOLINTBEGIN(portability-simd-intrinsics)
 
 namespace mag::simd
 {
-#ifdef MAG_ENABLE_SIMD_EXTENDED
 	template <>
-	struct ops<int8_t, 16>
+	struct ops_impl<float, 4, simd_isa::sse2>
+	{
+		using native_t = __m128;
+
+		MAG_INLINE static native_t load(const float* p) noexcept { return _mm_loadu_ps(p); }
+		MAG_INLINE static void store(float* p, const native_t v) noexcept { _mm_storeu_ps(p, v); }
+		MAG_INLINE static void store(std::span<float, 4> dst, const native_t v) noexcept
+		{
+			_mm_storeu_ps(dst.data(), v);
+		}
+
+		MAG_INLINE static native_t splat(const float s) noexcept { return _mm_set1_ps(s); }
+
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_ps(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_ps(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mul_ps(a, b);
+		}
+		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
+		{
+			return _mm_div_ps(a, b);
+		}
+
+		MAG_INLINE static float hmax(const native_t v) noexcept
+		{
+			__m128 max1 = _mm_max_ps(v, _mm_movehl_ps(v, v));
+			const __m128 max2 =
+					_mm_max_ps(max1, _mm_shuffle_ps(max1, max1, _MM_SHUFFLE(1, 1, 1, 1)));
+			return _mm_cvtss_f32(max2);
+		}
+
+		MAG_INLINE static float hmin(const native_t v) noexcept
+		{
+			__m128 min1 = _mm_min_ps(v, _mm_movehl_ps(v, v));
+			const __m128 min2 =
+					_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1)));
+			return _mm_cvtss_f32(min2);
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_ps(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_ps(a, b);
+		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept
+		{
+			return _mm_xor_ps(v, _mm_set1_ps(-0.0f));
+		}
+
+		MAG_INLINE static native_t abs(const native_t v) noexcept
+		{
+			return _mm_andnot_ps(_mm_set1_ps(-0.0f), v);
+		}
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return _mm_sqrt_ps(v); }
+
+		MAG_INLINE static float hsum(const native_t v) noexcept
+		{
+			__m128 t = _mm_add_ps(v, _mm_movehl_ps(v, v));
+			t = _mm_add_ss(t, _mm_shuffle_ps(t, t, 1));
+			return _mm_cvtss_f32(t);
+		}
+	};
+
+	template <>
+	struct ops_impl<double, 2, simd_isa::sse2>
+	{
+		using native_t = __m128d;
+
+		MAG_INLINE static native_t load(const double* p) noexcept { return _mm_loadu_pd(p); }
+		MAG_INLINE static void store(double* p, const native_t v) noexcept { _mm_storeu_pd(p, v); }
+		MAG_INLINE static void store(std::span<double, 2> dst, const native_t v) noexcept
+		{
+			_mm_storeu_pd(dst.data(), v);
+		}
+
+		MAG_INLINE static native_t splat(const double s) noexcept { return _mm_set1_pd(s); }
+
+		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
+		{
+			return _mm_add_pd(a, b);
+		}
+		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
+		{
+			return _mm_sub_pd(a, b);
+		}
+		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
+		{
+			return _mm_mul_pd(a, b);
+		}
+		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
+		{
+			return _mm_div_pd(a, b);
+		}
+
+		MAG_INLINE static double hmax(const native_t v) noexcept
+		{
+			const __m128d shifted = _mm_unpackhi_pd(v, v);
+			const __m128d max = _mm_max_sd(v, shifted);
+			return _mm_cvtsd_f64(max);
+		}
+
+		MAG_INLINE static double hmin(const native_t v) noexcept
+		{
+			const __m128d shifted = _mm_unpackhi_pd(v, v);
+			const __m128d min = _mm_min_sd(v, shifted);
+			return _mm_cvtsd_f64(min);
+		}
+
+		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
+		{
+			return _mm_max_pd(a, b);
+		}
+
+		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
+		{
+			return _mm_min_pd(a, b);
+		}
+
+		MAG_INLINE static native_t neg(const native_t v) noexcept
+		{
+			return _mm_xor_pd(v, _mm_set1_pd(-0.0));
+		}
+
+		MAG_INLINE static native_t abs(const native_t v) noexcept
+		{
+			return _mm_andnot_pd(_mm_set1_pd(-0.0), v);
+		}
+
+		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return _mm_sqrt_pd(v); }
+	};
+
+	template <>
+	struct ops_impl<int8_t, 16, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -109,7 +253,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<int16_t, 8>
+	struct ops_impl<int16_t, 8, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -176,7 +320,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<int32_t, 4>
+	struct ops_impl<int32_t, 4, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -241,7 +385,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<int64_t, 2>
+	struct ops_impl<int64_t, 2, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -302,7 +446,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<uint8_t, 16>
+	struct ops_impl<uint8_t, 16, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -384,7 +528,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<uint16_t, 8>
+	struct ops_impl<uint16_t, 8, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -455,7 +599,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<uint32_t, 4>
+	struct ops_impl<uint32_t, 4, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -524,7 +668,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<uint64_t, 2>
+	struct ops_impl<uint64_t, 2, simd_isa::sse2>
 	{
 		using native_t = __m128i;
 
@@ -583,155 +727,6 @@ namespace mag::simd
 		{
 			return _mm_min_epu64(a, b);
 		}
-	};
-#endif
-
-	template <>
-	struct ops<float, 4>
-	{
-		using native_t = __m128;
-
-		MAG_INLINE static native_t load(const float* p) noexcept { return _mm_loadu_ps(p); }
-		MAG_INLINE static void store(float* p, const native_t v) noexcept { _mm_storeu_ps(p, v); }
-		MAG_INLINE static void store(std::span<float, 4> dst, const native_t v) noexcept
-		{
-			_mm_storeu_ps(dst.data(), v);
-		}
-
-		MAG_INLINE static native_t splat(const float s) noexcept { return _mm_set1_ps(s); }
-
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
-		{
-			return _mm_add_ps(a, b);
-		}
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
-		{
-			return _mm_sub_ps(a, b);
-		}
-		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
-		{
-			return _mm_mul_ps(a, b);
-		}
-		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
-		{
-			return _mm_div_ps(a, b);
-		}
-
-		MAG_INLINE static float hsum(const native_t v) noexcept
-		{
-			return _mm_cvtss_f32(_mm_hadd_ps(_mm_hadd_ps(v, v), v));
-		}
-
-		MAG_INLINE static float hmax(const native_t v) noexcept
-		{
-			__m128 max1 = _mm_max_ps(v, _mm_movehl_ps(v, v));
-			const __m128 max2 =
-					_mm_max_ps(max1, _mm_shuffle_ps(max1, max1, _MM_SHUFFLE(1, 1, 1, 1)));
-			return _mm_cvtss_f32(max2);
-		}
-
-		MAG_INLINE static float hmin(const native_t v) noexcept
-		{
-			__m128 min1 = _mm_min_ps(v, _mm_movehl_ps(v, v));
-			const __m128 min2 =
-					_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1)));
-			return _mm_cvtss_f32(min2);
-		}
-
-		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
-		{
-			return _mm_max_ps(a, b);
-		}
-
-		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
-		{
-			return _mm_min_ps(a, b);
-		}
-
-		MAG_INLINE static native_t neg(const native_t v) noexcept
-		{
-			return _mm_xor_ps(v, _mm_set1_ps(-0.0f));
-		}
-
-		MAG_INLINE static native_t abs(const native_t v) noexcept
-		{
-			return _mm_andnot_ps(_mm_set1_ps(-0.0f), v);
-		}
-
-		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return _mm_sqrt_ps(v); }
-	};
-
-	template <>
-	struct ops<double, 2>
-	{
-		using native_t = __m128d;
-
-		MAG_INLINE static native_t load(const double* p) noexcept { return _mm_loadu_pd(p); }
-		MAG_INLINE static void store(double* p, const native_t v) noexcept { _mm_storeu_pd(p, v); }
-		MAG_INLINE static void store(std::span<double, 2> dst, const native_t v) noexcept
-		{
-			_mm_storeu_pd(dst.data(), v);
-		}
-
-		MAG_INLINE static native_t splat(const double s) noexcept { return _mm_set1_pd(s); }
-
-		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
-		{
-			return _mm_add_pd(a, b);
-		}
-		MAG_INLINE static native_t sub(const native_t a, const native_t b) noexcept
-		{
-			return _mm_sub_pd(a, b);
-		}
-		MAG_INLINE static native_t mul(const native_t a, const native_t b) noexcept
-		{
-			return _mm_mul_pd(a, b);
-		}
-		MAG_INLINE static native_t div(const native_t a, const native_t b) noexcept
-		{
-			return _mm_div_pd(a, b);
-		}
-
-		MAG_INLINE static double hsum(const native_t v) noexcept
-		{
-			return _mm_cvtsd_f64(_mm_hadd_pd(v, v));
-		}
-
-		MAG_INLINE static double hmax(const native_t v) noexcept
-		{
-			const __m128d shifted = _mm_unpackhi_pd(v, v);
-			const __m128d max = _mm_max_sd(v, shifted);
-			return _mm_cvtsd_f64(max);
-		}
-
-		MAG_INLINE static double hmin(const native_t v) noexcept
-		{
-			const __m128d shifted = _mm_unpackhi_pd(v, v);
-			const __m128d min = _mm_min_sd(v, shifted);
-			return _mm_cvtsd_f64(min);
-		}
-
-		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
-		{
-			return _mm_max_pd(a, b);
-		}
-
-		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
-		{
-			return _mm_min_pd(a, b);
-		}
-
-		MAG_INLINE static native_t neg(const native_t v) noexcept
-		{
-			return _mm_xor_pd(v, _mm_set1_pd(-0.0));
-		}
-
-		MAG_INLINE static native_t abs(const native_t v) noexcept
-		{
-			return _mm_andnot_pd(_mm_set1_pd(-0.0), v);
-		}
-
-		MAG_INLINE static native_t sqrt(const native_t v) noexcept { return _mm_sqrt_pd(v); }
 	};
 } // namespace mag::simd
 

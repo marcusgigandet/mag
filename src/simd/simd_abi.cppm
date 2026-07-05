@@ -17,7 +17,7 @@
 module;
 #include <cstddef>
 #include <type_traits>
-export module mag:simd_abi;
+export module mag.simd:abi;
 
 import :concepts;
 
@@ -66,9 +66,9 @@ namespace mag::simd
 	 */
 	consteval size_t nativeRegisterBytes() noexcept
 	{
-#ifdef MAG_NEON_SIMD
+#if defined(__SSE2__) || defined(__SSE3__)
 		return 16;
-#elif MAG_X86_SIMD
+#elif defined(__ARM_NEON)
 		return 16;
 #else
 		return 0;

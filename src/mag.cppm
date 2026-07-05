@@ -16,19 +16,10 @@
 
 export module mag;
 
-export import :aliases;
-export import :concepts;
-export import :constants;
-export import :matrix;
-export import :matrix_3x3;
-export import :matrix_4x4;
-export import :matrix_ops;
-export import :vector;
-export import :vector_2;
-export import :vector_3;
-export import :vector_4;
-export import :vector_ops;
+export import mag.core;
+export import mag.matrix;
+export import mag.vector;
 
 #ifdef MAG_ENABLE_SIMD
-export import :simd;
+export import mag.simd;
 #endif

@@ -17,70 +17,82 @@
 module;
 #include <concepts>
 #include <cstddef>
-export module mag:simd_concepts;
+export module mag.simd:concepts;
 
-import :simd_ops;
+import :ops;
 
 export namespace mag::simd
 {
-	template <typename T, size_t N>
+	template <typename T, size_t N, simd_isa Isa = default_isa>
 	concept supports_splat = requires(T s) {
-		{ ops<T, N>::splat(s) } -> std::same_as<typename ops<T, N>::native_t>;
+		{ ops_impl<T, N, Isa>::splat(s) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
 	};
 
-	template <typename T, size_t N>
-	concept supports_add =
-			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
-				{ ops<T, N>::add(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
-			};
-
-	template <typename T, size_t N>
-	concept supports_sub =
-			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
-				{ ops<T, N>::sub(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
-			};
-
-	template <typename T, size_t N>
-	concept supports_mul =
-			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
-				{ ops<T, N>::mul(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
-			};
-
-	template <typename T, size_t N>
-	concept supports_div =
-			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
-				{ ops<T, N>::div(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
-			};
-
-	template <typename T, size_t N>
-	concept supports_reduction = requires(typename ops<T, N>::native_t v) {
-		{ ops<T, N>::hsum(v) } -> std::same_as<T>;
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_add = requires(typename ops_impl<T, N, Isa>::native_t a,
+									typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::add(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
 	};
 
-	template <typename T, size_t N>
-	concept supports_min =
-			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
-				{ ops<T, N>::min(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
-			};
-
-	template <typename T, size_t N>
-	concept supports_max =
-			requires(typename ops<T, N>::native_t a, typename ops<T, N>::native_t b) {
-				{ ops<T, N>::max(a, b) } -> std::same_as<typename ops<T, N>::native_t>;
-			};
-
-	template <typename T, size_t N>
-	concept supports_neg = requires(typename ops<T, N>::native_t v) {
-		{ ops<T, N>::neg(v) } -> std::same_as<typename ops<T, N>::native_t>;
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_sub = requires(typename ops_impl<T, N, Isa>::native_t a,
+									typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::sub(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
 	};
 
-	template <typename T, size_t N>
-	concept supports_abs = requires(typename ops<T, N>::native_t v) {
-		{ ops<T, N>::abs(v) } -> std::same_as<typename ops<T, N>::native_t>;
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_mul = requires(typename ops_impl<T, N, Isa>::native_t a,
+									typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::mul(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
 	};
 
-	template <typename T, size_t N>
-	concept supports_sqrt = requires(typename ops<T, N>::native_t v) {
-		{ ops<T, N>::sqrt(v) } -> std::same_as<typename ops<T, N>::native_t>;
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_div = requires(typename ops_impl<T, N, Isa>::native_t a,
+									typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::div(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_reduction = requires(typename ops_impl<T, N, Isa>::native_t v) {
+		{ ops_impl<T, N, Isa>::hsum(v) } -> std::same_as<T>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_hmin = requires(typename ops_impl<T, N, Isa>::native_t a,
+									 typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::hmin(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_hmax = requires(typename ops_impl<T, N, Isa>::native_t a,
+									 typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::hmax(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_min = requires(typename ops_impl<T, N, Isa>::native_t a,
+									typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::min(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_max = requires(typename ops_impl<T, N, Isa>::native_t a,
+									typename ops_impl<T, N, Isa>::native_t b) {
+		{ ops_impl<T, N, Isa>::max(a, b) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_neg = requires(typename ops_impl<T, N, Isa>::native_t v) {
+		{ ops_impl<T, N, Isa>::neg(v) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_abs = requires(typename ops_impl<T, N, Isa>::native_t v) {
+		{ ops_impl<T, N, Isa>::abs(v) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
+	};
+
+	template <typename T, size_t N, simd_isa Isa = default_isa>
+	concept supports_sqrt = requires(typename ops_impl<T, N, Isa>::native_t v) {
+		{ ops_impl<T, N, Isa>::sqrt(v) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
 	};
 } // namespace mag::simd

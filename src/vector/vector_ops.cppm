@@ -17,13 +17,13 @@
 module;
 #include <cstddef>
 #include <type_traits>
-export module mag:vector_ops;
+export module mag.vector:vector_ops;
 
-import :concepts;
+import mag.core;
 import :vector;
 
 #ifdef MAG_ENABLE_SIMD
-import :simd;
+import mag.simd;
 using namespace mag::simd;
 #endif
 
@@ -67,8 +67,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::add(ops::load(a.v), ops::load(b.v)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{b.v};
+
+			auto vr{va + vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -87,8 +91,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_sub<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::sub(ops::load(a.v), ops::load(b.v)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{b.v};
+
+			auto vr{va - vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -107,8 +115,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::mul(ops::load(a.v), ops::load(b.v)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{b.v};
+
+			auto vr{va * vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -127,8 +139,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_div<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::div(ops::load(a.v), ops::load(b.v)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{b.v};
+
+			auto vr{va / vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -147,8 +163,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::add(ops::load(a.v), ops::splat(s)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{s};
+
+			auto vr{va + vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -167,8 +187,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (std::is_same_v<T, U> && supports_add<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::add(ops::splat(s), ops::load(b.v)));
+			Simd<T, N> va{s};
+			Simd<T, N> vb{b.v};
+
+			auto vr{va + vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -187,8 +211,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::sub(ops::load(a.v), ops::splat(s)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{s};
+
+			auto vr{va - vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -207,8 +235,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_sub<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::sub(ops::splat(s), ops::load(b.v)));
+			Simd<T, N> va{s};
+			Simd<T, N> vb{b.v};
+
+			auto vr{va - vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -227,8 +259,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::mul(ops::load(a.v), ops::splat(s)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{s};
+
+			auto vr{va * vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -247,8 +283,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_mul<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::mul(ops::splat(s), ops::load(b.v)));
+			Simd<T, N> va{s};
+			Simd<T, N> vb{b.v};
+
+			auto vr{va * vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif
@@ -267,8 +307,12 @@ export namespace mag
 #ifdef MAG_ENABLE_SIMD
 		if constexpr (supports_div<T, N> && supports_splat<T, N>)
 		{
-			using ops = ops<T, N>;
-			ops::store(ret.v, ops::div(ops::load(a.v), ops::splat(s)));
+			Simd<T, N> va{a.v};
+			Simd<T, N> vb{s};
+
+			auto vr{va / vb};
+			vr.store(ret.v);
+
 			return ret;
 		}
 #endif

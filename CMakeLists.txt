@@ -42,7 +42,6 @@ endif ()
 option(MAG_BUILD_TESTS "Build tests" OFF)
 option(MAG_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
-option(MAG_ENABLE_SIMD_EXTENDED "Enable simd for signed/unsigned integers" ON)
 option(MAG_NO_DEV_TOOLS "Disable all non-essential dev tools" OFF)
 option(MAG_CODE_ANALYSIS "Analyze code with clang-tidy" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -74,7 +73,6 @@ else ()
     if (ARCH MATCHES "^(aarch64|arm64|arm|armv.*)")
         set(MAG_NEON_SIMD TRUE CACHE BOOL "" FORCE)
 
-        list(FILTER MODULES EXCLUDE REGEX ".*/x86_64/.*")
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
 
     elseif (ARCH MATCHES "^(x86_64|amd64|i[3-6]86|x64)")
@@ -85,9 +83,8 @@ else ()
         # MSVC does not support GCC/Clang -m* SIMD flags.
         add_compile_options(
                 $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
+                $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE3>
                 $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2>
-                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse3>
-                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse4.1>
         )
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
@@ -133,9 +130,6 @@ target_compile_options(mag
 #######################################
 target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_ENABLE_SIMD}>:MAG_ENABLE_SIMD>
-        $<$<BOOL:${MAG_ENABLE_SIMD_EXTENDED}>:MAG_ENABLE_SIMD_EXTENDED>
-        $<$<BOOL:${MAG_NEON_SIMD}>:MAG_NEON_SIMD>
-        $<$<BOOL:${MAG_X86_SIMD}>:MAG_X86_SIMD>
 )
 
 # Why can't microsoft be normal >:(

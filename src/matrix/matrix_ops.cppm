@@ -17,10 +17,10 @@
 module;
 #include <cstddef>
 #include <type_traits>
-export module mag:matrix_ops;
+export module mag.matrix:matrix_ops;
 
-import :concepts;
 import :matrix;
+import mag.core;
 
 export namespace mag
 {

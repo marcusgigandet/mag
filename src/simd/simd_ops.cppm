@@ -16,12 +16,22 @@
 
 module;
 #include <cstddef>
-export module mag:simd_ops;
+export module mag.simd:ops;
 
-import :concepts;
+import mag.core;
 
 export namespace mag::simd
 {
+	enum class simd_isa
+	{
+		sse2,
+		sse3,
+		sse4_1,
+		sse4_2,
+		neon,
+		scalar ///< Fallback for unsupported ISA
+	};
+
 	/**
 	 * @brief SIMD backend operations interface.
 	 *
@@ -31,7 +41,21 @@ export namespace mag::simd
 	 *
 	 * @tparam T Scalar element type.
 	 * @tparam N SIMD lane count.
+	 * @tparam Isa SIMD instruction set architecture.
 	 */
-	template <Numeric T, size_t N>
-	struct ops;
+	template <Numeric T, size_t N, simd_isa Isa>
+	struct ops_impl;
+
+	// Conditionally select the default ISA based on compilation
+#if defined(__AVX512F__)
+#elif defined(__AVX2__)
+#elif defined(__SSE3__)
+	constexpr simd_isa default_isa = simd_isa::sse3;
+#elif defined(__SSE2__)
+	constexpr simd_isa default_isa = simd_isa::sse2;
+#elif defined(__ARM_NEON)
+	constexpr auto default_isa = simd_isa::neon;
+#else
+	constexpr auto default_isa = simd_isa::scalar;
+#endif
 } // namespace mag::simd

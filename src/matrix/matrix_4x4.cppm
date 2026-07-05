@@ -16,13 +16,11 @@
 
 module;
 #include <cmath>
-export module mag:matrix_4x4;
+export module mag.matrix:matrix_4x4;
 
-import :concepts;
-import :constants;
 import :matrix;
-import :vector_3;
-import :vector_4;
+import mag.core;
+import mag.vector;
 
 namespace mag
 {

@@ -5,7 +5,7 @@
 
 #include <vector>
 
-import mag;
+import mag.vector;
 
 using namespace mag;
 

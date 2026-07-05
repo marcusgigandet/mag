@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-export module mag:vector_2;
+export module mag.vector:vector_2;
 
-import :concepts;
+import mag.core;
 import :vector;
 
 namespace mag
