@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-import mag.vector;
+import mag;
 using namespace mag;
 
 namespace
