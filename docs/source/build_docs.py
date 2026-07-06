@@ -19,7 +19,7 @@ from docs_config import (
     PAGES_RELATIVE_PATH,
     REPO_ROOT,
     SITE_LANGUAGES,
-    VERSIONS_YAML_PATH,
+    CONFIG_YAML_PATH,
     VersionDetails,
     discover_languages,
     load_versions,
@@ -358,7 +358,7 @@ def main() -> None:
     :return: ``None``.
     """
     args = parse_args()
-    versions = load_versions(VERSIONS_YAML_PATH)
+    versions = load_versions(CONFIG_YAML_PATH)
 
     if args.local:
         plan = build_local_plan()

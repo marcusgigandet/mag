@@ -16,6 +16,17 @@ class VersionDetails(TypedDict, total=False):
     languages: list[str]
 
 
+class DoxygenDetails(TypedDict, total=False):
+    enabled: bool
+    executable: str
+    project_name: str
+    input_paths: list[str]
+    file_patterns: list[str]
+    exclude_patterns: list[str]
+    strip_from_path: str
+    recursive: bool
+
+
 class SiteDetails(TypedDict, total=False):
     default_language: str
     languages: list[str]
@@ -36,6 +47,7 @@ class SiteDetails(TypedDict, total=False):
     exclude_patterns: list[str]
     enable_sitemap: bool
     enable_github_issues: bool
+    doxygen: DoxygenDetails
 
 
 @dataclass(frozen=True)
@@ -59,6 +71,14 @@ class DocsConfig:
     exclude_patterns: list[str]
     enable_sitemap: bool
     enable_github_issues: bool
+    doxygen_enabled: bool
+    doxygen_executable: str
+    doxygen_project_name: str
+    doxygen_input_paths: list[Path]
+    doxygen_file_patterns: list[str]
+    doxygen_exclude_patterns: list[str]
+    doxygen_strip_from_path: Path
+    doxygen_recursive: bool
     versions: dict[str, VersionDetails]
 
 
@@ -104,7 +124,7 @@ def resolve_repo_root(start_dir: Path) -> Path:
 
 REPO_ROOT: Final[Path] = resolve_repo_root(DOCS_DIR)
 DOCS_RELATIVE_PATH: Final[Path] = DOCS_DIR.relative_to(REPO_ROOT)
-VERSIONS_YAML_PATH: Final[Path] = DOCS_DIR / "versions.yaml"
+CONFIG_YAML_PATH: Final[Path] = DOCS_DIR / "config.yaml"
 
 
 def load_raw_docs_yaml(path: Path) -> dict[str, object]:
@@ -177,6 +197,20 @@ def validate_bool(value: object, field_name: str) -> bool:
     return value
 
 
+def validate_string(value: object, field_name: str) -> str:
+    """
+    Validate that a config field is a string.
+
+    :param value: Raw config value.
+    :param field_name: Fully-qualified config field name.
+    :return: Validated string value.
+    """
+    if not isinstance(value, str):
+        raise TypeError(f"{field_name} must be a string.")
+
+    return value
+
+
 def validate_relative_path(path_value: object, field_name: str) -> str:
     """
     Validate that a config field is a relative path string.
@@ -191,6 +225,72 @@ def validate_relative_path(path_value: object, field_name: str) -> str:
         raise TypeError(f"{field_name} must be a relative path.")
 
     return path_value
+
+
+def validate_relative_path_list(values: object, field_name: str) -> list[str]:
+    """
+    Validate that a config field is a list of relative path strings.
+
+    :param values: Raw config value.
+    :param field_name: Fully-qualified config field name.
+    :return: Validated list of relative path strings.
+    """
+    path_values = validate_string_list(values, field_name)
+    return [
+        validate_relative_path(path_value, f"{field_name}[{index}]")
+        for index, path_value in enumerate(path_values)
+    ]
+
+
+def validate_doxygen_details(raw_doxygen: object) -> DoxygenDetails:
+    """
+    Validate site-level Doxygen configuration.
+
+    :param raw_doxygen: Raw Doxygen metadata loaded from YAML.
+    :return: Validated Doxygen metadata.
+    """
+    if not isinstance(raw_doxygen, dict):
+        raise TypeError("versions.yaml site.doxygen must be a mapping.")
+
+    validated: DoxygenDetails = {}
+
+    if raw_doxygen.get("enabled") is not None:
+        validated["enabled"] = validate_bool(
+            raw_doxygen["enabled"], "versions.yaml site.doxygen.enabled"
+        )
+    if raw_doxygen.get("recursive") is not None:
+        validated["recursive"] = validate_bool(
+            raw_doxygen["recursive"], "versions.yaml site.doxygen.recursive"
+        )
+
+    for field_name in ("executable", "project_name"):
+        field_value = raw_doxygen.get(field_name)
+        if field_value is None:
+            continue
+        validated[field_name] = validate_string(
+            field_value, f"versions.yaml site.doxygen.{field_name}"
+        )
+
+    if raw_doxygen.get("input_paths") is not None:
+        validated["input_paths"] = validate_relative_path_list(
+            raw_doxygen["input_paths"], "versions.yaml site.doxygen.input_paths"
+        )
+
+    for field_name in ("file_patterns", "exclude_patterns"):
+        field_value = raw_doxygen.get(field_name)
+        if field_value is None:
+            continue
+        validated[field_name] = validate_string_list(
+            field_value, f"versions.yaml site.doxygen.{field_name}"
+        )
+
+    if raw_doxygen.get("strip_from_path") is not None:
+        validated["strip_from_path"] = validate_relative_path(
+            raw_doxygen["strip_from_path"],
+            "versions.yaml site.doxygen.strip_from_path",
+        )
+
+    return validated
 
 
 def validate_site_details(raw_site: SiteDetails) -> SiteDetails:
@@ -254,6 +354,9 @@ def validate_site_details(raw_site: SiteDetails) -> SiteDetails:
         validated[field_name] = validate_bool(
             field_value, f"versions.yaml site.{field_name}"
         )
+
+    if raw_site.get("doxygen") is not None:
+        validated["doxygen"] = validate_doxygen_details(raw_site["doxygen"])
 
     return validated
 
@@ -517,6 +620,7 @@ def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
         site.get("local_pages_dir", ""), "pages-local"
     )
     locale_dir = as_relative_path(site.get("locale_dir", ""), "locale")
+    doxygen = site.get("doxygen", {})
 
     html_static_path = [
         Path(path_name)
@@ -527,6 +631,7 @@ def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
         [
             "sphinx.ext.githubpages",
             "sphinx.ext.intersphinx",
+            "breathe",
             "sphinx_copybutton",
             "sphinx_design",
             "sphinx_last_updated_by_git",
@@ -536,13 +641,14 @@ def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
     exclude_patterns = site.get(
         "exclude_patterns", [build_dir.as_posix(), "Thumbs.db", ".DS_Store"]
     )
+    resolved_project_name = os.getenv(
+        "DOCS_PROJECT_NAME", site.get("project_name", repo_root.name)
+    )
 
     return DocsConfig(
         default_language=default_language,
         languages=languages,
-        project_name=os.getenv(
-            "DOCS_PROJECT_NAME", site.get("project_name", repo_root.name)
-        ),
+        project_name=resolved_project_name,
         project_author=os.getenv(
             "DOCS_PROJECT_AUTHOR",
             site.get(
@@ -565,11 +671,25 @@ def load_docs_config(path: Path, repo_root: Path) -> DocsConfig:
         exclude_patterns=exclude_patterns,
         enable_sitemap=site.get("enable_sitemap", True),
         enable_github_issues=site.get("enable_github_issues", True),
+        doxygen_enabled=doxygen.get("enabled", True),
+        doxygen_executable=doxygen.get("executable", "doxygen"),
+        doxygen_project_name=doxygen.get("project_name", resolved_project_name),
+        doxygen_input_paths=[
+            Path(path_name) for path_name in doxygen.get("input_paths", ["src"])
+        ],
+        doxygen_file_patterns=doxygen.get(
+            "file_patterns", ["*.h", "*.hpp", "*.cpp", "*.cppm"]
+        ),
+        doxygen_exclude_patterns=doxygen.get("exclude_patterns", []),
+        doxygen_strip_from_path=as_relative_path(
+            doxygen.get("strip_from_path", ""), "."
+        ),
+        doxygen_recursive=doxygen.get("recursive", True),
         versions=versions,
     )
 
 
-DOCS_CONFIG: Final[DocsConfig] = load_docs_config(VERSIONS_YAML_PATH, REPO_ROOT)
+DOCS_CONFIG: Final[DocsConfig] = load_docs_config(CONFIG_YAML_PATH, REPO_ROOT)
 DEFAULT_LANGUAGE: Final[str] = DOCS_CONFIG.default_language
 SITE_LANGUAGES: Final[list[str]] = DOCS_CONFIG.languages
 PROJECT_NAME: Final[str] = DOCS_CONFIG.project_name
@@ -590,3 +710,11 @@ SPHINX_EXTENSIONS: Final[list[str]] = DOCS_CONFIG.extensions
 EXCLUDE_PATTERNS: Final[list[str]] = DOCS_CONFIG.exclude_patterns
 ENABLE_SITEMAP: Final[bool] = DOCS_CONFIG.enable_sitemap
 ENABLE_GITHUB_ISSUES: Final[bool] = DOCS_CONFIG.enable_github_issues
+DOXYGEN_ENABLED: Final[bool] = DOCS_CONFIG.doxygen_enabled
+DOXYGEN_EXECUTABLE: Final[str] = DOCS_CONFIG.doxygen_executable
+DOXYGEN_PROJECT_NAME: Final[str] = DOCS_CONFIG.doxygen_project_name
+DOXYGEN_INPUT_PATHS: Final[list[Path]] = DOCS_CONFIG.doxygen_input_paths
+DOXYGEN_FILE_PATTERNS: Final[list[str]] = DOCS_CONFIG.doxygen_file_patterns
+DOXYGEN_EXCLUDE_PATTERNS: Final[list[str]] = DOCS_CONFIG.doxygen_exclude_patterns
+DOXYGEN_STRIP_FROM_PATH: Final[Path] = DOCS_CONFIG.doxygen_strip_from_path
+DOXYGEN_RECURSIVE: Final[bool] = DOCS_CONFIG.doxygen_recursive

@@ -8,10 +8,19 @@ from typing import Final
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from docs_config import (
+    BUILD_RELATIVE_PATH,
     DEFAULT_LANGUAGE,
     DOCS_DIR,
     DOCS_RELATIVE_PATH,
     DOCS_SOURCE_RELATIVE_PATH,
+    DOXYGEN_ENABLED,
+    DOXYGEN_EXCLUDE_PATTERNS,
+    DOXYGEN_EXECUTABLE,
+    DOXYGEN_FILE_PATTERNS,
+    DOXYGEN_INPUT_PATHS,
+    DOXYGEN_PROJECT_NAME,
+    DOXYGEN_RECURSIVE,
+    DOXYGEN_STRIP_FROM_PATH,
     ENABLE_GITHUB_ISSUES,
     ENABLE_SITEMAP,
     EXCLUDE_PATTERNS,
@@ -27,7 +36,7 @@ from docs_config import (
     REPOSITORY_URL,
     SITE_LANGUAGES,
     SPHINX_EXTENSIONS,
-    VERSIONS_YAML_PATH,
+    CONFIG_YAML_PATH,
     VersionDetails,
     discover_languages,
     load_versions,
@@ -37,6 +46,73 @@ from docs_config import (
 LOCAL_BUILD: Final[bool] = os.getenv("DOCS_LOCAL_BUILD", "0") == "1"
 HTML_BASE_URL: Final[str] = "" if LOCAL_BUILD else REMOTE_HTML_BASE_URL
 SITE_BASE_URL: Final[str] = HTML_BASE_URL.rstrip("/")
+
+
+def quote_doxygen_value(value: str) -> str:
+    """
+    Quote a value for a generated Doxygen configuration file.
+
+    :param value: Raw value that should be quoted for Doxygen.
+    :return: Doxygen-safe quoted value.
+    """
+    escaped_value = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped_value}"'
+
+
+def render_doxygen_list(values: list[str]) -> str:
+    """
+    Render a list of values for a generated Doxygen configuration file.
+
+    :param values: Values that should be emitted on one Doxygen config line.
+    :return: Space-delimited Doxygen config values.
+    """
+    return " ".join(quote_doxygen_value(value) for value in values)
+
+
+def generate_doxygen_xml() -> Path:
+    """
+    Generate Doxygen XML output for the project sources used by Breathe.
+
+    :return: Path to the generated Doxygen XML directory.
+    """
+    doxygen_output_dir = (DOCS_DIR / BUILD_RELATIVE_PATH / "doxygen").resolve()
+    xml_output_dir = doxygen_output_dir / "xml"
+    doxygen_output_dir.mkdir(parents=True, exist_ok=True)
+
+    input_paths = [(REPO_ROOT / input_path).resolve().as_posix() for input_path in DOXYGEN_INPUT_PATHS]
+    strip_from_path = (REPO_ROOT / DOXYGEN_STRIP_FROM_PATH).resolve().as_posix()
+    config_lines = [
+        f"PROJECT_NAME = {quote_doxygen_value(DOXYGEN_PROJECT_NAME)}",
+        f"OUTPUT_DIRECTORY = {quote_doxygen_value(doxygen_output_dir.as_posix())}",
+        "GENERATE_HTML = NO",
+        "GENERATE_LATEX = NO",
+        "GENERATE_XML = YES",
+        "XML_OUTPUT = xml",
+        "QUIET = YES",
+        "WARN_IF_UNDOCUMENTED = NO",
+        "WARN_IF_DOC_ERROR = YES",
+        "EXTRACT_ALL = NO",
+        "EXTRACT_PRIVATE = NO",
+        "BUILTIN_STL_SUPPORT = YES",
+        "RECURSIVE = YES" if DOXYGEN_RECURSIVE else "RECURSIVE = NO",
+        f"INPUT = {render_doxygen_list(input_paths)}",
+        f"FILE_PATTERNS = {' '.join(DOXYGEN_FILE_PATTERNS)}",
+        f"STRIP_FROM_PATH = {quote_doxygen_value(strip_from_path)}",
+        "EXTENSION_MAPPING = cppm=C++",
+    ]
+    if DOXYGEN_EXCLUDE_PATTERNS:
+        config_lines.append(
+            f"EXCLUDE_PATTERNS = {' '.join(DOXYGEN_EXCLUDE_PATTERNS)}"
+        )
+
+    doxygen_config_path = doxygen_output_dir / "Doxyfile"
+    doxygen_config_path.write_text("\n".join(config_lines) + "\n", encoding="utf-8")
+    subprocess.run(
+        [DOXYGEN_EXECUTABLE, str(doxygen_config_path)],
+        check=True,
+        cwd=REPO_ROOT,
+    )
+    return xml_output_dir
 
 
 def build_local_language_link(current_language: str, target_language: str) -> str:
@@ -120,41 +196,6 @@ def resolve_local_edit_ref() -> str:
 
     return LATEST_REF or "main"
 
-
-def build_edit_context(
-    current_version: str, versions: dict[str, VersionDetails], local_build: bool
-) -> dict[str, object]:
-    """
-    Build GitHub edit-link context for the current page.
-
-    :param current_version: Docs version currently being built.
-    :param versions: Version metadata loaded from configuration.
-    :param local_build: Whether the current build is a local preview.
-    :return: HTML context entries enabling RTD theme edit links.
-    """
-    if not ISSUES_GITHUB_PATH:
-        return {}
-
-    github_user, github_repo = ISSUES_GITHUB_PATH.split("/", maxsplit=1)
-    if local_build:
-        github_version = resolve_local_edit_ref()
-    elif current_version == "latest":
-        github_version = LATEST_REF or resolve_local_edit_ref()
-    else:
-        github_version = versions.get(current_version, {}).get("tag", current_version)
-
-    source_path = f"/{(DOCS_RELATIVE_PATH / DOCS_SOURCE_RELATIVE_PATH).as_posix()}/"
-    return {
-        "display_github": True,
-        "display_vcs_links": True,
-        "github_user": github_user,
-        "github_repo": github_repo,
-        "github_version": normalize_vcs_ref(github_version),
-        "conf_py_path": source_path,
-        "theme_vcs_pageview_mode": "edit",
-    }
-
-
 def resolve_version_language(
     version_name: str,
     preferred_language: str,
@@ -202,7 +243,7 @@ def build_local_html_context(current_language: str) -> dict[str, object]:
         "current_version": "local",
         "repository_url": REPOSITORY_URL,
         "versions": [("local", "." if current_language == DEFAULT_LANGUAGE else "..")],
-    } | build_edit_context("local", load_versions(VERSIONS_YAML_PATH), local_build=True)
+    }
 
 
 def build_html_context(
@@ -219,7 +260,7 @@ def build_html_context(
     if local_build:
         return build_local_html_context(current_language)
 
-    versions = load_versions(VERSIONS_YAML_PATH)
+    versions = load_versions(CONFIG_YAML_PATH)
     languages: list[tuple[str, str]] = []
     version_links: list[tuple[str, str]] = []
 
@@ -265,7 +306,7 @@ def build_html_context(
         "current_version": current_version,
         "repository_url": REPOSITORY_URL,
         "versions": version_links,
-    } | build_edit_context(current_version, versions, local_build=False)
+    }
 
 
 def get_git_tag() -> str:
@@ -302,11 +343,23 @@ language = os.getenv("current_language", DEFAULT_LANGUAGE)
 templates_path = ["_templates"]
 extensions = SPHINX_EXTENSIONS.copy()
 issues_github_path = ISSUES_GITHUB_PATH
+if DOXYGEN_ENABLED and "breathe" not in extensions:
+    extensions.append("breathe")
 if ENABLE_GITHUB_ISSUES and issues_github_path and "sphinx_issues" not in extensions:
     extensions.append("sphinx_issues")
 if ENABLE_SITEMAP and not LOCAL_BUILD and HTML_BASE_URL and "sphinx_sitemap" not in extensions:
     extensions.append("sphinx_sitemap")
 exclude_patterns = EXCLUDE_PATTERNS.copy()
+breathe_projects: dict[str, str] = {}
+if DOXYGEN_ENABLED:
+    breathe_projects = {DOXYGEN_PROJECT_NAME: str(generate_doxygen_xml())}
+    breathe_default_project = DOXYGEN_PROJECT_NAME
+    breathe_domain_by_extension = {
+        "h": "cpp",
+        "hpp": "cpp",
+        "cpp": "cpp",
+        "cppm": "cpp",
+    }
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = HTML_THEME
