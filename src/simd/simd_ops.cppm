@@ -21,6 +21,9 @@ export module mag.simd:ops;
 
 export namespace mag::simd
 {
+	/**
+	 * @brief Enum of supported/implemented simd backends.
+	 */
 	enum class simd_isa
 	{
 		sse2,
@@ -44,15 +47,15 @@ export namespace mag::simd
 	struct ops_impl;
 
 	// Conditionally select the default ISA based on compilation
-#if defined(__AVX512F__)
-#elif defined(__AVX2__)
-#elif defined(__SSE4_1__)
+#if defined(__SSE4_1__)
 	constexpr simd_isa default_isa = simd_isa::sse4_1;
 #elif defined(__SSSE3__)
 	constexpr simd_isa default_isa = simd_isa::ssse3;
-#elif defined(__SSE2__)
+#elif defined(__SSE2__) || defined(_M_X64) || (defined(_M_AMD64) || defined(_M_X64))
 	constexpr simd_isa default_isa = simd_isa::sse2;
-#elif defined(__ARM_NEON)
-	constexpr auto default_isa = simd_isa::neon;
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__)
+	constexpr simd_isa default_isa = simd_isa::neon;
+#else
+#error No supported SIMD ISA was provided!
 #endif
 } // namespace mag::simd

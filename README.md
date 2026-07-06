@@ -59,7 +59,7 @@ MAG requires a compiler with usable C++20 module support.
 
 ## Module Overview
 
-Mag exposes two modules as part of the library - `mag` and `mag.simd`. If you wish to use the low-level SIMD API, you must import `mag.simd` since the core API, `mag`, only exports the core math API.
+Mag exposes two modules as part of the library - `mag` and `mag.simd`. If you wish to use the low-level SIMD API, you must import `mag.simd` since the non-simd API, `mag`, only exports the core math API.
 
 ## License
 

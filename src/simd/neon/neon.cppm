@@ -30,7 +30,7 @@ MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 namespace mag::simd
 {
 	template <>
-	struct ops<float, 4, simd_isa::neon>
+	struct ops_impl<float, 4, simd_isa::neon>
 	{
 		using native_t = float32x4_t;
 
@@ -77,7 +77,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<double, 2, simd_isa::neon>
+	struct ops_impl<double, 2, simd_isa::neon>
 	{
 		using native_t = float64x2_t;
 
@@ -125,7 +125,7 @@ namespace mag::simd
 	};
 
 	template <>
-	struct ops<int8_t, 16, simd_isa::neon>
+	struct ops_impl<int8_t, 16, simd_isa::neon>
 	{
 		using native_t = int8x16_t;
 
@@ -164,7 +164,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<int16_t, 8, simd_isa::neon>
+	struct ops_impl<int16_t, 8, simd_isa::neon>
 	{
 		using native_t = int16x8_t;
 
@@ -203,7 +203,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<int32_t, 4, simd_isa::neon>
+	struct ops_impl<int32_t, 4, simd_isa::neon>
 	{
 		using native_t = int32x4_t;
 
@@ -242,7 +242,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<int64_t, 2, simd_isa::neon>
+	struct ops_impl<int64_t, 2, simd_isa::neon>
 	{
 		using native_t = int64x2_t;
 
@@ -300,7 +300,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint8_t, 16, simd_isa::neon>
+	struct ops_impl<uint8_t, 16, simd_isa::neon>
 	{
 		using native_t = uint8x16_t;
 
@@ -339,7 +339,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint16_t, 8, simd_isa::neon>
+	struct ops_impl<uint16_t, 8, simd_isa::neon>
 	{
 		using native_t = uint16x8_t;
 
@@ -378,7 +378,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint32_t, 4, simd_isa::neon>
+	struct ops_impl<uint32_t, 4, simd_isa::neon>
 	{
 		using native_t = uint32x4_t;
 
@@ -417,7 +417,7 @@ namespace mag::simd
 
 
 	template <>
-	struct ops<uint64_t, 2, simd_isa::neon>
+	struct ops_impl<uint64_t, 2, simd_isa::neon>
 	{
 		using native_t = uint64x2_t;
 
