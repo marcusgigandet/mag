@@ -17,6 +17,7 @@
 module;
 #include "typedefs.hpp"
 #include <span>
+#include <cstdint>
 export module mag.simd:simd;
 
 import :abi;
