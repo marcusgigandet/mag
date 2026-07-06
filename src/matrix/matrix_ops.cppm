@@ -15,12 +15,12 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstddef>
 #include <type_traits>
-export module mag.matrix:matrix_ops;
+export module mag:matrix_ops;
 
 import :matrix;
-import mag.core;
 
 export namespace mag
 {

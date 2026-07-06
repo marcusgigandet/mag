@@ -4,7 +4,7 @@ project(mag LANGUAGES CXX)
 #####################
 # Compiler settings #
 #####################
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (PROJECT_IS_TOP_LEVEL)
@@ -173,13 +173,13 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
             DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 
-#    if (MAG_CODE_ANALYSIS)
-#        set_target_properties(mag PROPERTIES
-#                CXX_CLANG_TIDY
-#                "clang-tidy;
-#            -p=${CMAKE_BINARY_DIR};
-#            --system-headers=0;
-#            -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
-#        )
-#    endif ()
+    if (MAG_CODE_ANALYSIS)
+        set_target_properties(mag PROPERTIES
+                CXX_CLANG_TIDY
+                "clang-tidy;
+            -p=${CMAKE_BINARY_DIR};
+            --system-headers=0;
+            -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
+        )
+    endif ()
 endif ()

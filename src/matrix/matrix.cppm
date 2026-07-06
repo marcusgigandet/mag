@@ -15,14 +15,15 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <iomanip>
 #include <span>
 #include <sstream>
 #include <string>
-export module mag.matrix:matrix;
+export module mag:matrix;
 
-import mag.core;
-import mag.vector;
+import :vector;
+
 #ifdef MAG_ENABLE_SIMD
 import mag.simd;
 using namespace mag::simd;

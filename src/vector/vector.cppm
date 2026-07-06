@@ -15,13 +15,12 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <algorithm>
 #include <cmath>
 #include <sstream>
 #include <string>
-export module mag.vector:vector;
-
-import mag.core;
+export module mag:vector;
 
 #ifdef MAG_ENABLE_SIMD
 import mag.simd;

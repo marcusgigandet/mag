@@ -16,7 +16,7 @@
 
 module;
 #include <numbers>
-export module mag.core:constants;
+export module mag:constants;
 
 export namespace mag
 {

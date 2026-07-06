@@ -15,6 +15,7 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstddef>
 #include <type_traits>
 export module mag.simd:abi;

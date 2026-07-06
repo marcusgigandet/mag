@@ -15,16 +15,16 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cmath>
-export module mag.matrix:matrix_3x3;
+export module mag:matrix_3x3;
 
 import :matrix;
-import mag.core;
-import mag.vector;
+import :vector;
 
 namespace mag
 {
-	template <typename T>
+	template <Numeric T>
 	struct Mat<T, 3, 3> : IMat<Mat<T, 3, 3>, T, 3, 3>
 	{
 		union

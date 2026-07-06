@@ -15,10 +15,9 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstddef>
 export module mag.simd:ops;
-
-import mag.core;
 
 export namespace mag::simd
 {

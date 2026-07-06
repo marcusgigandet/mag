@@ -7,8 +7,7 @@
 #include <span>
 #include <utility>
 
-import mag;
-using namespace mag;
+import mag.simd;
 using namespace mag::simd;
 
 namespace
@@ -195,13 +194,11 @@ TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 
 		requireSimdEquals(a + b, {6.5, -6.0});
 		requireSimdEquals(a / b, {0.625, -3.0});
-		if constexpr (supports_reduction<double, 2> && supports_hmin<double, 2> &&
-					  supports_hmax<double, 2>)
-		{
-			// REQUIRE(hsum(a) == Catch::Approx(-6.5));
-			// REQUIRE(hmin(a) == Catch::Approx(-9.0));
-			// REQUIRE(hmax(a) == Catch::Approx(2.5));
-		}
+#if defined(__SSE4_1__) || defined(__ARM_NEON)
+		REQUIRE(hsum(a) == Catch::Approx(-6.5));
+		REQUIRE(hmin(a) == Catch::Approx(-9.0));
+		REQUIRE(hmax(a) == Catch::Approx(2.5));
+#endif
 	}
 
 	SECTION("signed integer arithmetic and reductions")

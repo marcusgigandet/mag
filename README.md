@@ -59,30 +59,7 @@ MAG requires a compiler with usable C++20 module support.
 
 ## Module Overview
 
-Mag exposes several modules as part of the API, however, it is recommended to use `mag` over the exposed submodules like `mag.simd`.
-
-The module hierarchy is shown below:
-
-```mermaid
-erDiagram
-    core["mag.core"]
-    simd["mag.simd"]
-    vec["mag.vector"]
-    mat["mag.matrix"]
-
-    mag ||..o| core : exports
-    mag ||..o| mat : exports
-    mag ||..o| simd : exports
-    mag ||..o| vec : exports
-
-    simd ||..|| core : uses
-
-    vec ||..|| core : uses
-    vec ||..|| simd : uses
-
-    mat ||..|| core : uses
-    mat ||..|| simd : uses
-```
+Mag exposes two modules as part of the library - `mag` and `mag.simd`. If you wish to use the low-level SIMD API, you must import `mag.simd` since the core API, `mag`, only exports the core math API.
 
 ## License
 

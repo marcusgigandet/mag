@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-export module mag.vector:vector_4;
+module;
+#include "typedefs.hpp"
+export module mag:vector_4;
 
-import mag.core;
 import :vector;
 
 namespace mag

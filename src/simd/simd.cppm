@@ -22,7 +22,6 @@ export module mag.simd:simd;
 import :abi;
 import :concepts;
 import :ops;
-import mag.core;
 
 namespace mag::simd
 {

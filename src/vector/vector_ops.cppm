@@ -15,11 +15,11 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstddef>
 #include <type_traits>
-export module mag.vector:vector_ops;
+export module mag:vector_ops;
 
-import mag.core;
 import :vector;
 
 #ifdef MAG_ENABLE_SIMD
