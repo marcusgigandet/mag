@@ -249,6 +249,12 @@ TEST_CASE("Vec4 utility helpers and iterators", "[Vec4]")
 		REQUIRE(normalized[3] == Catch::Approx(0.0f));
 	}
 
+	SECTION("toString formatting")
+	{
+		Vec<float, 4> v{1.0f, 2.0f, 3.0f, 4.0f};
+		REQUIRE(v.toString() == "Vec4(1, 2, 3, 4)");
+	}
+
 	SECTION("Iterators and reverse iterators")
 	{
 		Vec<float, 4> v{1.0f, 2.0f, 3.0f, 4.0f};
