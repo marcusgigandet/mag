@@ -69,6 +69,8 @@ Build Options
 +---------------------------+-----------+------------------------------------------------------------+
 | MAG_ENABLE_SIMD           | ON        | Enable SIMD support on supported architectures             |
 +---------------------------+-----------+------------------------------------------------------------+
+| MAG_SIMD_BACKEND          | AUTO      | Select SIMD backend: AUTO, SSE2, SSSE3, SSE4_1, or NEON   |
++---------------------------+-----------+------------------------------------------------------------+
 | MAG_NO_DEV_TOOLS          | OFF       | Disable development-only helpers and generated tooling     |
 +---------------------------+-----------+------------------------------------------------------------+
 | MAG_CODE_ANALYSIS         | ON        | Enable clang-tidy on the MAG target when dev tools are on  |
@@ -78,7 +80,12 @@ Platform notes
 --------------
 
 - On x86 and x86_64 targets, MAG enables SSE-family compile options for SIMD builds.
+- ``MAG_SIMD_BACKEND`` supports ``AUTO``, ``SSE2``, ``SSSE3``, and ``SSE4_1`` on x86/x64.
 - On ARM targets, MAG selects the NEON backend when available.
+- ``MAG_SIMD_BACKEND`` supports ``AUTO`` and ``NEON`` on ARM/ARM64.
+- The selected backend emits one compile definition:
+  ``MAG_SIMD_BACKEND_SSE2``, ``MAG_SIMD_BACKEND_SSSE3``, ``MAG_SIMD_BACKEND_SSE4_1``, or
+  ``MAG_SIMD_BACKEND_NEON``.
 - On unsupported architectures, MAG disables SIMD backends automatically and falls back to scalar
   implementations in the cmake file.
   - If the project is compiled with SIMD enabled on an unsupported architecture/backend, it will result in a compilation failure.
