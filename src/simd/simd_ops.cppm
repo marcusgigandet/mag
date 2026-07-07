@@ -46,16 +46,15 @@ export namespace mag::simd
 	template <Numeric T, size_t N, simd_isa Isa>
 	struct ops_impl;
 
-	// Conditionally select the default ISA based on compilation
-#if defined(__SSE4_1__)
+	// Conditionally select the default ISA based on CMake selection first,
+	// then compiler-provided ISA macros.
+#if defined(MAG_SIMD_BACKEND_SSE4_1)
 	constexpr simd_isa default_isa = simd_isa::sse4_1;
-#elif defined(__SSSE3__)
+#elif defined(MAG_SIMD_BACKEND_SSSE3)
 	constexpr simd_isa default_isa = simd_isa::ssse3;
-#elif defined(__SSE2__) || defined(_M_X64) || (defined(_M_AMD64) || defined(_M_X64))
+#elif defined(MAG_SIMD_BACKEND_SSE2)
 	constexpr simd_isa default_isa = simd_isa::sse2;
-#elif defined(__ARM_NEON) || defined(__ARM_NEON__)
+#elif defined(MAG_SIMD_BACKEND_NEON)
 	constexpr simd_isa default_isa = simd_isa::neon;
-#else
-#error No supported SIMD ISA was provided!
 #endif
 } // namespace mag::simd

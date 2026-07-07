@@ -29,17 +29,17 @@ export import :ops;
 #ifdef __AVX2__
 #warning Unsupported SIMD ISA
 #endif
-#ifdef __SSE2__
-export import :sse2;
-#endif
-#ifdef __SSSE3__
-export import :ssse3;
-#endif
-#ifdef __SSE4_1__
+
+#if defined(MAG_SIMD_BACKEND_SSE4_1)
 export import :sse4_1;
-#endif
-#ifdef __ARM_NEON
+#elif defined(MAG_SIMD_BACKEND_SSSE3)
+export import :ssse3;
+#elif defined(MAG_SIMD_BACKEND_SSE2)
+export import :sse2;
+#elif defined(MAG_SIMD_BACKEND_NEON)
 export import :neon;
+#else
+#error No supported SIMD ISA was provided!
 #endif
 
 export namespace mag::simd

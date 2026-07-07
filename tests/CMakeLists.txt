@@ -16,6 +16,9 @@ foreach (src ${TEST_SOURCES})
     get_filename_component(name "${src}" NAME_WE)
 
     add_executable(${name} ${src})
+    target_compile_definitions(${name} PRIVATE
+            $<$<AND:$<BOOL:${MAG_ENABLE_SIMD}>,$<BOOL:${MAG_SIMD_BACKEND_SELECTED}>>:MAG_SIMD_BACKEND_${MAG_SIMD_BACKEND_SELECTED}>
+    )
     target_link_libraries(${name}
             PRIVATE
             mag
@@ -29,6 +32,9 @@ endforeach ()
 # Build all tests as single executable #
 ########################################
 add_executable(run_all_tests ${TEST_SOURCES})
+target_compile_definitions(run_all_tests PRIVATE
+        $<$<AND:$<BOOL:${MAG_ENABLE_SIMD}>,$<BOOL:${MAG_SIMD_BACKEND_SELECTED}>>:MAG_SIMD_BACKEND_${MAG_SIMD_BACKEND_SELECTED}>
+)
 target_link_libraries(run_all_tests
         PRIVATE
         mag
@@ -36,9 +42,3 @@ target_link_libraries(run_all_tests
 )
 
 add_test(NAME mag_all_tests COMMAND run_all_tests)
-
-add_executable(demo ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp)
-target_link_libraries(demo
-        PRIVATE
-        mag
-)

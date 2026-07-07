@@ -187,6 +187,7 @@ TEST_CASE("f32x reductions and elementwise helpers", "[simd]")
 
 TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 {
+#if defined(MAG_SIMD_BACKEND_SSE4_1) || defined(MAG_SIMD_BACKEND_NEON)
 	SECTION("double precision arithmetic and reductions")
 	{
 		const f64x2 a{2.5, -9.0};
@@ -194,16 +195,13 @@ TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 
 		requireSimdEquals(a + b, {6.5, -6.0});
 		requireSimdEquals(a / b, {0.625, -3.0});
-#if defined(__SSE4_1__) || defined(__ARM_NEON)
 		REQUIRE(hsum(a) == Catch::Approx(-6.5));
 		REQUIRE(hmin(a) == Catch::Approx(-9.0));
 		REQUIRE(hmax(a) == Catch::Approx(2.5));
-#endif
 	}
 
 	SECTION("signed integer arithmetic and reductions")
 	{
-#if defined(__SSE4_1__) || defined(__ARM_NEON)
 		const i32x4 a{10, -20, 30, -40};
 		const i32x4 b{-1, 2, -3, 4};
 
@@ -214,12 +212,10 @@ TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 		REQUIRE(hsum(a) == -20);
 		REQUIRE(hmin(a) == -40);
 		REQUIRE(hmax(a) == 30);
-#endif
 	}
 
 	SECTION("unsigned integer arithmetic and reductions")
 	{
-#if defined(__SSE4_1__) || defined(__ARM_NEON)
 		const u32x4 a{2U, 4U, 6U, 8U};
 		const u32x4 b{1U, 5U, 3U, 9U};
 
@@ -230,6 +226,6 @@ TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 		REQUIRE(hsum(a) == 20U);
 		REQUIRE(hmin(a) == 2U);
 		REQUIRE(hmax(a) == 8U);
-#endif
 	}
+#endif
 }
