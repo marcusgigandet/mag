@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-25 22:45-0400\n"
+"POT-Creation-Date: 2026-07-06 22:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -21,73 +21,107 @@ msgstr ""
 "Generated-By: Babel 2.18.0\n"
 
 #: ../../source/getting-started/using-mag.rst:2
-#: 05cc5037338d4c50be9c46e39da3f0d9
+#: 943d23b625d640a295a02442b815eb7b
 msgid "Using MAG"
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:4
-#: b32f7f7d78514021b8f068c5776b727e
+#: 02124090141f48a6b300fd6199d0e171
 msgid "MAG is designed around a single module import:"
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:11
-#: 5c04d03d7389440b80fc7b6f35f3337b
+#: 1c09973a9a9f431f9690306322641853
 msgid "The examples below show the main workflows exposed by the public API."
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:14
-#: f58fba05890148e8a306aa59d920cd24
+#: f76877473fc54106a066adc25e1a4605
 msgid "Vector math"
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:32
-#: b4f28d3c403f40afb6ffd11298ae4ce2
+#: 828453cf71444107ae0a710bebe0d06d
 msgid ""
 "Vectors support component aliases where they make sense. For example, 4D "
 "vectors expose both ``x/y/z/w`` and ``r/g/b/a`` accessors."
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:35
-#: fd365246efbd4cc8baedc62aa3bee88b
+#: 049e40aef1d8454da1ba1c126f6d5ddc
 msgid ""
 "Matrices also support component aliases for specific implementations such"
 " as 3x3 and 4x4 matrices."
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:38
-#: 52e878aeeba346daa5d18a1e24e2f1e3
+#: bdd8fe31916940169dfe61c8f4f86f11
 msgid "Matrix math"
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:40
-#: d188d566cfd446db9989ca597a3495b8
+#: 61b9c59499314981bdcc34ea7e23efde
 msgid ""
 "Matrices are structured into column major 2D arrays meaning that data is "
 "stored into columns, rows in the array."
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:57
-#: 443aefb05e964b7ebd28589e2b3a5c89
+#: 4e7dacf008cc4d3bb4495f047eeb847c
 msgid "SIMD helpers"
 msgstr ""
 
 #: ../../source/getting-started/using-mag.rst:59
-#: 9d18d6e8f4e8469daa2ea19c9f1d7813
+#: 499082b9a40c497a88cccbc1794d4d6b
 msgid ""
 "When ``MAG_ENABLE_SIMD`` is enabled and the target architecture supports "
-"it, the ``mag`` module also exports SIMD functionality in a separate "
-"namespace, ``mag::simd``:"
+"it, ``mag.simd`` will export SIMD functionality in a separate namespace, "
+"``mag::simd``:"
 msgstr ""
 
-#: ../../source/getting-started/using-mag.rst:86
-#: 83dde0200e334dd6a1e397fd95b78144
+#: ../../source/getting-started/using-mag.rst:88
+#: d08a4f17234a434d8c4398263ed356e8
 msgid ""
 "The SIMD API supports arithmetic, reductions, load/store helpers, fixed-"
 "width ABI types, and native ABI aliases where available."
 msgstr ""
 
-#: ../../source/getting-started/using-mag.rst:88
-#: ba48c8c81a4a47299ff0af98abd6606f
+#: ../../source/getting-started/using-mag.rst:90
+#: 9e304cba6c324131b54d736028436a06
+msgid ""
+"You can choose the SIMD backend at configure time with "
+"``MAG_SIMD_BACKEND``:"
+msgstr ""
+
+#: ../../source/getting-started/using-mag.rst:96
+#: b63fe7af7f234a50b5464fd18412d6b3
+msgid "Supported values are:"
+msgstr ""
+
+#: ../../source/getting-started/using-mag.rst:98
+#: 1e53ada02dda4c34bda1d5736d4d49a2
+msgid "``AUTO`` (default)"
+msgstr ""
+
+#: ../../source/getting-started/using-mag.rst:99
+#: 71dae3e8345f483193b6fa0ac3ff5008
+msgid "``SSE2``, ``SSSE3``, ``SSE4_1`` on x86/x64"
+msgstr ""
+
+#: ../../source/getting-started/using-mag.rst:100
+#: 9dadca24eb6e47b2b8582fd8b0c880f8
+msgid "``NEON`` on ARM/ARM64"
+msgstr ""
+
+#: ../../source/getting-started/using-mag.rst:102
+#: 41147012af0d4c25989db2e654e9c2e1
+msgid ""
+"When set to auto, it will select ``SSE4_1`` on x86/x64 and ``NEON`` on "
+"ARM."
+msgstr ""
+
+#: ../../source/getting-started/using-mag.rst:104
+#: 39c452bb37b3466fa1f3c3616fcee75a
 msgid "**Note**: The SIMD API is subject to changes as it is still a WIP."
 msgstr ""
 
@@ -104,5 +138,13 @@ msgstr ""
 #~ "the target architecture supports it, the"
 #~ " ``mag`` module also exports SIMD "
 #~ "functionality:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "When ``MAG_ENABLE_SIMD`` is enabled and "
+#~ "the target architecture supports it, the"
+#~ " ``mag`` module also exports SIMD "
+#~ "functionality in a separate namespace, "
+#~ "``mag::simd``:"
 #~ msgstr ""
 

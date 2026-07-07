@@ -69,7 +69,7 @@ Build Options
 +---------------------------+-----------+------------------------------------------------------------+
 | MAG_ENABLE_SIMD           | ON        | Enable SIMD support on supported architectures             |
 +---------------------------+-----------+------------------------------------------------------------+
-| MAG_SIMD_BACKEND          | AUTO      | Select SIMD backend: AUTO, SSE2, SSSE3, SSE4_1, or NEON   |
+| MAG_SIMD_BACKEND          | AUTO      | Select SIMD backend: AUTO, SSE2, SSSE3, SSE4_1, or NEON    |
 +---------------------------+-----------+------------------------------------------------------------+
 | MAG_NO_DEV_TOOLS          | OFF       | Disable development-only helpers and generated tooling     |
 +---------------------------+-----------+------------------------------------------------------------+

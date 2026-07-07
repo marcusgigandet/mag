@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-25 22:45-0400\n"
+"POT-Creation-Date: 2026-07-06 22:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -20,121 +20,123 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../source/getting-started/overview.rst:2 ab0fe92e50cf46a895545515d3ba6d53
+#: ../../source/getting-started/overview.rst:2 4d6beedd26104c29a92541c19b3d18a4
 msgid "Library Overview"
 msgstr ""
 
-#: ../../source/getting-started/overview.rst:4 ff1591feba224806a05ab637ac8c56aa
+#: ../../source/getting-started/overview.rst:4 24b2d4b534524be8ab2c274d3335846d
 msgid ""
 "MAG is a C++20 math library for graphics-related development such as "
 "rendering engines."
 msgstr ""
 
-#: ../../source/getting-started/overview.rst:6 ea58748a3a4049af92aa5ff584512aa2
+#: ../../source/getting-started/overview.rst:6 839e34c2637f432b866b14c9368c00d6
 msgid "The public API is exposed through a single module shown below:"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:13
-#: 39fbdd7e1d524730af274ed7a192b016
+#: 5fd16a081c6b4457b0cded1331d127ed
 msgid "Common types"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:15
-#: 7604c912abe8428a8d249fbb978d789e
+#: b5861201f8af483687025138e047e098
 msgid ""
 "You will typically work with aliases such as the following exposed in the"
-" ``mag`` namespace:"
+" ``mag`` namespace and the ``mag`` module:"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:17
-#: c41d5eae14d04f58b82b2b9bb8aff55a
+#: 92057722b72142e4a9ef30e21cd13b79
 msgid "``Vec2f``, ``Vec3f``, ``Vec4f``"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:18
-#: d0263d361e1a4738a1b11f1e5daef296
+#: 87fb9ae52aab4ac480af862858c12711
 msgid "``Mat3f``, ``Mat4f``"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:20
-#: a11b041f5aca4282a6934a8444917e3f
-msgid "All simd-related aliases/types are exposed in the ``mag::simd`` namespace."
+#: d73f5fe7e30544298149488e65f84b88
+msgid ""
+"All simd-related aliases/types are exposed in the ``mag::simd`` namespace"
+" and the ``mag.simd`` module."
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:23
-#: 84fc88a97e274045b19782897aa8c062
+#: c7d70c9bf1434761aa9159ba243e76e5
 msgid "Build requirements"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:25
-#: 38c9d15043264cfe83e0ff915f347aeb
+#: bb5b3455514948429aefe2b7100c5165
 msgid ""
 "MAG depends on a compiler with usable C++20 module support. The top-level"
 " build currently checks for these minimum versions:"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:29
-#: 5b1afce920dd4a5b935b7957b907ef21
+#: 762c0facb9674391be04eb0af6846c4c
 msgid "Tool"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:29
-#: bf97c1f7e48042de8d5f255eef5ac21e
+#: 7971c2fec93d41c9bc77ce675a7a0dcc
 msgid "Minimum version"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:31
-#: 642eb55a1998436ab579797fa2089b27
+#: e3414b357eb2464a80cf4bd58988661c
 msgid "Clang"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:31
-#: 08a1b554287346f88daf1dcc7356bee3
+#: e0c2cf26a1f8447cb068dffdff1ed17e
 msgid "18"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:33
-#: da1dafdebca5483d99d505cedb459cca
+#: 1ebafe39189841c3b805bf92687e44f4
 msgid "GCC"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:33
-#: ae3325bafcf74788b567f0ca731d7edc
+#: 6b91dde101b4430387a3465031537169
 msgid "15"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:35
-#: 4201468333b342ed8f79c2262330a5c6
+#: b48a7c478c594b9384c50c9387dffa88
 msgid "MSVC"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:35
-#: 280879cb5eb54acc8c33179091fe1b7e
+#: 4bf03d82e9e84580ad5f717142e509ff
 msgid "Visual Studio 2022 17.10 / MSVC 19.40"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:37
-#: c4b6d44545b748ecb201444b6ed27e34
+#: a7f5391413e245969d7c18b5ae947842
 msgid "CMake"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:37
-#: 770975ad372b4624b92d288989829fdd
+#: 70687835751048fe95e5c02cce8b8759
 msgid "3.28.3"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:39
-#: f99ff233de5d46dda0c78254f91887df
+#: c5bf88355f804eb0acb1162df25c84bb
 msgid "Ninja"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:39
-#: 5060aa3b7bbf4bb0a091e908e45af999
+#: dac7d53a749341ecb397d09311d56513
 msgid "Recommended generator used by presets"
 msgstr ""
 
 #: ../../source/getting-started/overview.rst:42
-#: 373573278ceb4987a2da7df59dbbc82a
+#: 8df42714301a43b9b3b8d5d40eb53e28
 msgid "For a full setup walkthrough, continue with :doc:`building`."
 msgstr ""
 
@@ -215,5 +217,16 @@ msgstr ""
 #~ "``mag::simd::f32x4``, ``f64x2``, ``i32x4``, and "
 #~ "related SIMD aliases when SIMD is "
 #~ "available"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You will typically work with aliases "
+#~ "such as the following exposed in "
+#~ "the ``mag`` namespace:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "All simd-related aliases/types are "
+#~ "exposed in the ``mag::simd`` namespace."
 #~ msgstr ""
 

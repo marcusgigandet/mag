@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-25 22:45-0400\n"
+"POT-Creation-Date: 2026-07-06 22:51-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -20,191 +20,191 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../source/getting-started/building.rst:2 1c8607bcf22a471f8db9f49605d59e89
+#: ../../source/getting-started/building.rst:2 83981c3cc9a9490cb49befa3098a182c
 msgid "Building from Source"
 msgstr ""
 
-#: ../../source/getting-started/building.rst:4 d61be5361e1f4b0d931add77dd7bc153
+#: ../../source/getting-started/building.rst:4 3d875e8ca9ff4cefa7d2db4e4d658b62
 msgid "Build MAG with CMake and the repository presets."
 msgstr ""
 
-#: ../../source/getting-started/building.rst:7 92cf218ba99c42bcaf2179365167a961
+#: ../../source/getting-started/building.rst:7 6563582bb2ae45da82337729ae6268b6
 msgid "Prerequisites"
 msgstr ""
 
-#: ../../source/getting-started/building.rst:9 e75a03e3ad49464fa19e29fe58634e73
+#: ../../source/getting-started/building.rst:9 5ade9e4154d14181ba1f882533f1b1de
 msgid "Install the following tools before configuring the project:"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:11
-#: 2f711a47b8f5415b847ac3ca1f2b4cc9
+#: a3bf953527da473a854aff0e72e0f88b
 msgid "A modern C++ compiler with C++20 modules support:"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:13
-#: a0d8ed28792e44298c0b05f80aa415fb
+#: f57fbe41bee1466384ddcf35cc447f63
 msgid "**Clang 18+**"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:14
-#: c3f042bc1723446f972ed970c603bc12
+#: 294725ee002b41d49d8c945399ae46a2
 msgid "**GCC 15+**"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:15
-#: e9d4ef6b8515478a88a5346559e35de2
+#: d4a223a69c1a49d0b405823b6a98cd89
 msgid "**MSVC 19.40+**"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:16
-#: 7bd0ee47a51e47e787e8709be003e745
+#: 240db38b6b1947deb6d46d2f5964cc09
 msgid "**CMake 3.28.3+**"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:17
-#: 0bfe872855904782820de315e5b5e43a
+#: 8760ead7920140088fedd3ac7eaaa0b0
 msgid "**Ninja**"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:18
-#: 89b975e5ee744a01939ded7d6c806680
+#: 037a5a2241294adcb713c6267094b2b5
 msgid "**Python 3** when development tooling is enabled"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:20
-#: 4e3fc932acf54679924be50fa6132010
+#: e99b7ddec7224a26958e7a8ab145acf9
 msgid ""
 "The bundled presets assume Ninja and create build directories under "
 "``build/``."
 msgstr ""
 
 #: ../../source/getting-started/building.rst:23
-#: 01cfd750a8314d3a856943adf1a2391e
+#: 3dc4fa44bc8d47adacfbbfd53e19b97f
 msgid "Quick start with presets"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:25
-#: cd5150f42d0c438895a176369302c12c
+#: 8073c789d8014a53a2c60f857d1eadd1
 msgid "Choose the preset that matches your toolchain:"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:28
-#: ae084101c26f4f47ab427a610a5270c1
+#: 2a108fcad3c74502974d803723a9f3fd
 msgid "Preset"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:28
-#: e28b6ca2a9264dddbce4efb4211b15e3
+#: fdc4301ddb2043c0a63ecf99d7c8f546
 msgid "Typical use"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:30
-#: a737ae0799004f17a7f4eced1be7c1af
+#: 66493ab90b9742c1a7299bf61a84249f
 msgid "clang-debug"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:30
-#: 99695122b3aa461c97aaf86d2c053b34
+#: 73673d71fb9d42a8b3dce6f6c5ece30d
 msgid "Clang debug build"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:32
-#: c22860f940d4492e82c075028383f567
+#: 0fdaa23177df4d9082b75cfc8f1119d3
 msgid "clang-release"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:32
-#: 695be51578dc46b9be5acba742da5356
+#: fdf2eac50ec342a0a32cb3933c70c5e5
 msgid "Clang release build"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:34
-#: 29ed079ed1104edfa16896c98d1fcb5c
+#: 3e23559d17fc4550933ece7939af2c98
 msgid "gcc-debug"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:34
-#: 346f017c996143daa662a77b20675803
+#: 1364e777c26f473bb1ed1b6400c14812
 msgid "GCC debug build"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:36
-#: 06c7ad3abee74c1f98244ec8ccf13d42
+#: d8c269e72819406c8ca39722f2a987dd
 msgid "gcc-release"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:36
-#: ca65ba48203640c8aa0ca6394ee0b60e
+#: d18e8259829f4b729b9b2702bde15411
 msgid "GCC release build"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:38
-#: d33a61d0595e43edbe0f361b150cd539
+#: 92619326a87d4b7e932083a7624257ac
 msgid "msvc-debug"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:38
-#: 09287b1207c14cb5a0265ebaa842c4db
+#: d9c87a58094648099cba705f24fe10ad
 msgid "MSVC debug build"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:40
-#: afac8c6aff7f4a91b19d08f3a871c404
+#: a2542560a6c3468a91d9e0f72b882cfb
 msgid "msvc-release"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:40
-#: f84ce17cd1df491d9e72aeb171315185
+#: ed3e7e60cf424259b20140192d3ac6c3
 msgid "MSVC release build"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:43
-#: 03ec80b8f3f64a9ab86956182cd9f9df
+#: aa5f4bfbb52c47c89cf6c96d5d493d43
 msgid "Example with Clang:"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:50
-#: c6dc5820224444148593f32000f4e0df
+#: e6b378fbd2e944cc92bbc0cd97d63c64
 msgid "To run the test suite for a preset-enabled build:"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:57
-#: 277a48aa36304395aa61be7df0f57db8
+#: 0e03190da261432e8ba6c3c82be7f4c5
 msgid "Build Options"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:60
-#: 937b5f78144c46679f77049ffe43d74c
+#: d565c7d2a4214d04a471d4e83a983986
 msgid "Option"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:60
-#: 5d03570317d847c3ad6570dc81d89f15
+#: 7367aad50a954e15a67a5cda96984a08
 msgid "Default"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:60
-#: 7c1e5f885dca42e4b62aa9e2b5c7533c
+#: 25575fbc01fc4d629b726f8a1e045be0
 msgid "Description"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:62
-#: 91571f0749704ea482ae4aef4d6ed31e
+#: c4b6157c074e4c858fc96e18ac769677
 msgid "CMAKE_BUILD_TYPE"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:62
-#: 1b1379a19ae04c0e9cde127da5239b45
+#: 16831afa5f5c4f0aa815e7a613e0cabc
 msgid "Release"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:62
-#: 2e92946302be4615a7383806052563ce
+#: 4d49ba4051a447bc90bff80ef1f3736f
 msgid "Standard single-config build type for manual configure"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:64
-#: 8736125f53654e9980f7791f16e42c5e
+#: 276645807a8e4a878098b24df38d77ac
 msgid "BUILD_SHARED_LIBS"
 msgstr ""
 
@@ -212,123 +212,221 @@ msgstr ""
 #: ../../source/getting-started/building.rst:66
 #: ../../source/getting-started/building.rst:68
 #: ../../source/getting-started/building.rst:74
-#: 7577446daada4bdc925f53fd287891ad 80cec4caf850494980e4633400e0780a
-#: 9c2c11f7c37c4578982865dbc3bad6eb e82ad2fda8db4ccd92a7b80845d53d1c
+#: 27678cf0b58f4cbe89999ab92535b47d 34eeed9eccdb4cde9009a10f15275038
+#: 36d0ea3d2f234334bdbd4ec8bb1c4071 925939ce1283421293cb6dbbbed726a9
 msgid "OFF"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:64
-#: 37876a03dfee4e0e9f872924736a2822
+#: f4c0e2e99ed34913b9ac2303cc479a73
 msgid "Build MAG as a shared library instead of a static library"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:66
-#: 68f1b9881fc9405297360017e10bbc7e
+#: cd19b61dbb44484299696d4925be172f
 msgid "MAG_BUILD_TESTS"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:66
-#: b36dec50e0104352a5e349a9432a34b8
+#: 0f2e20eb3e424d19b65d93d2ed43067b
 msgid "Build the Catch2-based test suite"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:68
-#: fef47f3760f34f8da88633f9393d3568
+#: 0c754209d5074852bf99399ea6a3bb6f
 msgid "MAG_BUILD_BENCHMARKS"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:68
-#: 9419fb35384d45c08f3badcc19fb58a3
+#: fc0c956ea7cd4c2e94e02654201e9e0d
 msgid "Build benchmark targets"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:70
-#: 5650c91bb8164975bf46374b1ef2c6db
+#: 0297db0c5a73462c9c806f94aeba51b9
 msgid "MAG_ENABLE_SIMD"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:70
-#: ../../source/getting-started/building.rst:72
 #: ../../source/getting-started/building.rst:76
-#: 0fe674a3742d4986ac87cd4819c25f50 22c004c8700d45c1ba8a8ddc4344593b
-#: efa72175b6b949d1b2bd2e100b3dbc45
+#: 7d2df1e007fe4aa4b67c3f4b2313c3bb 86c407846b454e6283a5252263c47ed4
 msgid "ON"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:70
-#: 616f4ad12a3a4760aa9b1fe967525b82
+#: cd5e8529e4db49a0b500c413f04ac8f9
 msgid "Enable SIMD support on supported architectures"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:72
-#: ddcb0b1426c746c2a0c2c33285e0d504
-msgid "MAG_ENABLE_SIMD_EXTENDED"
+#: 8e6874bdf63e44c697fb56d7e65c6aca
+msgid "MAG_SIMD_BACKEND"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:72
-#: bcf1501a97184667aa3a4f07b0371c56
-msgid "Enable extra integer SIMD paths; requires SIMD"
+#: 42c3fbb19d794af3b77846d10932c213
+msgid "AUTO"
+msgstr ""
+
+#: ../../source/getting-started/building.rst:72
+#: a0942d604e694f3bb871180ad06614f8
+msgid "Select SIMD backend: AUTO, SSE2, SSSE3, SSE4_1, or NEON"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:74
-#: 1660ba2983da4d90b7946d24e48e470c
+#: f722a4239c1647fba14750b8b422896f
 msgid "MAG_NO_DEV_TOOLS"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:74
-#: 965f768ef43948ec8a4c57eb993f9e11
+#: f2df217e36554e4c9fdc46ebeb6c82f3
 msgid "Disable development-only helpers and generated tooling"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:76
-#: 18def9e92a344054a955322b81ff4f04
+#: e125a0fc75694202a2cc30c6bba46ca9
 msgid "MAG_CODE_ANALYSIS"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:76
-#: 2a82297af0034d4abc517f8a27614765
+#: 876ec0999e6b41a4b8ef3083a4eca2c5
 msgid "Enable clang-tidy on the MAG target when dev tools are on"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:80
-#: a20e9f41aa7f404f95f39c00204e563f
+#: 750eba4ecef24591bf64710bfcfa5d27
 msgid "Platform notes"
 msgstr ""
 
 #: ../../source/getting-started/building.rst:82
-#: 8f0eaf34befb42d189e80c8c652b5e2e
+#: 7c76025b020544db809c4d7b5e468e1f
 msgid ""
 "On x86 and x86_64 targets, MAG enables SSE-family compile options for "
 "SIMD builds."
 msgstr ""
 
 #: ../../source/getting-started/building.rst:83
-#: f6d7747ab0414f068f6691060f5d39f2
-msgid "On ARM targets, MAG selects the NEON backend when available."
+#: 87c5299f9d2d4f9a93e089a2fd6ca6e6
+msgid ""
+"``MAG_SIMD_BACKEND`` supports ``AUTO``, ``SSE2``, ``SSSE3``, and "
+"``SSE4_1`` on x86/x64."
 msgstr ""
 
 #: ../../source/getting-started/building.rst:84
-#: 07c64be95915424fac0fd5b0df555304
-msgid ""
-"On unsupported architectures, MAG disables SIMD backends automatically "
-"and falls back to scalar implementations."
+#: 2f4ab172e05d41ecbece8024d6e75daf
+msgid "On ARM targets, MAG selects the NEON backend when available."
+msgstr ""
+
+#: ../../source/getting-started/building.rst:85
+#: 9b6338b6831e44eaa94450b90fbbce57
+msgid "``MAG_SIMD_BACKEND`` supports ``AUTO`` and ``NEON`` on ARM/ARM64."
 msgstr ""
 
 #: ../../source/getting-started/building.rst:86
-#: 46da2365c3c249718791d0450bdd8ec2
+#: 8015e54583e54b00affa2fa0ebeea274
+msgid ""
+"The selected backend emits one compile definition: "
+"``MAG_SIMD_BACKEND_SSE2``, ``MAG_SIMD_BACKEND_SSSE3``, "
+"``MAG_SIMD_BACKEND_SSE4_1``, or ``MAG_SIMD_BACKEND_NEON``."
+msgstr ""
+
+#: ../../source/getting-started/building.rst:89
+#: 8e9224426a8343a3bf169e22461c124e
+msgid ""
+"On unsupported architectures, MAG disables SIMD backends automatically "
+"and falls back to scalar implementations in the cmake file. - If the "
+"project is compiled with SIMD enabled on an unsupported "
+"architecture/backend, it will result in a compilation failure."
+msgstr ""
+
+#: ../../source/getting-started/building.rst:92
+#: 4c213defe2be46f781a225724150637e
 msgid ""
 "Development tooling is only configured for top-level builds when "
 "``MAG_NO_DEV_TOOLS`` is left disabled."
 msgstr ""
 
-#: ../../source/getting-started/building.rst:90
-#: 757cce8b113e4869893813708033a6dc
+#: ../../source/getting-started/building.rst:96
+#: 10e490e0ea824a34b012e8c7ded359ac
 msgid "Next step"
 msgstr ""
 
-#: ../../source/getting-started/building.rst:92
-#: 91bd8c68f6434a31bef455a865566204
+#: ../../source/getting-started/building.rst:98
+#: 1e908bee320e4ca5b4595e7c06c9d419
 msgid ""
 "Once MAG builds successfully, continue with :doc:`integration` to link it"
 " into another project."
 msgstr ""
+
+#~ msgid "Option"
+#~ msgstr ""
+
+#~ msgid "Default"
+#~ msgstr ""
+
+#~ msgid "Description"
+#~ msgstr ""
+
+#~ msgid "CMAKE_BUILD_TYPE"
+#~ msgstr ""
+
+#~ msgid "Release"
+#~ msgstr ""
+
+#~ msgid "Standard single-config build type for manual configure"
+#~ msgstr ""
+
+#~ msgid "BUILD_SHARED_LIBS"
+#~ msgstr ""
+
+#~ msgid "OFF"
+#~ msgstr ""
+
+#~ msgid "Build MAG as a shared library instead of a static library"
+#~ msgstr ""
+
+#~ msgid "MAG_BUILD_TESTS"
+#~ msgstr ""
+
+#~ msgid "Build the Catch2-based test suite"
+#~ msgstr ""
+
+#~ msgid "MAG_BUILD_BENCHMARKS"
+#~ msgstr ""
+
+#~ msgid "Build benchmark targets"
+#~ msgstr ""
+
+#~ msgid "MAG_ENABLE_SIMD"
+#~ msgstr ""
+
+#~ msgid "ON"
+#~ msgstr ""
+
+#~ msgid "Enable SIMD support on supported architectures"
+#~ msgstr ""
+
+#~ msgid "MAG_ENABLE_SIMD_EXTENDED"
+#~ msgstr ""
+
+#~ msgid "Enable extra integer SIMD paths; requires SIMD"
+#~ msgstr ""
+
+#~ msgid "MAG_NO_DEV_TOOLS"
+#~ msgstr ""
+
+#~ msgid "Disable development-only helpers and generated tooling"
+#~ msgstr ""
+
+#~ msgid "MAG_CODE_ANALYSIS"
+#~ msgstr ""
+
+#~ msgid "Enable clang-tidy on the MAG target when dev tools are on"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "On unsupported architectures, MAG disables "
+#~ "SIMD backends automatically and falls "
+#~ "back to scalar implementations."
+#~ msgstr ""
+

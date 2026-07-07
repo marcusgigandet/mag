@@ -117,3 +117,4 @@ lcov-report/
 _build/
 pages/
 pages-local/
+*.mo
