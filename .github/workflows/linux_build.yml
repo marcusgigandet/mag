@@ -78,7 +78,7 @@ jobs:
             -DCMAKE_C_COMPILER=${CC} \
             -DCMAKE_CXX_COMPILER=${CXX} \
             -DMAG_NO_DEV_TOOLS=ON \
-            -DMAG_ENABLE_SIMD=${{ matrix.simd }}
+            -DMAG_ENABLE_SIMD=ON
 
       - name: Build
         run: cmake --build --preset $PRESET

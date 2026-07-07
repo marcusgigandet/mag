@@ -56,14 +56,14 @@ Matrices are structured into column major 2D arrays meaning that data is stored 
 SIMD helpers
 ------------
 
-When ``MAG_ENABLE_SIMD`` is enabled and the target architecture supports it, the ``mag`` module also
-exports SIMD functionality in a separate namespace, ``mag::simd``:
+When ``MAG_ENABLE_SIMD`` is enabled and the target architecture supports it, ``mag.simd`` will
+export SIMD functionality in a separate namespace, ``mag::simd``:
 
 .. code-block:: c++
 
    #include <array>
 
-   import mag;
+   import mag.simd;
    using namespace mag::simd;
 
    std::array<float, 4> data{5.0f, 6.0f, 7.0f, 8.0f};
@@ -80,9 +80,25 @@ exports SIMD functionality in a separate namespace, ``mag::simd``:
    float minValue{hmin(a)};
    float maxValue{hmax(a)};
 
+   ...
+
    std::array<float, 4> out{};
    mixed.store(out.data());
 
 The SIMD API supports arithmetic, reductions, load/store helpers, fixed-width ABI types, and native ABI aliases where available.
+
+You can choose the SIMD backend at configure time with ``MAG_SIMD_BACKEND``:
+
+.. code-block:: bash
+
+   cmake -S . -B build -DMAG_ENABLE_SIMD=ON -DMAG_SIMD_BACKEND=SSE4_1
+
+Supported values are:
+
+- ``AUTO`` (default)
+- ``SSE2``, ``SSSE3``, ``SSE4_1`` on x86/x64
+- ``NEON`` on ARM/ARM64
+
+When set to auto, it will select ``SSE4_1`` on x86/x64 and ``NEON`` on ARM.
 
 **Note**: The SIMD API is subject to changes as it is still a WIP.

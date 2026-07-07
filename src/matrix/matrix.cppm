@@ -15,16 +15,17 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <iomanip>
 #include <span>
 #include <sstream>
+#include <string>
 export module mag:matrix;
 
-import :concepts;
 import :vector;
 
 #ifdef MAG_ENABLE_SIMD
-import :simd;
+import mag.simd;
 using namespace mag::simd;
 #endif
 
@@ -138,11 +139,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_add<T, R> && supports_splat<T, R>)
 			{
-				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c],
-							   ops::add(ops::load(derived().m[c]), ops::splat(val)));
+					Simd<T, R> va{derived().m[c]};
+					Simd<T, R> vb{val};
+					Simd<T, R> vc{va + vb};
+					vc.store(derived().m[c]);
 				}
 
 				return derived();
@@ -160,11 +162,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R> && supports_splat<T, R>)
 			{
-				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c],
-							   ops::sub(ops::load(derived().m[c]), ops::splat(val)));
+					Simd<T, R> va{derived().m[c]};
+					Simd<T, R> vb{val};
+					Simd<T, R> vc{va - vb};
+					vc.store(derived().m[c]);
 				}
 
 				return derived();
@@ -182,11 +185,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_mul<T, R> && supports_splat<T, R>)
 			{
-				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c],
-							   ops::mul(ops::load(derived().m[c]), ops::splat(val)));
+					Simd<T, R> va{derived().m[c]};
+					Simd<T, R> vb{val};
+					Simd<T, R> vc{va * vb};
+					vc.store(derived().m[c]);
 				}
 
 				return derived();
@@ -204,11 +208,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_div<T, R> && supports_splat<T, R>)
 			{
-				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c],
-							   ops::div(ops::load(derived().m[c]), ops::splat(val)));
+					Simd<T, R> va{derived().m[c]};
+					Simd<T, R> vb{val};
+					Simd<T, R> vc{va / vb};
+					vc.store(derived().m[c]);
 				}
 
 				return derived();
@@ -226,11 +231,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_add<T, R>)
 			{
-				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c],
-							   ops::add(ops::load(derived().m[c]), ops::load(rhs.m[c])));
+					Simd<T, R> va{derived().m[c]};
+					Simd<T, R> vb{rhs.m[c]};
+					Simd<T, R> vc{va + vb};
+					vc.store(derived().m[c]);
 				}
 
 				return derived();
@@ -248,11 +254,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R>)
 			{
-				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c],
-							   ops::sub(ops::load(derived().m[c]), ops::load(rhs.m[c])));
+					Simd<T, R> va{derived().m[c]};
+					Simd<T, R> vb{rhs.m[c]};
+					Simd<T, R> vc{va - vb};
+					vc.store(derived().m[c]);
 				}
 
 				return derived();
@@ -270,11 +277,12 @@ namespace mag
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R>)
 			{
-				using ops = ops<T, R>;
 				for (size_t c = 0; c < C; ++c)
 				{
-					ops::store(derived().m[c],
-							   ops::mul(ops::load(derived().m[c]), ops::load(rhs.m[c])));
+					Simd<T, R> va{derived().m[c]};
+					Simd<T, R> vb{rhs.m[c]};
+					Simd<T, R> vc{va * vb};
+					vc.store(derived().m[c]);
 				}
 
 				return derived();
@@ -352,7 +360,7 @@ namespace mag
 		 *		 )```.
 		 * Where column 0, row 1 is 4.
 		 *
-		 * @return A string in the form `VecN(...)`.
+		 * @return A string in the form `MatNxM(...)`.
 		 */
 		[[nodiscard]] std::string toString() const noexcept
 		{
@@ -380,7 +388,7 @@ namespace mag
 		}
 	};
 
-	export template <Numeric T, size_t C, size_t R>
+	template <Numeric T, size_t C, size_t R>
 	struct Mat : IMat<Mat<T, C, R>, T, C, R>
 	{
 		T m[C][R];
