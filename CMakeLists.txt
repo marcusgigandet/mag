@@ -86,7 +86,7 @@ else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
 
         if (MAG_SIMD_BACKEND STREQUAL "AUTO")
-            set(MAG_SIMD_BACKEND "SSE2")
+            set(MAG_SIMD_BACKEND "SSE4_1")
         endif ()
 
         if (MAG_SIMD_BACKEND STREQUAL "SSE2")
