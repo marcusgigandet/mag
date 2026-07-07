@@ -12,12 +12,12 @@ The public API is exposed through a single module shown below:
 Common types
 ------------
 
-You will typically work with aliases such as the following exposed in the ``mag`` namespace:
+You will typically work with aliases such as the following exposed in the ``mag`` namespace and the ``mag`` module:
 
 - ``Vec2f``, ``Vec3f``, ``Vec4f``
 - ``Mat3f``, ``Mat4f``
 
-All simd-related aliases/types are exposed in the ``mag::simd`` namespace.
+All simd-related aliases/types are exposed in the ``mag::simd`` namespace and the ``mag.simd`` module.
 
 Build requirements
 ------------------

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <concepts>
+
 #if defined(__clang__) || defined(__GNUC__)
 #define MAG_INLINE __attribute__((always_inline)) inline
 #elif defined(_MSC_VER)
@@ -35,3 +37,9 @@
 #define MAG_DIAG_POP
 #define MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 #endif
+
+/**
+ * @brief Verify template parameters are numeric types.
+ */
+template <typename T>
+concept Numeric = std::is_arithmetic_v<T>;

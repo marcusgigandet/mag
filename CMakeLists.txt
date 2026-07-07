@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28.3 FATAL_ERROR)
-project(mag VERSION 1.0.0 LANGUAGES CXX)
+project(mag LANGUAGES CXX)
 
 #####################
 # Compiler settings #
@@ -42,10 +42,13 @@ endif ()
 option(MAG_BUILD_TESTS "Build tests" OFF)
 option(MAG_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(MAG_ENABLE_SIMD "Enable simd for supported platforms" ON)
-option(MAG_ENABLE_SIMD_EXTENDED "Enable simd for signed/unsigned integers" ON)
 option(MAG_NO_DEV_TOOLS "Disable all non-essential dev tools" OFF)
 option(MAG_CODE_ANALYSIS "Analyze code with clang-tidy" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+set(MAG_SIMD_BACKEND "AUTO" CACHE STRING
+        "SIMD backend: AUTO, SSE2, SSSE3, SSE4_1, NEON"
+)
+set_property(CACHE MAG_SIMD_BACKEND PROPERTY STRINGS AUTO SSE2 SSSE3 SSE4_1 NEON)
 
 #################
 # Set constants #
@@ -58,37 +61,58 @@ file(GLOB_RECURSE HEADERS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
 )
 
-set(MAG_NEON_SIMD FALSE CACHE BOOL "" FORCE)
-set(MAG_X86_SIMD FALSE CACHE BOOL "" FORCE)
-set(MAG_SIMD_COMPILE_OPTIONS "")
-
 # Remove unused code
 if (NOT MAG_ENABLE_SIMD)
     list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
 else ()
     # Make arch consistent across platforms
     string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" ARCH)
+    string(TOUPPER "${MAG_SIMD_BACKEND}" MAG_SIMD_BACKEND)
+    set(MAG_SIMD_BACKEND_SELECTED "")
 
-    # Filter based on x86 and arm
-    # Add more architectures if we add future support for something like RISC-V
+    # Filter based on x86 and arm.
+    # Add more architectures if we add future support for something like RISC-V.
     if (ARCH MATCHES "^(aarch64|arm64|arm|armv.*)")
-        set(MAG_NEON_SIMD TRUE CACHE BOOL "" FORCE)
+        if (NOT MAG_SIMD_BACKEND STREQUAL "AUTO" AND NOT MAG_SIMD_BACKEND STREQUAL "NEON")
+            message(FATAL_ERROR
+                    "MAG_SIMD_BACKEND='${MAG_SIMD_BACKEND}' is invalid on ARM. "
+                    "Supported values are AUTO and NEON."
+            )
+        endif ()
 
-        list(FILTER MODULES EXCLUDE REGEX ".*/x86_64/.*")
         list(FILTER MODULES EXCLUDE REGEX ".*/x86/.*")
-
+        set(MAG_SIMD_BACKEND_SELECTED "NEON")
     elseif (ARCH MATCHES "^(x86_64|amd64|i[3-6]86|x64)")
-        set(MAG_X86_SIMD TRUE CACHE BOOL "" FORCE)
-
         list(FILTER MODULES EXCLUDE REGEX ".*/neon/.*")
 
-        # MSVC does not support GCC/Clang -m* SIMD flags.
-        add_compile_options(
-                $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
-                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2>
-                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse3>
-                $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse4.1>
-        )
+        if (MAG_SIMD_BACKEND STREQUAL "AUTO")
+            set(MAG_SIMD_BACKEND "SSE4_1")
+        endif ()
+
+        if (MAG_SIMD_BACKEND STREQUAL "SSE2")
+            set(MAG_SIMD_BACKEND_SELECTED "SSE2")
+            list(FILTER MODULES EXCLUDE REGEX ".*/x86/(ssse3|sse4_1)\\.cppm$")
+            add_compile_options(
+                    $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
+                    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2>
+            )
+        elseif (MAG_SIMD_BACKEND STREQUAL "SSSE3")
+            set(MAG_SIMD_BACKEND_SELECTED "SSSE3")
+            list(FILTER MODULES EXCLUDE REGEX ".*/x86/sse4_1\\.cppm$")
+            if (NOT MSVC)
+                add_compile_options(-mssse3)
+            endif ()
+        elseif (MAG_SIMD_BACKEND STREQUAL "SSE4_1")
+            set(MAG_SIMD_BACKEND_SELECTED "SSE4_1")
+            if (NOT MSVC)
+                add_compile_options(-msse4.1)
+            endif ()
+        else ()
+            message(FATAL_ERROR
+                    "MAG_SIMD_BACKEND='${MAG_SIMD_BACKEND}' is invalid on x86/x64. "
+                    "Supported values are AUTO, SSE2, SSSE3, and SSE4_1."
+            )
+        endif ()
     else ()
         list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
         set(MAG_ENABLE_SIMD OFF)
@@ -123,19 +147,12 @@ target_compile_features(mag
         cxx_std_20
 )
 
-target_compile_options(mag
-        PRIVATE
-        ${MAG_SIMD_COMPILE_OPTIONS}
-)
-
 #######################################
 # Add compile definitions and options #
 #######################################
 target_compile_definitions(mag PRIVATE
         $<$<BOOL:${MAG_ENABLE_SIMD}>:MAG_ENABLE_SIMD>
-        $<$<BOOL:${MAG_ENABLE_SIMD_EXTENDED}>:MAG_ENABLE_SIMD_EXTENDED>
-        $<$<BOOL:${MAG_NEON_SIMD}>:MAG_NEON_SIMD>
-        $<$<BOOL:${MAG_X86_SIMD}>:MAG_X86_SIMD>
+        $<$<AND:$<BOOL:${MAG_ENABLE_SIMD}>,$<BOOL:${MAG_SIMD_BACKEND_SELECTED}>>:MAG_SIMD_BACKEND_${MAG_SIMD_BACKEND_SELECTED}>
 )
 
 # Why can't microsoft be normal >:(

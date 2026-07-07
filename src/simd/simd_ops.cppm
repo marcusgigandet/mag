@@ -15,13 +15,23 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstddef>
-export module mag:simd_ops;
-
-import :concepts;
+export module mag.simd:ops;
 
 export namespace mag::simd
 {
+	/**
+	 * @brief Enum of supported/implemented simd backends.
+	 */
+	enum class simd_isa
+	{
+		sse2,
+		ssse3,
+		sse4_1,
+		neon,
+	};
+
 	/**
 	 * @brief SIMD backend operations interface.
 	 *
@@ -31,7 +41,20 @@ export namespace mag::simd
 	 *
 	 * @tparam T Scalar element type.
 	 * @tparam N SIMD lane count.
+	 * @tparam Isa SIMD instruction set architecture.
 	 */
-	template <Numeric T, size_t N>
-	struct ops;
+	template <Numeric T, size_t N, simd_isa Isa>
+	struct ops_impl;
+
+	// Conditionally select the default ISA based on CMake selection first,
+	// then compiler-provided ISA macros.
+#if defined(MAG_SIMD_BACKEND_SSE4_1)
+	constexpr simd_isa default_isa = simd_isa::sse4_1;
+#elif defined(MAG_SIMD_BACKEND_SSSE3)
+	constexpr simd_isa default_isa = simd_isa::ssse3;
+#elif defined(MAG_SIMD_BACKEND_SSE2)
+	constexpr simd_isa default_isa = simd_isa::sse2;
+#elif defined(MAG_SIMD_BACKEND_NEON)
+	constexpr simd_isa default_isa = simd_isa::neon;
+#endif
 } // namespace mag::simd

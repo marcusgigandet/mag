@@ -7,8 +7,7 @@
 #include <span>
 #include <utility>
 
-import mag;
-using namespace mag;
+import mag.simd;
 using namespace mag::simd;
 
 namespace
@@ -188,6 +187,7 @@ TEST_CASE("f32x reductions and elementwise helpers", "[simd]")
 
 TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 {
+#if defined(MAG_SIMD_BACKEND_SSE4_1) || defined(MAG_SIMD_BACKEND_NEON)
 	SECTION("double precision arithmetic and reductions")
 	{
 		const f64x2 a{2.5, -9.0};
@@ -227,4 +227,5 @@ TEST_CASE("f64x and integer simd paths stay wired up", "[simd]")
 		REQUIRE(hmin(a) == 2U);
 		REQUIRE(hmax(a) == 8U);
 	}
+#endif
 }

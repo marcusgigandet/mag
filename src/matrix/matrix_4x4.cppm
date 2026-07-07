@@ -15,18 +15,17 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cmath>
 export module mag:matrix_4x4;
 
-import :concepts;
 import :constants;
 import :matrix;
-import :vector_3;
-import :vector_4;
+import :vector;
 
 namespace mag
 {
-	template <typename T>
+	template <Numeric T>
 	struct Mat<T, 4, 4> : IMat<Mat<T, 4, 4>, T, 4, 4>
 	{
 		union

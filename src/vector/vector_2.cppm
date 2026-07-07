@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+module;
+#include "typedefs.hpp"
 export module mag:vector_2;
 
-import :concepts;
 import :vector;
 
 namespace mag

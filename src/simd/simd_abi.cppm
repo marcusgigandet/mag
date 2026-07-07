@@ -15,9 +15,10 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstddef>
 #include <type_traits>
-export module mag:simd_abi;
+export module mag.simd:abi;
 
 import :concepts;
 
@@ -66,9 +67,8 @@ namespace mag::simd
 	 */
 	consteval size_t nativeRegisterBytes() noexcept
 	{
-#ifdef MAG_NEON_SIMD
-		return 16;
-#elif MAG_X86_SIMD
+#if defined(MAG_SIMD_BACKEND_SSE2) || defined(MAG_SIMD_BACKEND_SSSE3) ||                           \
+		defined(MAG_SIMD_BACKEND_SSE4_1) || defined(MAG_SIMD_BACKEND_NEON)
 		return 16;
 #else
 		return 0;

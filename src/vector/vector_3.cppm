@@ -15,10 +15,10 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <type_traits>
 export module mag:vector_3;
 
-import :concepts;
 import :vector;
 
 namespace mag
