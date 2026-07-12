@@ -24,7 +24,7 @@ import :vector;
 
 #ifdef MAG_ENABLE_SIMD
 import mag.simd;
-using namespace mag::simd;
+using namespace MAG_NAMESPACE::simd;
 #endif
 
 export namespace MAG_NAMESPACE

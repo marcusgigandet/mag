@@ -66,7 +66,7 @@ namespace MAG_NAMESPACE
 		template <Numeric U>
 		constexpr auto cross(const Vec<U, 3>& other) const noexcept
 		{
-			return mag::cross(*this, other);
+			return MAG_NAMESPACE::cross(*this, other);
 		}
 	};
 } // namespace MAG_NAMESPACE
