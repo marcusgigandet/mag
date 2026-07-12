@@ -22,7 +22,7 @@ export module mag.simd:abi;
 
 import :concepts;
 
-namespace mag::simd
+namespace MAG_NAMESPACE::simd
 {
 	/**
 	 * @brief Tag type for scalar (single-lane) ABI.
@@ -162,4 +162,4 @@ namespace mag::simd
 	 */
 	export template <Numeric T, typename Abi = native_abi>
 	inline constexpr size_t abi_lanes_v = abi_lanes<T, Abi>::value;
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd

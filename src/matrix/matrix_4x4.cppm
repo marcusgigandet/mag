@@ -23,7 +23,7 @@ import :constants;
 import :matrix;
 import :vector;
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	template <Numeric T>
 	struct Mat<T, 4, 4> : IMat<Mat<T, 4, 4>, T, 4, 4>
@@ -246,4 +246,4 @@ namespace mag
 			// clang-format on
 		}
 	};
-} // namespace mag
+} // namespace MAG_NAMESPACE

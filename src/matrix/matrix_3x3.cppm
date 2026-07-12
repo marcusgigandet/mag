@@ -22,7 +22,7 @@ export module mag:matrix_3x3;
 import :matrix;
 import :vector;
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	template <Numeric T>
 	struct Mat<T, 3, 3> : IMat<Mat<T, 3, 3>, T, 3, 3>
@@ -155,4 +155,4 @@ namespace mag
 			// clang-format on
 		}
 	};
-} // namespace mag
+} // namespace MAG_NAMESPACE

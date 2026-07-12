@@ -27,7 +27,7 @@ import :ops;
 MAG_DIAG_PUSH
 MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
-namespace mag::simd
+namespace MAG_NAMESPACE::simd
 {
 	template <>
 	struct ops_impl<float, 4, simd_isa::neon>

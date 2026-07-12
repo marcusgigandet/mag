@@ -29,7 +29,7 @@ import mag.simd;
 using namespace mag::simd;
 #endif
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	/**
 	 * @brief Generic CxR-dimensional matrix for numerical computations.
@@ -408,4 +408,4 @@ namespace mag
 					m(c, r) = static_cast<T>(val);
 		}
 	};
-} // namespace mag
+} // namespace MAG_NAMESPACE

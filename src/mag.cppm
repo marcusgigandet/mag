@@ -15,6 +15,7 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstdint>
 export module mag;
 
@@ -32,7 +33,7 @@ export import :vector_3;
 export import :vector_4;
 export import :vector_ops;
 
-export namespace mag
+export namespace MAG_NAMESPACE
 {
 	using Mat2d = Mat<double, 2, 2>;
 	using Mat2f = Mat<float, 2, 2>;
@@ -89,4 +90,4 @@ export namespace mag
 	using Vec2 = Vec2d;
 	using Vec3 = Vec3d;
 	using Vec4 = Vec4d;
-} // namespace mag
+} // namespace MAG_NAMESPACE

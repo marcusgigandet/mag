@@ -27,7 +27,7 @@ import mag.simd;
 using namespace mag::simd;
 #endif
 
-export namespace mag
+export namespace MAG_NAMESPACE
 {
 	template <Numeric T, Numeric U, size_t N>
 	constexpr auto operator<=>(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
@@ -321,4 +321,4 @@ export namespace mag
 			ret[i] = a[i] / s;
 		return ret;
 	}
-} // namespace mag
+} // namespace MAG_NAMESPACE

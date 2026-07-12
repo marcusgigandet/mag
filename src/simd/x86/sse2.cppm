@@ -25,9 +25,9 @@ import :ops;
 
 // NOLINTBEGIN(portability-simd-intrinsics)
 
-namespace mag::simd
+namespace MAG_NAMESPACE::simd
 {
-	template <typename T, std::size_t N>
+	template <Numeric T, std::size_t N>
 	struct ops_impl<T, N, simd_isa::sse2>
 	{
 	};
@@ -680,6 +680,6 @@ namespace mag::simd
 			return _mm_min_epu64(a, b);
 		}
 	};
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd
 
 // NOLINTEND(portability-simd-intrinsics)

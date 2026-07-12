@@ -22,7 +22,7 @@ export module mag:matrix_ops;
 
 import :matrix;
 
-export namespace mag
+export namespace MAG_NAMESPACE
 {
 	template <Numeric T, Numeric U, size_t R, size_t C>
 	constexpr bool operator==(const Mat<T, C, R>& lhs, const Mat<U, C, R>& rhs) noexcept
@@ -110,4 +110,4 @@ export namespace mag
 					result(c, r) += lhs(c, k) * rhs(k, r);
 		return result;
 	}
-} // namespace mag
+} // namespace MAG_NAMESPACE

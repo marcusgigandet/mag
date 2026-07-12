@@ -21,7 +21,7 @@ export module mag:vector_3;
 
 import :vector;
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	export template <Numeric T, Numeric U>
 	constexpr auto cross(const Vec<T, 3>& a, const Vec<U, 3>& b) noexcept
@@ -69,4 +69,4 @@ namespace mag
 			return mag::cross(*this, other);
 		}
 	};
-} // namespace mag
+} // namespace MAG_NAMESPACE

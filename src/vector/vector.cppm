@@ -27,7 +27,7 @@ import mag.simd;
 using namespace mag::simd;
 #endif
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	/**
 	 * @brief Generic N-dimensional vector for numerical computations.
@@ -398,4 +398,4 @@ namespace mag
 				v[i] = val;
 		}
 	};
-}; // namespace mag
+}; // namespace MAG_NAMESPACE

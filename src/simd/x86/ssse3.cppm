@@ -26,9 +26,9 @@ export import :sse2;
 
 // NOLINTBEGIN(portability-simd-intrinsics)
 
-namespace mag::simd
+namespace MAG_NAMESPACE::simd
 {
-	template <typename T, std::size_t N>
+	template <Numeric T, std::size_t N>
 	struct ops_impl<T, N, simd_isa::ssse3> : ops_impl<T, N, simd_isa::sse2>
 	{
 	};
@@ -69,6 +69,6 @@ namespace mag::simd
 					_mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v)));
 		}
 	};
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd
 
 // NOLINTEND(portability-simd-intrinsics)

@@ -24,7 +24,7 @@ import :abi;
 import :concepts;
 import :ops;
 
-namespace mag::simd
+namespace MAG_NAMESPACE::simd
 {
 	/**
 	 * @brief SIMD interface.
@@ -280,4 +280,4 @@ namespace mag::simd
 	{
 		return Simd<T, N, Isa>{ops_impl<T, N, Isa>::sqrt(v.native())};
 	}
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd

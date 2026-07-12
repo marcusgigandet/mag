@@ -15,13 +15,14 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <concepts>
 #include <cstddef>
 export module mag.simd:concepts;
 
 import :ops;
 
-export namespace mag::simd
+export namespace MAG_NAMESPACE::simd
 {
 	template <typename T, size_t N, simd_isa Isa = default_isa>
 	concept supports_splat = requires(T s) {
@@ -95,4 +96,4 @@ export namespace mag::simd
 	concept supports_sqrt = requires(typename ops_impl<T, N, Isa>::native_t v) {
 		{ ops_impl<T, N, Isa>::sqrt(v) } -> std::same_as<typename ops_impl<T, N, Isa>::native_t>;
 	};
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd

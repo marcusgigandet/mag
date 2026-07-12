@@ -20,7 +20,7 @@ export module mag:vector_2;
 
 import :vector;
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	template <Numeric T>
 	struct alignas(8) Vec<T, 2> : IVec<Vec<T, 2>, T, 2>
@@ -50,4 +50,4 @@ namespace mag
 		{
 		}
 	};
-} // namespace mag
+} // namespace MAG_NAMESPACE
