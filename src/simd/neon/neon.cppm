@@ -472,7 +472,7 @@ namespace MAG_NAMESPACE::simd
 			return vcombine_u64(vdup_n_u64(a0 > b0 ? a0 : b0), vdup_n_u64(a1 > b1 ? a1 : b1));
 		}
 	};
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd
 
 // Restore to default state
 MAG_DIAG_POP
