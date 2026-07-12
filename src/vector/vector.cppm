@@ -24,10 +24,10 @@ export module mag:vector;
 
 #ifdef MAG_ENABLE_SIMD
 import mag.simd;
-using namespace mag::simd;
+using namespace MAG_NAMESPACE::simd;
 #endif
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	/**
 	 * @brief Generic N-dimensional vector for numerical computations.
@@ -337,7 +337,7 @@ namespace mag
 			return derived();
 		}
 
-		constexpr T length() const noexcept { return mag::length(derived()); }
+		constexpr T length() const noexcept { return MAG_NAMESPACE::length(derived()); }
 
 		constexpr Derived normalized() const noexcept
 		{
@@ -359,7 +359,7 @@ namespace mag
 		template <Numeric U>
 		constexpr auto dot(const Vec<U, N>& o) const noexcept
 		{
-			return mag::dot(derived(), o);
+			return MAG_NAMESPACE::dot(derived(), o);
 		}
 
 		/**
@@ -398,4 +398,4 @@ namespace mag
 				v[i] = val;
 		}
 	};
-}; // namespace mag
+}; // namespace MAG_NAMESPACE

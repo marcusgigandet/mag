@@ -19,7 +19,7 @@ module;
 #include <cstddef>
 export module mag.simd:ops;
 
-export namespace mag::simd
+export namespace MAG_NAMESPACE::simd
 {
 	/**
 	 * @brief Enum of supported/implemented simd backends.
@@ -57,4 +57,4 @@ export namespace mag::simd
 #elif defined(MAG_SIMD_BACKEND_NEON)
 	constexpr simd_isa default_isa = simd_isa::neon;
 #endif
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd

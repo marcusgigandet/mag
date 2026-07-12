@@ -26,10 +26,10 @@ import :vector;
 
 #ifdef MAG_ENABLE_SIMD
 import mag.simd;
-using namespace mag::simd;
+using namespace MAG_NAMESPACE::simd;
 #endif
 
-namespace mag
+namespace MAG_NAMESPACE
 {
 	/**
 	 * @brief Generic CxR-dimensional matrix for numerical computations.
@@ -408,4 +408,4 @@ namespace mag
 					m(c, r) = static_cast<T>(val);
 		}
 	};
-} // namespace mag
+} // namespace MAG_NAMESPACE

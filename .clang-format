@@ -8,6 +8,7 @@ TabWidth: 4
 UseTab: Always
 ColumnLimit: 100
 NamespaceIndentation: All
+IndentPPDirectives: AfterHash
 AccessModifierOffset: -4
 
 # Braces & init lists

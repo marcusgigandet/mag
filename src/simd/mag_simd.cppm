@@ -15,6 +15,7 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <cstdint>
 export module mag.simd;
 
@@ -24,10 +25,10 @@ export import :concepts;
 export import :ops;
 
 #ifdef __AVX512F__
-#warning Unsupported SIMD ISA
+#	warning Unsupported SIMD ISA
 #endif
 #ifdef __AVX2__
-#warning Unsupported SIMD ISA
+#	warning Unsupported SIMD ISA
 #endif
 
 #if defined(MAG_SIMD_BACKEND_SSE4_1)
@@ -39,10 +40,10 @@ export import :sse2;
 #elif defined(MAG_SIMD_BACKEND_NEON)
 export import :neon;
 #else
-#error No supported SIMD ISA was provided!
+#	error No supported SIMD ISA was provided!
 #endif
 
-export namespace mag::simd
+export namespace MAG_NAMESPACE::simd
 {
 	using f32x4 = Simd<float, 4>;
 	using f64x2 = Simd<double, 2>;
@@ -66,4 +67,4 @@ export namespace mag::simd
 	using u16x = native_simd<uint16_t>;
 	using u32x = native_simd<uint32_t>;
 	using u64x = native_simd<uint64_t>;
-} // namespace mag::simd
+} // namespace MAG_NAMESPACE::simd

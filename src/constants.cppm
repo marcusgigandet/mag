@@ -15,10 +15,11 @@
  */
 
 module;
+#include "typedefs.hpp"
 #include <numbers>
 export module mag:constants;
 
-export namespace mag
+export namespace MAG_NAMESPACE
 {
 	template <typename T>
 	inline constexpr T pi{std::numbers::pi_v<T>};
@@ -37,4 +38,4 @@ export namespace mag
 
 	template <typename T>
 	inline constexpr T rad_to_deg{static_cast<T>(180) / pi<T>};
-} // namespace mag
+} // namespace MAG_NAMESPACE
