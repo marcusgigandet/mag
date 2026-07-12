@@ -61,6 +61,12 @@ file(GLOB_RECURSE HEADERS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
 )
 
+###################
+# Target: library #
+###################
+add_library(mag)
+add_library(mag::mag ALIAS mag)
+
 # Remove unused code
 if (NOT MAG_ENABLE_SIMD)
     list(FILTER MODULES EXCLUDE REGEX ".*/simd/.*")
@@ -92,7 +98,8 @@ else ()
         if (MAG_SIMD_BACKEND STREQUAL "SSE2")
             set(MAG_SIMD_BACKEND_SELECTED "SSE2")
             list(FILTER MODULES EXCLUDE REGEX ".*/x86/(ssse3|sse4_1)\\.cppm$")
-            add_compile_options(
+            target_compile_options(mag
+                    PUBLIC
                     $<$<CXX_COMPILER_ID:MSVC>:/arch:SSE2>
                     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse2>
             )
@@ -100,12 +107,18 @@ else ()
             set(MAG_SIMD_BACKEND_SELECTED "SSSE3")
             list(FILTER MODULES EXCLUDE REGEX ".*/x86/sse4_1\\.cppm$")
             if (NOT MSVC)
-                add_compile_options(-mssse3)
+                target_compile_options(mag
+                        PUBLIC
+                        -mssse3
+                )
             endif ()
         elseif (MAG_SIMD_BACKEND STREQUAL "SSE4_1")
             set(MAG_SIMD_BACKEND_SELECTED "SSE4_1")
             if (NOT MSVC)
-                add_compile_options(-msse4.1)
+                target_compile_options(mag
+                        PUBLIC
+                        -msse4.1
+                )
             endif ()
         else ()
             message(FATAL_ERROR
@@ -122,12 +135,6 @@ else ()
         )
     endif ()
 endif ()
-
-###################
-# Target: library #
-###################
-add_library(mag ${HEADERS})
-add_library(mag::mag ALIAS mag)
 
 target_sources(mag
         PUBLIC
