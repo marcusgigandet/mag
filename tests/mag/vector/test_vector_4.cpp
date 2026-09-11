@@ -1,6 +1,7 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <cmath>
+#include <cstdint>
 
 import mag;
 using namespace mag;
@@ -21,7 +22,7 @@ TEST_CASE("Vec4 basic arithmetic", "[Vec4]")
 
 	SECTION("Subtraction")
 	{
-		auto c = b - a;
+		auto c{b - a};
 		REQUIRE(c[0] == Catch::Approx(2.0f));
 		REQUIRE(c[1] == Catch::Approx(2.0f));
 		REQUIRE(c[2] == Catch::Approx(2.0f));
@@ -36,7 +37,7 @@ TEST_CASE("Vec4 basic arithmetic", "[Vec4]")
 
 	SECTION("Scalar multiplication")
 	{
-		auto c = a * 2.0f;
+		auto c{a * 2.0f};
 		REQUIRE(c[0] == Catch::Approx(2.0f));
 		REQUIRE(c[1] == Catch::Approx(4.0f));
 		REQUIRE(c[2] == Catch::Approx(6.0f));
@@ -45,7 +46,7 @@ TEST_CASE("Vec4 basic arithmetic", "[Vec4]")
 
 	SECTION("Scalar division")
 	{
-		auto c = b / 2.0f;
+		auto c{b / 2.0f};
 		REQUIRE(c[0] == Catch::Approx(1.5f));
 		REQUIRE(c[1] == Catch::Approx(2.0f));
 		REQUIRE(c[2] == Catch::Approx(2.5f));
@@ -54,7 +55,7 @@ TEST_CASE("Vec4 basic arithmetic", "[Vec4]")
 
 	SECTION("Element-wise multiplication")
 	{
-		auto c = a * b;
+		auto c{a * b};
 		REQUIRE(c[0] == Catch::Approx(3.0f));
 		REQUIRE(c[1] == Catch::Approx(8.0f));
 		REQUIRE(c[2] == Catch::Approx(15.0f));
@@ -64,7 +65,7 @@ TEST_CASE("Vec4 basic arithmetic", "[Vec4]")
 	SECTION("Element-wise division")
 	{
 		Vec<float, 4> d{4.0f, 8.0f, 12.0f, 16.0f};
-		auto c = d / a;
+		auto c{d / a};
 		REQUIRE(c[0] == Catch::Approx(4.0f));
 		REQUIRE(c[1] == Catch::Approx(4.0f));
 		REQUIRE(c[2] == Catch::Approx(4.0f));
@@ -89,7 +90,7 @@ TEST_CASE("Vec4 length, dot, normalize", "[Vec4]")
 
 	SECTION("Normalization")
 	{
-		auto normalized = a.normalized();
+		auto normalized{a.normalized()};
 		REQUIRE(normalized.length() == Catch::Approx(1.0f));
 	}
 }
@@ -101,7 +102,7 @@ TEST_CASE("Vec4 clamp and lerp", "[Vec4]")
 
 	SECTION("Clamp")
 	{
-		auto clamped = a.clamped(1.5f, 3.5f);
+		auto clamped{a.clamped(1.5f, 3.5f)};
 		REQUIRE(clamped[0] == Catch::Approx(1.5f));
 		REQUIRE(clamped[1] == Catch::Approx(2.0f));
 		REQUIRE(clamped[2] == Catch::Approx(3.0f));
@@ -110,7 +111,7 @@ TEST_CASE("Vec4 clamp and lerp", "[Vec4]")
 
 	SECTION("Lerp")
 	{
-		auto lerped = lerp(a, b, 0.5f);
+		auto lerped{lerp(a, b, 0.5f)};
 		REQUIRE(lerped[0] == Catch::Approx(2.0f));
 		REQUIRE(lerped[1] == Catch::Approx(3.0f));
 		REQUIRE(lerped[2] == Catch::Approx(4.0f));
@@ -215,9 +216,9 @@ TEST_CASE("Vec4 compound operators and scalar-left overloads", "[Vec4]")
 	SECTION("Scalar-left operators")
 	{
 		Vec<float, 4> v{1.0f, 2.0f, 3.0f, 4.0f};
-		auto sum  = 10.0f + v;
-		auto diff = 10.0f - v;
-		auto prod = 0.5f * v;
+		auto sum{10.0f + v};
+		auto diff{10.0f - v};
+		auto prod{0.5f * v};
 
 		REQUIRE(sum[0] == Catch::Approx(11.0f));
 		REQUIRE(sum[1] == Catch::Approx(12.0f));
@@ -245,7 +246,7 @@ TEST_CASE("Vec4 utility helpers and iterators", "[Vec4]")
 		REQUIRE(distance(a, b) == Catch::Approx(std::sqrt(30.0f)));
 
 		Vec<float, 4> zero{0.0f, 0.0f, 0.0f, 0.0f};
-		auto normalized = zero.normalized();
+		auto normalized{zero.normalized()};
 		REQUIRE(normalized[0] == Catch::Approx(0.0f));
 		REQUIRE(normalized[1] == Catch::Approx(0.0f));
 		REQUIRE(normalized[2] == Catch::Approx(0.0f));
@@ -261,14 +262,14 @@ TEST_CASE("Vec4 utility helpers and iterators", "[Vec4]")
 	SECTION("Iterators and reverse iterators")
 	{
 		Vec<float, 4> v{1.0f, 2.0f, 3.0f, 4.0f};
-		float forwardSum = 0.0f;
+		float forwardSum{0.0f};
 		for (float c : v)
 		{
 			forwardSum += c;
 		}
 		REQUIRE(forwardSum == Catch::Approx(10.0f));
 
-		auto rit = v.rbegin();
+		auto rit{v.rbegin()};
 		REQUIRE(*rit == Catch::Approx(4.0f));
 		++rit;
 		REQUIRE(*rit == Catch::Approx(3.0f));

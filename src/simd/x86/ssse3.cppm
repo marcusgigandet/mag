@@ -52,20 +52,20 @@ namespace MAG_NAMESPACE::simd
 	};
 
 	template <>
-	struct ops_impl<int32_t, 4, simd_isa::ssse3> : ops_impl<int32_t, 4, simd_isa::sse2>
+	struct ops_impl<std::int32_t, 4, simd_isa::ssse3> : ops_impl<std::int32_t, 4, simd_isa::sse2>
 	{
-		MAG_INLINE static int32_t hsum(const native_t v) noexcept
+		MAG_INLINE static std::int32_t hsum(const native_t v) noexcept
 		{
 			return _mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v));
 		}
 	};
 
 	template <>
-	struct ops_impl<uint32_t, 4, simd_isa::ssse3> : ops_impl<uint32_t, 4, simd_isa::sse2>
+	struct ops_impl<std::uint32_t, 4, simd_isa::ssse3> : ops_impl<std::uint32_t, 4, simd_isa::sse2>
 	{
-		MAG_INLINE static uint32_t hsum(const native_t v) noexcept
+		MAG_INLINE static std::uint32_t hsum(const native_t v) noexcept
 		{
-			return static_cast<uint32_t>(
+			return static_cast<std::uint32_t>(
 				_mm_cvtsi128_si32(_mm_hadd_epi32(_mm_hadd_epi32(v, v), v)));
 		}
 	};

@@ -592,7 +592,7 @@ namespace MAG_NAMESPACE::simd
 
 		MAG_INLINE static native_t splat(const uint32_t s) noexcept
 		{
-			return _mm_set1_epi32(static_cast<int>(s));
+			return _mm_set1_epi32(static_cast<std::int32_t>(s));
 		}
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept

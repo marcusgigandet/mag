@@ -1,5 +1,6 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <cstdint>
 
 import mag;
 using namespace mag;
@@ -7,18 +8,18 @@ using namespace mag;
 TEST_CASE("Vec2 basic arithmetic", "[Vec2]")
 {
 	Vec<float, 2> a{1.0f, 2.0f};
-	Vec<int, 2> b{3, 4};
+	Vec<std::int32_t, 2> b{3, 4};
 
 	SECTION("Addition")
 	{
-		auto c = a + b;
+		auto c{a + b};
 		REQUIRE(c[0] == Catch::Approx(4.0f));
 		REQUIRE(c[1] == Catch::Approx(6.0f));
 	}
 
 	SECTION("Subtraction")
 	{
-		auto c = b - a;
+		auto c{b - a};
 		REQUIRE(c[0] == Catch::Approx(2.0f));
 		REQUIRE(c[1] == Catch::Approx(2.0f));
 
@@ -29,21 +30,21 @@ TEST_CASE("Vec2 basic arithmetic", "[Vec2]")
 
 	SECTION("Scalar multiplication")
 	{
-		auto c = a * 2.0f;
+		auto c{a * 2.0f};
 		REQUIRE(c[0] == Catch::Approx(2.0f));
 		REQUIRE(c[1] == Catch::Approx(4.0f));
 	}
 
 	SECTION("Scalar division")
 	{
-		auto c = b / 2.0f;
+		auto c{b / 2.0f};
 		REQUIRE(c[0] == Catch::Approx(1.5f));
 		REQUIRE(c[1] == Catch::Approx(2.0f));
 	}
 
 	SECTION("Element-wise multiplication")
 	{
-		auto c = a * b;
+		auto c{a * b};
 		REQUIRE(c[0] == Catch::Approx(3.0f));
 		REQUIRE(c[1] == Catch::Approx(8.0f));
 	}
@@ -51,7 +52,7 @@ TEST_CASE("Vec2 basic arithmetic", "[Vec2]")
 	SECTION("Element-wise division")
 	{
 		Vec<float, 2> d{4.0f, 8.0f};
-		auto c = d / a;
+		auto c{d / a};
 		REQUIRE(c[0] == Catch::Approx(4.0f));
 		REQUIRE(c[1] == Catch::Approx(4.0f));
 	}
@@ -74,7 +75,7 @@ TEST_CASE("Vec2 length, dot, normalize", "[Vec2]")
 
 	SECTION("Normalization")
 	{
-		auto normalized = a.normalized();
+		auto normalized{a.normalized()};
 		REQUIRE(normalized.length() == Catch::Approx(1.0f));
 		REQUIRE(normalized[0] == Catch::Approx(0.6f));
 		REQUIRE(normalized[1] == Catch::Approx(0.8f));
@@ -88,14 +89,14 @@ TEST_CASE("Vec2 clamp and lerp", "[Vec2]")
 
 	SECTION("Clamp")
 	{
-		auto clamped = a.clamped(1.5f, 2.5f);
+		auto clamped{a.clamped(1.5f, 2.5f)};
 		REQUIRE(clamped[0] == Catch::Approx(1.5f));
 		REQUIRE(clamped[1] == Catch::Approx(2.0f));
 	}
 
 	SECTION("Lerp")
 	{
-		auto lerped = lerp(a, b, 0.5f);
+		auto lerped{lerp(a, b, 0.5f)};
 		REQUIRE(lerped[0] == Catch::Approx(2.0f));
 		REQUIRE(lerped[1] == Catch::Approx(3.0f));
 	}
@@ -162,15 +163,15 @@ TEST_CASE("Vec2 compound arithmetic and scalar-first operations", "[Vec2]")
 	{
 		Vec<float, 2> value{1.5f, 2.5f};
 
-		auto sum = 2.0f + value;
+		auto sum{2.0f + value};
 		REQUIRE(sum[0] == Catch::Approx(3.5f));
 		REQUIRE(sum[1] == Catch::Approx(4.5f));
 
-		auto diff = 5.0f - value;
+		auto diff{5.0f - value};
 		REQUIRE(diff[0] == Catch::Approx(3.5f));
 		REQUIRE(diff[1] == Catch::Approx(2.5f));
 
-		auto prod = 2.0f * value;
+		auto prod{2.0f * value};
 		REQUIRE(prod[0] == Catch::Approx(3.0f));
 		REQUIRE(prod[1] == Catch::Approx(5.0f));
 	}
@@ -184,11 +185,11 @@ TEST_CASE("Vec2 utilities and aliases", "[Vec2]")
 		Vec<float, 2> b{4.0f, 6.0f};
 		REQUIRE(distance(a, b) == Catch::Approx(5.0f));
 
-		auto normalized = normalize(Vec<float, 2>{3.0f, 4.0f});
+		auto normalized{normalize(Vec<float, 2>{3.0f, 4.0f})};
 		REQUIRE(normalized[0] == Catch::Approx(0.6f));
 		REQUIRE(normalized[1] == Catch::Approx(0.8f));
 
-		auto zeroNormalized = normalize(Vec<float, 2>{0.0f, 0.0f});
+		auto zeroNormalized{normalize(Vec<float, 2>{0.0f, 0.0f})};
 		REQUIRE(zeroNormalized[0] == Catch::Approx(0.0f));
 		REQUIRE(zeroNormalized[1] == Catch::Approx(0.0f));
 	}
@@ -201,14 +202,14 @@ TEST_CASE("Vec2 utilities and aliases", "[Vec2]")
 		REQUIRE(color.x == Catch::Approx(3.0f));
 		REQUIRE(color.y == Catch::Approx(4.0f));
 
-		float sum = 0.0f;
+		float sum{0.0f};
 		for (float c : color)
 		{
 			sum += c;
 		}
 		REQUIRE(sum == Catch::Approx(7.0f));
 
-		auto rev = color.rbegin();
+		auto rev{color.rbegin()};
 		REQUIRE(*rev == Catch::Approx(4.0f));
 		++rev;
 		REQUIRE(*rev == Catch::Approx(3.0f));

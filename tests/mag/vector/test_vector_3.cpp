@@ -12,7 +12,7 @@ TEST_CASE("Vec3 basic arithmetic", "[Vec3]")
 
 	SECTION("Addition")
 	{
-		auto c = a + b;
+		auto c{a + b};
 		REQUIRE(c[0] == Catch::Approx(4.0f));
 		REQUIRE(c[1] == Catch::Approx(6.0f));
 		REQUIRE(c[2] == Catch::Approx(8.0f));
@@ -20,7 +20,7 @@ TEST_CASE("Vec3 basic arithmetic", "[Vec3]")
 
 	SECTION("Subtraction")
 	{
-		auto c = b - a;
+		auto c{b - a};
 		REQUIRE(c[0] == Catch::Approx(2.0f));
 		REQUIRE(c[1] == Catch::Approx(2.0f));
 		REQUIRE(c[2] == Catch::Approx(2.0f));
@@ -33,7 +33,7 @@ TEST_CASE("Vec3 basic arithmetic", "[Vec3]")
 
 	SECTION("Scalar multiplication")
 	{
-		auto c = a * 2.0f;
+		auto c{a * 2.0f};
 		REQUIRE(c[0] == Catch::Approx(2.0f));
 		REQUIRE(c[1] == Catch::Approx(4.0f));
 		REQUIRE(c[2] == Catch::Approx(6.0f));
@@ -41,7 +41,7 @@ TEST_CASE("Vec3 basic arithmetic", "[Vec3]")
 
 	SECTION("Scalar division")
 	{
-		auto c = b / 2.0f;
+		auto c{b / 2.0f};
 		REQUIRE(c[0] == Catch::Approx(1.5f));
 		REQUIRE(c[1] == Catch::Approx(2.0f));
 		REQUIRE(c[2] == Catch::Approx(2.5f));
@@ -49,7 +49,7 @@ TEST_CASE("Vec3 basic arithmetic", "[Vec3]")
 
 	SECTION("Element-wise multiplication")
 	{
-		auto c = a * b;
+		auto c{a * b};
 		REQUIRE(c[0] == Catch::Approx(3.0f));
 		REQUIRE(c[1] == Catch::Approx(8.0f));
 		REQUIRE(c[2] == Catch::Approx(15.0f));
@@ -58,7 +58,7 @@ TEST_CASE("Vec3 basic arithmetic", "[Vec3]")
 	SECTION("Element-wise division")
 	{
 		Vec<float, 3> d{4.0f, 8.0f, 12.0f};
-		auto c = d / a;
+		auto c{d / a};
 		REQUIRE(c[0] == Catch::Approx(4.0f));
 		REQUIRE(c[1] == Catch::Approx(4.0f));
 		REQUIRE(c[2] == Catch::Approx(4.0f));
@@ -82,7 +82,7 @@ TEST_CASE("Vec3 length, dot, normalize", "[Vec3]")
 
 	SECTION("Normalization")
 	{
-		auto normalized = a.normalized();
+		auto normalized{a.normalized()};
 		REQUIRE(normalized.length() == Catch::Approx(1.0f));
 	}
 }
@@ -94,7 +94,7 @@ TEST_CASE("Vec3 clamp and lerp", "[Vec3]")
 
 	SECTION("Clamp")
 	{
-		auto clamped = a.clamped(1.5f, 2.5f);
+		auto clamped{a.clamped(1.5f, 2.5f)};
 		REQUIRE(clamped[0] == Catch::Approx(1.5f));
 		REQUIRE(clamped[1] == Catch::Approx(2.0f));
 		REQUIRE(clamped[2] == Catch::Approx(2.5f));
@@ -102,7 +102,7 @@ TEST_CASE("Vec3 clamp and lerp", "[Vec3]")
 
 	SECTION("Lerp")
 	{
-		auto lerped = lerp(a, b, 0.5f);
+		auto lerped{lerp(a, b, 0.5f)};
 		REQUIRE(lerped[0] == Catch::Approx(2.0f));
 		REQUIRE(lerped[1] == Catch::Approx(3.0f));
 		REQUIRE(lerped[2] == Catch::Approx(4.0f));
@@ -178,17 +178,17 @@ TEST_CASE("Vec3 compound arithmetic and scalar-first operations", "[Vec3]")
 	{
 		Vec<float, 3> value{1.0f, 2.0f, 3.0f};
 
-		auto sum = 2.0f + value;
+		auto sum{2.0f + value};
 		REQUIRE(sum[0] == Catch::Approx(3.0f));
 		REQUIRE(sum[1] == Catch::Approx(4.0f));
 		REQUIRE(sum[2] == Catch::Approx(5.0f));
 
-		auto diff = 10.0f - value;
+		auto diff{10.0f - value};
 		REQUIRE(diff[0] == Catch::Approx(9.0f));
 		REQUIRE(diff[1] == Catch::Approx(8.0f));
 		REQUIRE(diff[2] == Catch::Approx(7.0f));
 
-		auto prod = 3.0f * value;
+		auto prod{3.0f * value};
 		REQUIRE(prod[0] == Catch::Approx(3.0f));
 		REQUIRE(prod[1] == Catch::Approx(6.0f));
 		REQUIRE(prod[2] == Catch::Approx(9.0f));
@@ -202,12 +202,12 @@ TEST_CASE("Vec3 cross product, aliases, and iterators", "[Vec3]")
 		Vec<float, 3> a{1.0f, 0.0f, 0.0f};
 		Vec<float, 3> b{0.0f, 1.0f, 0.0f};
 
-		auto freeCross = cross(a, b);
+		auto freeCross{cross(a, b)};
 		REQUIRE(freeCross[0] == Catch::Approx(0.0f));
 		REQUIRE(freeCross[1] == Catch::Approx(0.0f));
 		REQUIRE(freeCross[2] == Catch::Approx(1.0f));
 
-		auto memberCross = a.cross(b);
+		auto memberCross{a.cross(b)};
 		REQUIRE(memberCross[0] == Catch::Approx(0.0f));
 		REQUIRE(memberCross[1] == Catch::Approx(0.0f));
 		REQUIRE(memberCross[2] == Catch::Approx(1.0f));
@@ -223,14 +223,14 @@ TEST_CASE("Vec3 cross product, aliases, and iterators", "[Vec3]")
 		REQUIRE(color.y == Catch::Approx(5.0f));
 		REQUIRE(color.z == Catch::Approx(6.0f));
 
-		float sum = 0.0f;
+		float sum{0.0f};
 		for (float c : color)
 		{
 			sum += c;
 		}
 		REQUIRE(sum == Catch::Approx(15.0f));
 
-		auto rev = color.rbegin();
+		auto rev{color.rbegin()};
 		REQUIRE(*rev == Catch::Approx(6.0f));
 		++rev;
 		REQUIRE(*rev == Catch::Approx(5.0f));

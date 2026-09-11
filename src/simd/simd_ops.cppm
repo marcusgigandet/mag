@@ -43,7 +43,7 @@ export namespace MAG_NAMESPACE::simd
 	 * @tparam N SIMD lane count.
 	 * @tparam Isa SIMD instruction set architecture.
 	 */
-	template <Numeric T, size_t N, simd_isa Isa>
+	template <Numeric T, std::size_t N, simd_isa Isa>
 	struct ops_impl;
 
 	// Conditionally select the default ISA based on the define provided to CMake
