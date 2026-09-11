@@ -55,7 +55,7 @@ ContinuationIndentWidth: 4
 
 AlignTrailingComments:
   Kind: Always
-  OverEmptyLines: 2
+  OverEmptyLines: 0
 
 # Alignment for consecutive assignments/declarations
 AlignConsecutiveAssignments:
