@@ -227,12 +227,14 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
     )
 
     if (MAG_CODE_ANALYSIS)
-        set_target_properties(mag PROPERTIES
+        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+            set_target_properties(mag PROPERTIES
                 CXX_CLANG_TIDY
                 "clang-tidy;
-            -p=${CMAKE_BINARY_DIR};
-            --system-headers=0;
-            -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
-        )
+                -p=${CMAKE_BINARY_DIR};
+                --system-headers=0;
+                -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
+            )
+        endif ()
     endif ()
 endif ()
