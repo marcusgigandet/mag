@@ -4,6 +4,7 @@
 #include <array>
 #include <cmath>
 #include <concepts>
+#include <cstddef>
 #include <span>
 #include <utility>
 
@@ -12,7 +13,7 @@ using namespace mag::simd;
 
 namespace
 {
-	template <typename T, size_t N>
+	template <typename T, std::size_t N>
 	std::array<T, N> toArray(const Simd<T, N>& v)
 	{
 		std::array<T, N> out{};
@@ -20,10 +21,10 @@ namespace
 		return out;
 	}
 
-	template <typename T, size_t N>
+	template <typename T, std::size_t N>
 	void requireArrayEquals(const std::array<T, N>& actual, const std::array<T, N>& expected)
 	{
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			if constexpr (std::floating_point<T>)
 			{
@@ -36,7 +37,7 @@ namespace
 		}
 	}
 
-	template <typename T, size_t N>
+	template <typename T, std::size_t N>
 	void requireSimdEquals(const Simd<T, N>& actual, const std::array<T, N>& expected)
 	{
 		requireArrayEquals(toArray(actual), expected);
@@ -70,9 +71,9 @@ TEST_CASE("simd compile-time contracts", "[simd]")
 	STATIC_REQUIRE(supports_mul<float, 4>);
 	STATIC_REQUIRE(supports_div<float, 4>);
 	STATIC_REQUIRE(supports_reduction<float, 4>);
-	STATIC_REQUIRE(supports_add<int32_t, 4>);
-	STATIC_REQUIRE(supports_sub<uint32_t, 4>);
-	STATIC_REQUIRE(!supports_div<int32_t, 4>);
+	STATIC_REQUIRE(supports_add<std::int32_t, 4>);
+	STATIC_REQUIRE(supports_sub<std::uint32_t, 4>);
+	STATIC_REQUIRE(!supports_div<std::int32_t, 4>);
 }
 
 TEST_CASE("f32x arithmetic supports simd and scalar operands", "[simd]")

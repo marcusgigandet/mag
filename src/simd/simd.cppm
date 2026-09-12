@@ -34,7 +34,7 @@ namespace MAG_NAMESPACE::simd
 	 * @tparam T Scalar element type.
 	 * @tparam N SIMD lane count.
 	 */
-	export template <Numeric T, size_t N, simd_isa Isa = default_isa>
+	export template <Numeric T, std::size_t N, simd_isa Isa = default_isa>
 	class Simd
 	{
 		using native_type = ops_impl<T, N, Isa>::native_t;
@@ -43,10 +43,10 @@ namespace MAG_NAMESPACE::simd
 		native_type m_native{};
 
 	public:
-		using value_type			  = T;
-		static constexpr size_t lanes = N;
+		using value_type = T;
+		static constexpr std::size_t lanes{N};
 
-		[[nodiscard]] static consteval size_t size() noexcept { return N; }
+		[[nodiscard]] static consteval std::size_t size() noexcept { return N; }
 
 		MAG_INLINE Simd() noexcept = default;
 
@@ -211,7 +211,7 @@ namespace MAG_NAMESPACE::simd
 	export template <Numeric T>
 	using scalar_simd = basic_simd<T, scalar_abi>;
 
-	export template <Numeric T, size_t N, simd_isa Isa = default_isa>
+	export template <Numeric T, std::size_t N, simd_isa Isa = default_isa>
 	using fixed_simd = basic_simd<T, fixed_abi<N>>;
 
 	export template <Numeric T, typename Abi = native_abi>
@@ -226,56 +226,56 @@ namespace MAG_NAMESPACE::simd
 		return basic_simd<T, Abi>{value};
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	T hsum(const Simd<T, N, Isa>& s)
 		requires supports_reduction<T, N, Isa>
 	{
 		return ops_impl<T, N, Isa>::hsum(s.native());
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	T hmin(const Simd<T, N, Isa>& s)
 		requires supports_reduction<T, N, Isa>
 	{
 		return ops_impl<T, N, Isa>::hmin(s.native());
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	T hmax(const Simd<T, N, Isa>& s)
 		requires supports_reduction<T, N, Isa>
 	{
 		return ops_impl<T, N, Isa>::hmax(s.native());
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	Simd<T, N, Isa> max(const Simd<T, N, Isa>& a, const Simd<T, N, Isa>& b) noexcept
 		requires supports_max<T, N, Isa>
 	{
 		return Simd<T, N, Isa>{ops_impl<T, N, Isa>::max(a.native(), b.native())};
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	Simd<T, N, Isa> min(const Simd<T, N, Isa>& a, const Simd<T, N, Isa>& b) noexcept
 		requires supports_min<T, N, Isa>
 	{
 		return Simd<T, N, Isa>{ops_impl<T, N, Isa>::min(a.native(), b.native())};
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	Simd<T, N, Isa> neg(const Simd<T, N, Isa>& v) noexcept
 		requires supports_neg<T, N, Isa>
 	{
 		return Simd<T, N, Isa>{ops_impl<T, N, Isa>::neg(v.native())};
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	Simd<T, N, Isa> abs(const Simd<T, N, Isa>& v) noexcept
 		requires supports_abs<T, N, Isa>
 	{
 		return Simd<T, N, Isa>{ops_impl<T, N, Isa>::abs(v.native())};
 	}
 
-	export template <typename T, size_t N, simd_isa Isa>
+	export template <typename T, std::size_t N, simd_isa Isa>
 	Simd<T, N, Isa> sqrt(const Simd<T, N, Isa>& v) noexcept
 		requires supports_sqrt<T, N, Isa>
 	{

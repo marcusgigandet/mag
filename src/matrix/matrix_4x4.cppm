@@ -231,7 +231,7 @@ namespace MAG_NAMESPACE
 			const Vec<U, 3> s{cross(f, up).normalized()};	// Right vector
 			const Vec<U, 3> u{cross(s, f)};
 
-															// clang-format off
+			// clang-format off
 			return Mat{s.x,  s.y,  s.z, -s.dot(eye),
 					   u.x,  u.y,  u.z, -u.dot(eye),
 				      -f.x, -f.y, -f.z,  f.dot(eye),

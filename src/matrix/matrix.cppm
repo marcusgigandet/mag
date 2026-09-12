@@ -16,6 +16,7 @@
 
 module;
 #include "typedefs.hpp"
+#include <cstddef>
 #include <iomanip>
 #include <span>
 #include <sstream>
@@ -38,7 +39,7 @@ namespace MAG_NAMESPACE
 	 * @tparam C Number of columns in the matrix.
 	 * @tparam R Number of rows in the matrix.
 	 */
-	export template <Numeric T, size_t C, size_t R>
+	export template <Numeric T, std::size_t C, std::size_t R>
 	struct Mat;
 
 	/**
@@ -50,7 +51,7 @@ namespace MAG_NAMESPACE
 	 * @tparam C Number of columns in the matrix.
 	 * @tparam R Number of rows in the matrix.
 	 */
-	template <typename Derived, Numeric T, size_t C, size_t R>
+	template <typename Derived, Numeric T, std::size_t C, std::size_t R>
 	struct IMat
 	{
 	private:
@@ -123,11 +124,11 @@ namespace MAG_NAMESPACE
 		constexpr std::reverse_iterator<const T*> crend() const noexcept { return rend(); }
 
 		// clang-format off
-		constexpr std::span<T, R> operator[](size_t i) noexcept { return std::span<T, R>(derived().m[i]); }
-		constexpr std::span<const T, R> operator[](size_t i) const noexcept { return derived().m[i]; }
+		constexpr std::span<T, R> operator[](std::size_t i) noexcept { return std::span<T, R>(derived().m[i]); }
+		constexpr std::span<const T, R> operator[](std::size_t i) const noexcept { return derived().m[i]; }
 
-		constexpr T& operator()(size_t c, size_t r) noexcept { return derived().m[c][r]; }
-		constexpr const T& operator()(size_t c, size_t r) const noexcept { return derived().m[c][r]; }
+		constexpr T& operator()(std::size_t c, std::size_t r) noexcept { return derived().m[c][r]; }
+		constexpr const T& operator()(std::size_t c, std::size_t r) const noexcept { return derived().m[c][r]; }
 		// clang-format on
 
 		constexpr T* data() noexcept { return &derived().m[0][0]; }
@@ -139,7 +140,7 @@ namespace MAG_NAMESPACE
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_add<T, R> && supports_splat<T, R>)
 			{
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					Simd<T, R> va{derived().m[c]};
 					Simd<T, R> vb{val};
@@ -150,9 +151,9 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					derived()(c, r) += val;
 				}
@@ -166,7 +167,7 @@ namespace MAG_NAMESPACE
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R> && supports_splat<T, R>)
 			{
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					Simd<T, R> va{derived().m[c]};
 					Simd<T, R> vb{val};
@@ -177,9 +178,9 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					derived()(c, r) -= val;
 				}
@@ -193,7 +194,7 @@ namespace MAG_NAMESPACE
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_mul<T, R> && supports_splat<T, R>)
 			{
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					Simd<T, R> va{derived().m[c]};
 					Simd<T, R> vb{val};
@@ -204,9 +205,9 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					derived()(c, r) *= val;
 				}
@@ -220,7 +221,7 @@ namespace MAG_NAMESPACE
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_div<T, R> && supports_splat<T, R>)
 			{
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					Simd<T, R> va{derived().m[c]};
 					Simd<T, R> vb{val};
@@ -231,9 +232,9 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					derived()(c, r) /= val;
 				}
@@ -247,7 +248,7 @@ namespace MAG_NAMESPACE
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_add<T, R>)
 			{
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					Simd<T, R> va{derived().m[c]};
 					Simd<T, R> vb{rhs.m[c]};
@@ -258,9 +259,9 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					derived()(c, r) += rhs(c, r);
 				}
@@ -274,7 +275,7 @@ namespace MAG_NAMESPACE
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R>)
 			{
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					Simd<T, R> va{derived().m[c]};
 					Simd<T, R> vb{rhs.m[c]};
@@ -285,9 +286,9 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					derived()(c, r) -= rhs(c, r);
 				}
@@ -301,7 +302,7 @@ namespace MAG_NAMESPACE
 #ifdef MAG_ENABLE_SIMD
 			if constexpr (supports_sub<T, R>)
 			{
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					Simd<T, R> va{derived().m[c]};
 					Simd<T, R> vb{rhs.m[c]};
@@ -312,9 +313,9 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					derived()(c, r) *= rhs(c, r);
 				}
@@ -333,9 +334,9 @@ namespace MAG_NAMESPACE
 		constexpr Mat<T, R, C> transpose() const noexcept
 		{
 			Mat<T, R, C> result{};
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					result(r, c) = derived()(c, r);
 				}
@@ -357,8 +358,8 @@ namespace MAG_NAMESPACE
 		static constexpr Derived diagonal(const T val) noexcept
 		{
 			Derived result{};
-			const size_t limit = (R < C ? R : C);
-			for (size_t i = 0; i < limit; ++i)
+			const std::size_t limit{R < C ? R : C};
+			for (std::size_t i = 0; i < limit; ++i)
 			{
 				result(i, i) = val;
 			}
@@ -379,9 +380,9 @@ namespace MAG_NAMESPACE
 		 */
 		static constexpr Derived diagonal(const Vec<T, R> diagVals) noexcept
 		{
-			Derived result{};
-			const size_t limit = (R < C) ? R : C;
-			for (size_t i = 0; i < limit; ++i)
+			Derived result;
+			const std::size_t limit{R < C ? R : C};
+			for (std::size_t i = 0; i < limit; ++i)
 			{
 				result(i, i) = diagVals[i];
 			}
@@ -405,10 +406,10 @@ namespace MAG_NAMESPACE
 
 			oss << std::fixed << std::setprecision(6);
 			oss << "Mat" << R << "x" << C << "(\n";
-			for (size_t r = 0; r < R; ++r)
+			for (std::size_t r = 0; r < R; ++r)
 			{
 				oss << "\t[";
-				for (size_t c = 0; c < C; ++c)
+				for (std::size_t c = 0; c < C; ++c)
 				{
 					oss << m[c][r];
 					if (c != C - 1)
@@ -428,16 +429,16 @@ namespace MAG_NAMESPACE
 		}
 	};
 
-	template <Numeric T, size_t C, size_t R>
+	template <Numeric T, std::size_t C, std::size_t R>
 	struct Mat : IMat<Mat<T, C, R>, T, C, R>
 	{
 		T m[C][R];
 
 		constexpr Mat() noexcept
 		{
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					m(c, r) = static_cast<T>(0);
 				}
@@ -447,9 +448,9 @@ namespace MAG_NAMESPACE
 		template <Numeric U>
 		constexpr explicit Mat(U val) noexcept
 		{
-			for (size_t c = 0; c < C; ++c)
+			for (std::size_t c = 0; c < C; ++c)
 			{
-				for (size_t r = 0; r < R; ++r)
+				for (std::size_t r = 0; r < R; ++r)
 				{
 					m(c, r) = static_cast<T>(val);
 				}

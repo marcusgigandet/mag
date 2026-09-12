@@ -125,14 +125,14 @@ namespace MAG_NAMESPACE::simd
 	};
 
 	template <>
-	struct ops_impl<int8_t, 16, simd_isa::neon>
+	struct ops_impl<std::int8_t, 16, simd_isa::neon>
 	{
 		using native_t = int8x16_t;
 
-		MAG_INLINE static native_t load(const int8_t* p) noexcept { return vld1q_s8(p); }
-		MAG_INLINE static void store(int8_t* p, const native_t v) noexcept { vst1q_s8(p, v); }
+		MAG_INLINE static native_t load(const std::int8_t* p) noexcept { return vld1q_s8(p); }
+		MAG_INLINE static void store(std::int8_t* p, const native_t v) noexcept { vst1q_s8(p, v); }
 
-		MAG_INLINE static native_t splat(const int8_t s) noexcept { return vdupq_n_s8(s); }
+		MAG_INLINE static native_t splat(const std::int8_t s) noexcept { return vdupq_n_s8(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -147,9 +147,9 @@ namespace MAG_NAMESPACE::simd
 			return vmulq_s8(a, b);
 		}
 
-		MAG_INLINE static int8_t hsum(const native_t v) noexcept { return vaddvq_s8(v); }
-		MAG_INLINE static int8_t hmax(const native_t v) noexcept { return vmaxvq_s8(v); }
-		MAG_INLINE static int8_t hmin(const native_t v) noexcept { return vminvq_s8(v); }
+		MAG_INLINE static std::int8_t hsum(const native_t v) noexcept { return vaddvq_s8(v); }
+		MAG_INLINE static std::int8_t hmax(const native_t v) noexcept { return vmaxvq_s8(v); }
+		MAG_INLINE static std::int8_t hmin(const native_t v) noexcept { return vminvq_s8(v); }
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
@@ -164,14 +164,17 @@ namespace MAG_NAMESPACE::simd
 
 
 	template <>
-	struct ops_impl<int16_t, 8, simd_isa::neon>
+	struct ops_impl<std::int16_t, 8, simd_isa::neon>
 	{
 		using native_t = int16x8_t;
 
-		MAG_INLINE static native_t load(const int16_t* p) noexcept { return vld1q_s16(p); }
-		MAG_INLINE static void store(int16_t* p, const native_t v) noexcept { vst1q_s16(p, v); }
+		MAG_INLINE static native_t load(const std::int16_t* p) noexcept { return vld1q_s16(p); }
+		MAG_INLINE static void store(std::int16_t* p, const native_t v) noexcept
+		{
+			vst1q_s16(p, v);
+		}
 
-		MAG_INLINE static native_t splat(const int16_t s) noexcept { return vdupq_n_s16(s); }
+		MAG_INLINE static native_t splat(const std::int16_t s) noexcept { return vdupq_n_s16(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -186,9 +189,9 @@ namespace MAG_NAMESPACE::simd
 			return vmulq_s16(a, b);
 		}
 
-		MAG_INLINE static int16_t hsum(const native_t v) noexcept { return vaddvq_s16(v); }
-		MAG_INLINE static int16_t hmax(const native_t v) noexcept { return vmaxvq_s16(v); }
-		MAG_INLINE static int16_t hmin(const native_t v) noexcept { return vminvq_s16(v); }
+		MAG_INLINE static std::int16_t hsum(const native_t v) noexcept { return vaddvq_s16(v); }
+		MAG_INLINE static std::int16_t hmax(const native_t v) noexcept { return vmaxvq_s16(v); }
+		MAG_INLINE static std::int16_t hmin(const native_t v) noexcept { return vminvq_s16(v); }
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
@@ -203,14 +206,17 @@ namespace MAG_NAMESPACE::simd
 
 
 	template <>
-	struct ops_impl<int32_t, 4, simd_isa::neon>
+	struct ops_impl<std::int32_t, 4, simd_isa::neon>
 	{
 		using native_t = int32x4_t;
 
-		MAG_INLINE static native_t load(const int32_t* p) noexcept { return vld1q_s32(p); }
-		MAG_INLINE static void store(int32_t* p, const native_t v) noexcept { vst1q_s32(p, v); }
+		MAG_INLINE static native_t load(const std::int32_t* p) noexcept { return vld1q_s32(p); }
+		MAG_INLINE static void store(std::int32_t* p, const native_t v) noexcept
+		{
+			vst1q_s32(p, v);
+		}
 
-		MAG_INLINE static native_t splat(const int32_t s) noexcept { return vdupq_n_s32(s); }
+		MAG_INLINE static native_t splat(const std::int32_t s) noexcept { return vdupq_n_s32(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -225,9 +231,9 @@ namespace MAG_NAMESPACE::simd
 			return vmulq_s32(a, b);
 		}
 
-		MAG_INLINE static int32_t hsum(const native_t v) noexcept { return vaddvq_s32(v); }
-		MAG_INLINE static int32_t hmax(const native_t v) noexcept { return vmaxvq_s32(v); }
-		MAG_INLINE static int32_t hmin(const native_t v) noexcept { return vminvq_s32(v); }
+		MAG_INLINE static std::int32_t hsum(const native_t v) noexcept { return vaddvq_s32(v); }
+		MAG_INLINE static std::int32_t hmax(const native_t v) noexcept { return vmaxvq_s32(v); }
+		MAG_INLINE static std::int32_t hmin(const native_t v) noexcept { return vminvq_s32(v); }
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
@@ -242,14 +248,17 @@ namespace MAG_NAMESPACE::simd
 
 
 	template <>
-	struct ops_impl<int64_t, 2, simd_isa::neon>
+	struct ops_impl<std::int64_t, 2, simd_isa::neon>
 	{
 		using native_t = int64x2_t;
 
-		MAG_INLINE static native_t load(const int64_t* p) noexcept { return vld1q_s64(p); }
-		MAG_INLINE static void store(int64_t* p, const native_t v) noexcept { vst1q_s64(p, v); }
+		MAG_INLINE static native_t load(const std::int64_t* p) noexcept { return vld1q_s64(p); }
+		MAG_INLINE static void store(std::int64_t* p, const native_t v) noexcept
+		{
+			vst1q_s64(p, v);
+		}
 
-		MAG_INLINE static native_t splat(const int64_t s) noexcept { return vdupq_n_s64(s); }
+		MAG_INLINE static native_t splat(const std::int64_t s) noexcept { return vdupq_n_s64(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -260,39 +269,39 @@ namespace MAG_NAMESPACE::simd
 			return vsubq_s64(a, b);
 		}
 
-		MAG_INLINE static int64_t hsum(const native_t v) noexcept { return vaddvq_s64(v); }
-		MAG_INLINE static int64_t hmax(const native_t v) noexcept
+		MAG_INLINE static std::int64_t hsum(const native_t v) noexcept { return vaddvq_s64(v); }
+		MAG_INLINE static std::int64_t hmax(const native_t v) noexcept
 		{
 			// Get the max of the two lanes
-			const int64_t a = vgetq_lane_s64(v, 0);
-			const int64_t b = vgetq_lane_s64(v, 1);
+			const std::int64_t a{vgetq_lane_s64(v, 0)};
+			const std::int64_t b{vgetq_lane_s64(v, 1)};
 			return (a > b) ? a : b;
 		}
 
-		MAG_INLINE static int64_t hmin(const native_t v) noexcept
+		MAG_INLINE static std::int64_t hmin(const native_t v) noexcept
 		{
 			// Get the min of the two lanes
-			const int64_t a = vgetq_lane_s64(v, 0);
-			const int64_t b = vgetq_lane_s64(v, 1);
+			const std::int64_t a{vgetq_lane_s64(v, 0)};
+			const std::int64_t b{vgetq_lane_s64(v, 1)};
 			return (a < b) ? a : b;
 		}
 
 		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
 		{
-			const int64_t a0 = vgetq_lane_s64(a, 0);
-			const int64_t a1 = vgetq_lane_s64(a, 1);
-			const int64_t b0 = vgetq_lane_s64(b, 0);
-			const int64_t b1 = vgetq_lane_s64(b, 1);
+			const std::int64_t a0{vgetq_lane_s64(a, 0)};
+			const std::int64_t a1{vgetq_lane_s64(a, 1)};
+			const std::int64_t b0{vgetq_lane_s64(b, 0)};
+			const std::int64_t b1{vgetq_lane_s64(b, 1)};
 
 			return vcombine_s64(vdup_n_s64(a0 < b0 ? a0 : b0), vdup_n_s64(a1 < b1 ? a1 : b1));
 		}
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
-			const int64_t a0 = vgetq_lane_s64(a, 0);
-			const int64_t a1 = vgetq_lane_s64(a, 1);
-			const int64_t b0 = vgetq_lane_s64(b, 0);
-			const int64_t b1 = vgetq_lane_s64(b, 1);
+			const std::int64_t a0{vgetq_lane_s64(a, 0)};
+			const std::int64_t a1{vgetq_lane_s64(a, 1)};
+			const std::int64_t b0{vgetq_lane_s64(b, 0)};
+			const std::int64_t b1{vgetq_lane_s64(b, 1)};
 
 			return vcombine_s64(vdup_n_s64(a0 > b0 ? a0 : b0), vdup_n_s64(a1 > b1 ? a1 : b1));
 		}
@@ -300,14 +309,14 @@ namespace MAG_NAMESPACE::simd
 
 
 	template <>
-	struct ops_impl<uint8_t, 16, simd_isa::neon>
+	struct ops_impl<std::uint8_t, 16, simd_isa::neon>
 	{
 		using native_t = uint8x16_t;
 
-		MAG_INLINE static native_t load(const uint8_t* p) noexcept { return vld1q_u8(p); }
-		MAG_INLINE static void store(uint8_t* p, const native_t v) noexcept { vst1q_u8(p, v); }
+		MAG_INLINE static native_t load(const std::uint8_t* p) noexcept { return vld1q_u8(p); }
+		MAG_INLINE static void store(std::uint8_t* p, const native_t v) noexcept { vst1q_u8(p, v); }
 
-		MAG_INLINE static native_t splat(const uint8_t s) noexcept { return vdupq_n_u8(s); }
+		MAG_INLINE static native_t splat(const std::uint8_t s) noexcept { return vdupq_n_u8(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -322,9 +331,9 @@ namespace MAG_NAMESPACE::simd
 			return vmulq_u8(a, b);
 		}
 
-		MAG_INLINE static uint8_t hsum(const native_t v) noexcept { return vaddvq_u8(v); }
-		MAG_INLINE static uint8_t hmax(const native_t v) noexcept { return vmaxvq_u8(v); }
-		MAG_INLINE static uint8_t hmin(const native_t v) noexcept { return vminvq_u8(v); }
+		MAG_INLINE static std::uint8_t hsum(const native_t v) noexcept { return vaddvq_u8(v); }
+		MAG_INLINE static std::uint8_t hmax(const native_t v) noexcept { return vmaxvq_u8(v); }
+		MAG_INLINE static std::uint8_t hmin(const native_t v) noexcept { return vminvq_u8(v); }
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
@@ -339,14 +348,17 @@ namespace MAG_NAMESPACE::simd
 
 
 	template <>
-	struct ops_impl<uint16_t, 8, simd_isa::neon>
+	struct ops_impl<std::uint16_t, 8, simd_isa::neon>
 	{
 		using native_t = uint16x8_t;
 
-		MAG_INLINE static native_t load(const uint16_t* p) noexcept { return vld1q_u16(p); }
-		MAG_INLINE static void store(uint16_t* p, const native_t v) noexcept { vst1q_u16(p, v); }
+		MAG_INLINE static native_t load(const std::uint16_t* p) noexcept { return vld1q_u16(p); }
+		MAG_INLINE static void store(std::uint16_t* p, const native_t v) noexcept
+		{
+			vst1q_u16(p, v);
+		}
 
-		MAG_INLINE static native_t splat(const uint16_t s) noexcept { return vdupq_n_u16(s); }
+		MAG_INLINE static native_t splat(const std::uint16_t s) noexcept { return vdupq_n_u16(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -361,9 +373,9 @@ namespace MAG_NAMESPACE::simd
 			return vmulq_u16(a, b);
 		}
 
-		MAG_INLINE static uint16_t hsum(const native_t v) noexcept { return vaddvq_u16(v); }
-		MAG_INLINE static uint16_t hmax(const native_t v) noexcept { return vmaxvq_u16(v); }
-		MAG_INLINE static uint16_t hmin(const native_t v) noexcept { return vminvq_u16(v); }
+		MAG_INLINE static std::uint16_t hsum(const native_t v) noexcept { return vaddvq_u16(v); }
+		MAG_INLINE static std::uint16_t hmax(const native_t v) noexcept { return vmaxvq_u16(v); }
+		MAG_INLINE static std::uint16_t hmin(const native_t v) noexcept { return vminvq_u16(v); }
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
@@ -378,14 +390,17 @@ namespace MAG_NAMESPACE::simd
 
 
 	template <>
-	struct ops_impl<uint32_t, 4, simd_isa::neon>
+	struct ops_impl<std::uint32_t, 4, simd_isa::neon>
 	{
 		using native_t = uint32x4_t;
 
-		MAG_INLINE static native_t load(const uint32_t* p) noexcept { return vld1q_u32(p); }
-		MAG_INLINE static void store(uint32_t* p, const native_t v) noexcept { vst1q_u32(p, v); }
+		MAG_INLINE static native_t load(const std::uint32_t* p) noexcept { return vld1q_u32(p); }
+		MAG_INLINE static void store(std::uint32_t* p, const native_t v) noexcept
+		{
+			vst1q_u32(p, v);
+		}
 
-		MAG_INLINE static native_t splat(uint32_t s) noexcept { return vdupq_n_u32(s); }
+		MAG_INLINE static native_t splat(std::uint32_t s) noexcept { return vdupq_n_u32(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -400,9 +415,9 @@ namespace MAG_NAMESPACE::simd
 			return vmulq_u32(a, b);
 		}
 
-		MAG_INLINE static uint32_t hsum(const native_t v) noexcept { return vaddvq_u32(v); }
-		MAG_INLINE static uint32_t hmax(const native_t v) noexcept { return vmaxvq_u32(v); }
-		MAG_INLINE static uint32_t hmin(const native_t v) noexcept { return vminvq_u32(v); }
+		MAG_INLINE static std::uint32_t hsum(const native_t v) noexcept { return vaddvq_u32(v); }
+		MAG_INLINE static std::uint32_t hmax(const native_t v) noexcept { return vmaxvq_u32(v); }
+		MAG_INLINE static std::uint32_t hmin(const native_t v) noexcept { return vminvq_u32(v); }
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
@@ -417,14 +432,17 @@ namespace MAG_NAMESPACE::simd
 
 
 	template <>
-	struct ops_impl<uint64_t, 2, simd_isa::neon>
+	struct ops_impl<std::uint64_t, 2, simd_isa::neon>
 	{
 		using native_t = uint64x2_t;
 
-		MAG_INLINE static native_t load(const uint64_t* p) noexcept { return vld1q_u64(p); }
-		MAG_INLINE static void store(uint64_t* p, const native_t v) noexcept { vst1q_u64(p, v); }
+		MAG_INLINE static native_t load(const std::uint64_t* p) noexcept { return vld1q_u64(p); }
+		MAG_INLINE static void store(std::uint64_t* p, const native_t v) noexcept
+		{
+			vst1q_u64(p, v);
+		}
 
-		MAG_INLINE static native_t splat(const uint64_t s) noexcept { return vdupq_n_u64(s); }
+		MAG_INLINE static native_t splat(const std::uint64_t s) noexcept { return vdupq_n_u64(s); }
 
 		MAG_INLINE static native_t add(const native_t a, const native_t b) noexcept
 		{
@@ -435,39 +453,39 @@ namespace MAG_NAMESPACE::simd
 			return vsubq_u64(a, b);
 		}
 
-		MAG_INLINE static uint64_t hsum(const native_t v) noexcept { return vaddvq_u64(v); }
-		MAG_INLINE static uint64_t hmax(const native_t v) noexcept
+		MAG_INLINE static std::uint64_t hsum(const native_t v) noexcept { return vaddvq_u64(v); }
+		MAG_INLINE static std::uint64_t hmax(const native_t v) noexcept
 		{
 			// Get the max of the two lanes
-			const int64_t a = vgetq_lane_u64(v, 0);
-			const int64_t b = vgetq_lane_u64(v, 1);
+			const std::uint64_t a{vgetq_lane_u64(v, 0)};
+			const std::uint64_t b{vgetq_lane_u64(v, 1)};
 			return (a > b) ? a : b;
 		}
 
-		MAG_INLINE static uint64_t hmin(const native_t v) noexcept
+		MAG_INLINE static std::uint64_t hmin(const native_t v) noexcept
 		{
 			// Get the min of the two lanes
-			const int64_t a = vgetq_lane_u64(v, 0);
-			const int64_t b = vgetq_lane_u64(v, 1);
+			const std::uint64_t a{vgetq_lane_u64(v, 0)};
+			const std::uint64_t b{vgetq_lane_u64(v, 1)};
 			return (a < b) ? a : b;
 		}
 
 		MAG_INLINE static native_t min(const native_t a, const native_t b) noexcept
 		{
-			const uint64_t a0 = vgetq_lane_u64(a, 0);
-			const uint64_t a1 = vgetq_lane_u64(a, 1);
-			const uint64_t b0 = vgetq_lane_u64(b, 0);
-			const uint64_t b1 = vgetq_lane_u64(b, 1);
+			const std::uint64_t a0{vgetq_lane_u64(a, 0)};
+			const std::uint64_t a1{vgetq_lane_u64(a, 1)};
+			const std::uint64_t b0{vgetq_lane_u64(b, 0)};
+			const std::uint64_t b1{vgetq_lane_u64(b, 1)};
 
 			return vcombine_u64(vdup_n_u64(a0 < b0 ? a0 : b0), vdup_n_u64(a1 < b1 ? a1 : b1));
 		}
 
 		MAG_INLINE static native_t max(const native_t a, const native_t b) noexcept
 		{
-			const uint64_t a0 = vgetq_lane_u64(a, 0);
-			const uint64_t a1 = vgetq_lane_u64(a, 1);
-			const uint64_t b0 = vgetq_lane_u64(b, 0);
-			const uint64_t b1 = vgetq_lane_u64(b, 1);
+			const std::uint64_t a0{vgetq_lane_u64(a, 0)};
+			const std::uint64_t a1{vgetq_lane_u64(a, 1)};
+			const std::uint64_t b0{vgetq_lane_u64(b, 0)};
+			const std::uint64_t b1{vgetq_lane_u64(b, 1)};
 
 			return vcombine_u64(vdup_n_u64(a0 > b0 ? a0 : b0), vdup_n_u64(a1 > b1 ? a1 : b1));
 		}

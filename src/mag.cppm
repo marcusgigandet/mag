@@ -68,24 +68,24 @@ export namespace MAG_NAMESPACE
 
 	using Vec2d	 = Vec<double, 2>;
 	using Vec2f	 = Vec<float, 2>;
-	using Vec2i	 = Vec<int32_t, 2>;
-	using Vec2u	 = Vec<uint32_t, 2>;
-	using Vec2l	 = Vec<int64_t, 2>;
-	using Vec2ul = Vec<uint64_t, 2>;
+	using Vec2i	 = Vec<std::int32_t, 2>;
+	using Vec2u	 = Vec<std::uint32_t, 2>;
+	using Vec2l	 = Vec<std::int64_t, 2>;
+	using Vec2ul = Vec<std::uint64_t, 2>;
 
 	using Vec3d	 = Vec<double, 3>;
 	using Vec3f	 = Vec<float, 3>;
-	using Vec3i	 = Vec<int32_t, 3>;
-	using Vec3u	 = Vec<uint32_t, 3>;
-	using Vec3l	 = Vec<int64_t, 3>;
-	using Vec3ul = Vec<uint64_t, 3>;
+	using Vec3i	 = Vec<std::int32_t, 3>;
+	using Vec3u	 = Vec<std::uint32_t, 3>;
+	using Vec3l	 = Vec<std::int64_t, 3>;
+	using Vec3ul = Vec<std::uint64_t, 3>;
 
 	using Vec4d	 = Vec<double, 4>;
 	using Vec4f	 = Vec<float, 4>;
-	using Vec4i	 = Vec<int32_t, 4>;
-	using Vec4u	 = Vec<uint32_t, 4>;
-	using Vec4l	 = Vec<int64_t, 4>;
-	using Vec4ul = Vec<uint64_t, 4>;
+	using Vec4i	 = Vec<std::int32_t, 4>;
+	using Vec4u	 = Vec<std::uint32_t, 4>;
+	using Vec4l	 = Vec<std::int64_t, 4>;
+	using Vec4ul = Vec<std::uint64_t, 4>;
 
 	using Vec2 = Vec2d;
 	using Vec3 = Vec3d;

@@ -5,9 +5,13 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   call-verify-copyright:
-    uses: marcusgigandet/toolbox/.github/workflows/verify_copyright.yml@664e5de7f0b6098b0d292053a3c4f4d57dc5f620
+    uses: marcusgigandet/toolbox/.github/workflows/verify_copyright.yml@c47391aa0be63bad84af411903d52977f87d88d6
     with:
       config: "config.toml"
       directory: "src"
@@ -15,7 +19,7 @@ jobs:
   check-formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install clang-format
         run: |
           sudo apt-get update && sudo apt-get install -y clang-format

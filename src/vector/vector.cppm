@@ -18,6 +18,7 @@ module;
 #include "typedefs.hpp"
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <sstream>
 #include <string>
 export module mag:vector;
@@ -35,10 +36,10 @@ namespace MAG_NAMESPACE
 	 * @tparam T Numeric type of the vector elements.
 	 * @tparam N Dimension of the vector.
 	 */
-	export template <Numeric T, size_t N>
+	export template <Numeric T, std::size_t N>
 	struct Vec;
 
-	export template <Numeric T, size_t N>
+	export template <Numeric T, std::size_t N>
 	constexpr T length(const Vec<T, N>& v) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -49,7 +50,7 @@ namespace MAG_NAMESPACE
 		}
 #endif
 		T ret{0};
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret += v[i] * v[i];
 		}
@@ -57,14 +58,14 @@ namespace MAG_NAMESPACE
 		return std::sqrt(ret);
 	}
 
-	export template <Numeric T, size_t N>
+	export template <Numeric T, std::size_t N>
 	constexpr Vec<T, N> normalize(Vec<T, N> v)
 	{
 		float length{std::sqrt(v.x * v.x + v.y * v.y)};
 		return (length > 0.0f) ? Vec<T, N>{v.x / length, v.y / length} : Vec<T, N>{0.0f, 0.0f};
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	export template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto dot(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -76,21 +77,21 @@ namespace MAG_NAMESPACE
 		}
 #endif
 		using R = std::common_type_t<T, U>;
-		R ret	= 0;
-		for (size_t i = 0; i < N; ++i)
+		R ret{0};
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret += a[i] * b[i];
 		}
 		return ret;
 	}
 
-	export template <Numeric T, size_t N>
+	export template <Numeric T, std::size_t N>
 	constexpr T distance(const Vec<T, N>& a, const Vec<T, N>& b) noexcept
 	{
 		return length(a - b);
 	}
 
-	export template <Numeric T, Numeric U, size_t N>
+	export template <Numeric T, Numeric U, std::size_t N>
 	constexpr Vec<T, N> lerp(const Vec<T, N>& a, const Vec<U, N>& b, T t) noexcept
 	{
 #ifdef MAG_ENABLE_SIMD
@@ -121,7 +122,7 @@ namespace MAG_NAMESPACE
 	 * @tparam T Numeric type of the vector elements.
 	 * @tparam N Dimension of the vector.
 	 */
-	template <typename Derived, Numeric T, size_t N>
+	template <typename Derived, Numeric T, std::size_t N>
 	struct IVec
 	{
 	private:
@@ -163,12 +164,22 @@ namespace MAG_NAMESPACE
 		/* Reverse iterator support */
 		/****************************/
 
-		// clang-format off
-		constexpr std::reverse_iterator<T*> rbegin() noexcept { return std::reverse_iterator<T*>(end()); }
-		constexpr std::reverse_iterator<const T*> rbegin() const noexcept { return std::reverse_iterator<const T*>(end()); }
-		constexpr std::reverse_iterator<T*> rend() noexcept { return std::reverse_iterator<T*>(begin()); }
-		constexpr std::reverse_iterator<const T*> rend() const noexcept { return std::reverse_iterator<const T*>(begin()); }
-		// clang-format on
+		constexpr std::reverse_iterator<T*> rbegin() noexcept
+		{
+			return std::reverse_iterator<T*>(end());
+		}
+		constexpr std::reverse_iterator<const T*> rbegin() const noexcept
+		{
+			return std::reverse_iterator<const T*>(end());
+		}
+		constexpr std::reverse_iterator<T*> rend() noexcept
+		{
+			return std::reverse_iterator<T*>(begin());
+		}
+		constexpr std::reverse_iterator<const T*> rend() const noexcept
+		{
+			return std::reverse_iterator<const T*>(begin());
+		}
 
 		/**************************/
 		/* Const iterator support */
@@ -179,8 +190,8 @@ namespace MAG_NAMESPACE
 		constexpr std::reverse_iterator<const T*> crbegin() const noexcept { return rbegin(); }
 		constexpr std::reverse_iterator<const T*> crend() const noexcept { return rend(); }
 
-		constexpr T& operator[](size_t i) noexcept { return derived().v[i]; }
-		constexpr const T& operator[](size_t i) const noexcept { return derived().v[i]; }
+		constexpr T& operator[](std::size_t i) noexcept { return derived().v[i]; }
+		constexpr const T& operator[](std::size_t i) const noexcept { return derived().v[i]; }
 
 		template <Numeric U>
 		constexpr Vec<T, N>& operator+=(const Vec<U, N>& o) noexcept
@@ -197,7 +208,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] += o[i];
 			}
@@ -219,7 +230,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] -= o[i];
 			}
@@ -241,7 +252,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] *= o[i];
 			}
@@ -263,7 +274,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] /= o[i];
 			}
@@ -285,7 +296,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] += s;
 			}
@@ -307,7 +318,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] -= s;
 			}
@@ -329,7 +340,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] *= s;
 			}
@@ -351,7 +362,7 @@ namespace MAG_NAMESPACE
 				return derived();
 			}
 #endif
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				derived()[i] /= s;
 			}
@@ -362,7 +373,7 @@ namespace MAG_NAMESPACE
 
 		constexpr Derived normalized() const noexcept
 		{
-			Derived ret = derived();
+			Derived ret{derived()};
 			T len{ret.length()};
 			if (len > 0)
 			{
@@ -373,8 +384,8 @@ namespace MAG_NAMESPACE
 
 		constexpr Derived clamped(T min, T max) const noexcept
 		{
-			Derived ret = derived();
-			for (size_t i = 0; i < N; ++i)
+			Derived ret{derived()};
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				ret[i] = std::clamp(derived()[i], min, max);
 			}
@@ -398,7 +409,7 @@ namespace MAG_NAMESPACE
 		{
 			std::ostringstream oss;
 			oss << "Vec" << N << "(";
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				if (i != N - 1)
 				{
@@ -414,7 +425,7 @@ namespace MAG_NAMESPACE
 		}
 	};
 
-	template <Numeric T, size_t N>
+	template <Numeric T, std::size_t N>
 	struct Vec : IVec<Vec<T, N>, T, N>
 	{
 		T v[N]{};
@@ -423,7 +434,7 @@ namespace MAG_NAMESPACE
 
 		explicit constexpr Vec(T val)
 		{
-			for (size_t i = 0; i < N; ++i)
+			for (std::size_t i = 0; i < N; ++i)
 			{
 				v[i] = val;
 			}

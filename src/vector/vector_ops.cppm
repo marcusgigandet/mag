@@ -29,12 +29,12 @@ using namespace MAG_NAMESPACE::simd;
 
 export namespace MAG_NAMESPACE
 {
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator<=>(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 		using comparison_t = decltype(a[0] <=> b[0]);
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			if (auto cmp = a[i] <=> b[i]; cmp != 0)
 			{
@@ -45,10 +45,10 @@ export namespace MAG_NAMESPACE
 		return comparison_t::equivalent;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr bool operator==(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			if (a[i] != b[i])
 			{
@@ -58,13 +58,13 @@ export namespace MAG_NAMESPACE
 		return true;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr bool operator!=(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 		return !(a == b);
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator+(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -83,14 +83,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] + b[i];
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator-(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -109,14 +109,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] - b[i];
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator*(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -135,14 +135,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] * b[i];
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator/(const Vec<T, N>& a, const Vec<U, N>& b) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -161,14 +161,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] / b[i];
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator+(const Vec<T, N>& a, U s) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -187,14 +187,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] + s;
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator+(U s, const Vec<T, N>& b) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -213,14 +213,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = b[i] + s;
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator-(const Vec<T, N>& a, U s) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -239,14 +239,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] - s;
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator-(U s, const Vec<T, N>& b) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -265,14 +265,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = s - b[i];
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator*(const Vec<T, N>& a, U s) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -291,14 +291,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] * s;
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator*(U s, const Vec<T, N>& b) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -317,14 +317,14 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = b[i] * s;
 		}
 		return ret;
 	}
 
-	template <Numeric T, Numeric U, size_t N>
+	template <Numeric T, Numeric U, std::size_t N>
 	constexpr auto operator/(const Vec<T, N>& a, U s) noexcept
 	{
 		using R = std::common_type_t<T, U>;
@@ -343,7 +343,7 @@ export namespace MAG_NAMESPACE
 		}
 #endif
 
-		for (size_t i = 0; i < N; ++i)
+		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret[i] = a[i] / s;
 		}
