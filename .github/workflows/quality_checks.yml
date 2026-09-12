@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   call-verify-copyright:
     uses: marcusgigandet/toolbox/.github/workflows/verify_copyright.yml@c47391aa0be63bad84af411903d52977f87d88d6
