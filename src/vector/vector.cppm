@@ -77,7 +77,7 @@ namespace MAG_NAMESPACE
 		}
 #endif
 		using R = std::common_type_t<T, U>;
-		R ret	= 0;
+		R ret{0};
 		for (std::size_t i = 0; i < N; ++i)
 		{
 			ret += a[i] * b[i];
@@ -373,7 +373,7 @@ namespace MAG_NAMESPACE
 
 		constexpr Derived normalized() const noexcept
 		{
-			Derived ret = derived();
+			Derived ret{derived()};
 			T len{ret.length()};
 			if (len > 0)
 			{
@@ -384,7 +384,7 @@ namespace MAG_NAMESPACE
 
 		constexpr Derived clamped(T min, T max) const noexcept
 		{
-			Derived ret = derived();
+			Derived ret{derived()};
 			for (std::size_t i = 0; i < N; ++i)
 			{
 				ret[i] = std::clamp(derived()[i], min, max);

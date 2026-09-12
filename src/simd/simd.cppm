@@ -43,8 +43,8 @@ namespace MAG_NAMESPACE::simd
 		native_type m_native{};
 
 	public:
-		using value_type				   = T;
-		static constexpr std::size_t lanes = N;
+		using value_type = T;
+		static constexpr std::size_t lanes{N};
 
 		[[nodiscard]] static consteval std::size_t size() noexcept { return N; }
 

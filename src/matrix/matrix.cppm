@@ -358,7 +358,7 @@ namespace MAG_NAMESPACE
 		static constexpr Derived diagonal(const T val) noexcept
 		{
 			Derived result{};
-			const std::size_t limit = (R < C ? R : C);
+			const std::size_t limit{R < C ? R : C};
 			for (std::size_t i = 0; i < limit; ++i)
 			{
 				result(i, i) = val;

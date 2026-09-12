@@ -38,16 +38,16 @@ namespace MAG_NAMESPACE::simd
 	{
 		MAG_INLINE static std::int32_t hmax(const native_t v) noexcept
 		{
-			__m128i max = v;
-			max			= _mm_max_epi32(max, _mm_srli_si128(max, 8));
-			max			= _mm_max_epi32(max, _mm_srli_si128(max, 4));
+			__m128i max{v};
+			max = _mm_max_epi32(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epi32(max, _mm_srli_si128(max, 4));
 			return _mm_cvtsi128_si32(max);
 		}
 		MAG_INLINE static std::int32_t hmin(const native_t v) noexcept
 		{
-			__m128i min = v;
-			min			= _mm_min_epi32(min, _mm_srli_si128(min, 8));
-			min			= _mm_min_epi32(min, _mm_srli_si128(min, 4));
+			__m128i min{v};
+			min = _mm_min_epi32(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epi32(min, _mm_srli_si128(min, 4));
 			return _mm_cvtsi128_si32(min);
 		}
 
@@ -67,16 +67,16 @@ namespace MAG_NAMESPACE::simd
 	{
 		MAG_INLINE static std::uint32_t hmax(const native_t v) noexcept
 		{
-			__m128i max = v;
-			max			= _mm_max_epu32(max, _mm_srli_si128(max, 8));
-			max			= _mm_max_epu32(max, _mm_srli_si128(max, 4));
+			__m128i max{v};
+			max = _mm_max_epu32(max, _mm_srli_si128(max, 8));
+			max = _mm_max_epu32(max, _mm_srli_si128(max, 4));
 			return static_cast<std::uint32_t>(_mm_cvtsi128_si32(max));
 		}
 		MAG_INLINE static std::uint32_t hmin(const native_t v) noexcept
 		{
-			__m128i min = v;
-			min			= _mm_min_epu32(min, _mm_srli_si128(min, 8));
-			min			= _mm_min_epu32(min, _mm_srli_si128(min, 4));
+			__m128i min{v};
+			min = _mm_min_epu32(min, _mm_srli_si128(min, 8));
+			min = _mm_min_epu32(min, _mm_srli_si128(min, 4));
 			return static_cast<std::uint32_t>(_mm_cvtsi128_si32(min));
 		}
 

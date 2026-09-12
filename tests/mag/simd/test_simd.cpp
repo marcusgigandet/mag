@@ -71,9 +71,9 @@ TEST_CASE("simd compile-time contracts", "[simd]")
 	STATIC_REQUIRE(supports_mul<float, 4>);
 	STATIC_REQUIRE(supports_div<float, 4>);
 	STATIC_REQUIRE(supports_reduction<float, 4>);
-	STATIC_REQUIRE(supports_add<int32_t, 4>);
-	STATIC_REQUIRE(supports_sub<uint32_t, 4>);
-	STATIC_REQUIRE(!supports_div<int32_t, 4>);
+	STATIC_REQUIRE(supports_add<std::int32_t, 4>);
+	STATIC_REQUIRE(supports_sub<std::uint32_t, 4>);
+	STATIC_REQUIRE(!supports_div<std::int32_t, 4>);
 }
 
 TEST_CASE("f32x arithmetic supports simd and scalar operands", "[simd]")

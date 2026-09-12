@@ -57,7 +57,7 @@ namespace MAG_NAMESPACE::simd
 	export template <std::size_t N>
 	struct fixed_abi
 	{
-		static constexpr std::size_t lanes = N;
+		static constexpr std::size_t lanes{N};
 	};
 
 	/**
@@ -89,14 +89,14 @@ namespace MAG_NAMESPACE::simd
 	template <Numeric T>
 	consteval std::size_t defaultLanes() noexcept
 	{
-		constexpr std::size_t bytes = nativeRegisterBytes();
+		constexpr std::size_t bytes{nativeRegisterBytes()};
 		if constexpr (bytes == 0)
 		{
 			return 1;
 		}
 		else
 		{
-			constexpr std::size_t lanes = bytes / sizeof(T);
+			constexpr std::size_t lanes{bytes / sizeof(T)};
 			return lanes == 0 ? 1 : lanes;
 		}
 	}
