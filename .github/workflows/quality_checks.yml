@@ -16,9 +16,11 @@ jobs:
   check-formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
       - name: Check formatting
-        uses: ./vendor/cmake-tooling/.github/actions/format-lint
+        uses: marcusgigandet/cmake-tooling/.github/actions/format-lint@4e634975a661ba2f1fe51cc7c5802a507cb688c8
         with:
           globs: |
             :(glob)**/*.h
