@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Check formatting
-        uses: marcusgigandet/cmake-tooling/.github/actions/format-lint@4e634975a661ba2f1fe51cc7c5802a507cb688c8
+        uses: marcusgigandet/cmake-tooling/.github/actions/format-lint@92d042519e65574a245ea35797aae78ff782a38e
         with:
           globs: |
             :(glob)**/*.h
