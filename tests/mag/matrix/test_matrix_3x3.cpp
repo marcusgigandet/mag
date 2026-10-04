@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Marcus Gigandet
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 // clang-format off
 
 #include <catch2/catch_approx.hpp>

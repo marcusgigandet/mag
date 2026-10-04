@@ -207,23 +207,25 @@ endif ()
 #############
 
 if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
-    include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cmake-tooling/CMakeLists.txt)
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/cmake-tooling)
+    else ()
+        message(STATUS "cmake-tooling submodule not found, tooling targets are disabled.")
+    endif ()
 
     file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
     file(GLOB_RECURSE BENCHMARK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/*.cpp")
 
-    enforce_clang_format(
+    add_code_format_target(
             TARGET ${PROJECT_NAME}
             FILES ${MODULES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${HEADERS}
     )
-    enforce_copyright(
+    add_reuse_header_target(
             TARGET ${PROJECT_NAME}
-            CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
-            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src"
-    )
-    generate_clangd_compdb(
-            TARGET ${PROJECT_NAME}
-            DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
+            LICENSE "Apache-2.0"
+            USERS "Marcus Gigandet"
+            FLAGS "--style=c"
+            FILES ${MODULES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${HEADERS}
     )
 
     if (MAG_CODE_ANALYSIS)
