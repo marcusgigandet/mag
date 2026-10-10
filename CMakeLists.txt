@@ -227,16 +227,10 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
             FLAGS "--style=c"
             FILES ${MODULES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${HEADERS}
     )
+    add_compile_commands_copy_target()
+    add_clang_tidy_target(
+            TARGET ${PROJECT_NAME}
+            FILES ${MODULES} ${HEADERS}
+    )
 
-    if (MAG_CODE_ANALYSIS)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-            set_target_properties(mag PROPERTIES
-                CXX_CLANG_TIDY
-                "clang-tidy;
-                -p=${CMAKE_BINARY_DIR};
-                --system-headers=0;
-                -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
-            )
-        endif ()
-    endif ()
 endif ()

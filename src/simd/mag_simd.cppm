@@ -21,7 +21,7 @@ export import :ops;
 #	warning Unsupported SIMD ISA
 #endif
 
-#if defined(MAG_SIMD_BACKEND_SSE4_1)
+#ifdef MAG_SIMD_BACKEND_SSE4_1
 export import :sse4_1;
 #elif defined(MAG_SIMD_BACKEND_SSSE3)
 export import :ssse3;

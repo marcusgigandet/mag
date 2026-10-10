@@ -6,6 +6,7 @@
 
 module;
 #include "typedefs.hpp"
+#include <array>
 export module mag:vector_2;
 
 import :vector;
@@ -17,7 +18,7 @@ namespace MAG_NAMESPACE
 	{
 		union
 		{
-			T v[2];
+			std::array<T, 2> v;
 			struct
 			{
 				T x, y;

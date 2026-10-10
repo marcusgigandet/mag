@@ -6,6 +6,7 @@
 
 module;
 #include "typedefs.hpp"
+#include <array>
 #include <cstddef>
 #include <iomanip>
 #include <span>
@@ -422,7 +423,7 @@ namespace MAG_NAMESPACE
 	template <Numeric T, std::size_t C, std::size_t R>
 	struct Mat : IMat<Mat<T, C, R>, T, C, R>
 	{
-		T m[C][R];
+		std::array<std::array<T, R>, C> m;
 
 		constexpr Mat() noexcept
 		{

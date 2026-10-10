@@ -12,7 +12,10 @@ export module mag.simd:sse2;
 
 import :ops;
 
-// NOLINTBEGIN(portability-simd-intrinsics)
+// Suppress "TU local entity ___ is exposed" errors on some compilers. This warning can be ignored
+// since inlining the functions calling native simd functions result in the exposure.
+MAG_DIAG_PUSH
+MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
 namespace MAG_NAMESPACE::simd
 {
@@ -56,7 +59,8 @@ namespace MAG_NAMESPACE::simd
 		{
 			__m128 max1{_mm_max_ps(v, _mm_movehl_ps(v, v))};
 			const __m128 max2{
-				_mm_max_ps(max1, _mm_shuffle_ps(max1, max1, _MM_SHUFFLE(1, 1, 1, 1)))};
+				_mm_max_ps(max1, _mm_shuffle_ps(max1, max1, _MM_SHUFFLE(1, 1, 1, 1))),
+			};
 			return _mm_cvtss_f32(max2);
 		}
 
@@ -64,7 +68,8 @@ namespace MAG_NAMESPACE::simd
 		{
 			__m128 min1{_mm_min_ps(v, _mm_movehl_ps(v, v))};
 			const __m128 min2{
-				_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1)))};
+				_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1))),
+			};
 			return _mm_cvtss_f32(min2);
 		}
 
@@ -92,8 +97,8 @@ namespace MAG_NAMESPACE::simd
 
 		MAG_INLINE static float hsum(const native_t v) noexcept
 		{
-			__m128 t{_mm_add_ps(v, _mm_movehl_ps(v, v))};
-			t = _mm_add_ss(t, _mm_shuffle_ps(t, t, 1));
+			__m128 t = _mm_add_ps(v, _mm_movehl_ps(v, v));
+			t		 = _mm_add_ss(t, _mm_shuffle_ps(t, t, 1));
 			return _mm_cvtss_f32(t);
 		}
 	};
@@ -683,4 +688,5 @@ namespace MAG_NAMESPACE::simd
 	};
 } // namespace MAG_NAMESPACE::simd
 
-// NOLINTEND(portability-simd-intrinsics)
+// Restore to default state
+MAG_DIAG_POP

@@ -6,6 +6,7 @@
 
 module;
 #include "typedefs.hpp"
+#include <array>
 #include <cmath>
 export module mag:matrix_3x3;
 
@@ -19,7 +20,7 @@ namespace MAG_NAMESPACE
 	{
 		union
 		{
-			T m[3][3];
+			std::array<std::array<T, 3>, 3> m;
 			struct
 			{
 				T m00, m01, m02;
@@ -81,7 +82,8 @@ namespace MAG_NAMESPACE
 			return {
 				m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z,
 				m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z,
-				m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z};
+				m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z,
+			};
 		}
 
 		constexpr static Mat identity() noexcept { return Mat::diagonal(1); }
@@ -102,9 +104,11 @@ namespace MAG_NAMESPACE
 
 			// Calculate the adjugate matrix
 			// clang-format off
-			return {(m11 * m22 - m21 * m12) * inv_det, (m20 * m12 - m10 * m22) * inv_det, (m10 * m21 - m20 * m11) * inv_det,
-					(m21 * m02 - m01 * m22) * inv_det, (m00 * m22 - m20 * m02) * inv_det, (m20 * m01 - m00 * m21) * inv_det,
-					(m01 * m12 - m11 * m02) * inv_det, (m10 * m02 - m00 * m12) * inv_det, (m00 * m11 - m10 * m01) * inv_det};
+			return {
+				(m11 * m22 - m21 * m12) * inv_det, (m20 * m12 - m10 * m22) * inv_det, (m10 * m21 - m20 * m11) * inv_det,
+				(m21 * m02 - m01 * m22) * inv_det, (m00 * m22 - m20 * m02) * inv_det, (m20 * m01 - m00 * m21) * inv_det,
+				(m01 * m12 - m11 * m02) * inv_det, (m10 * m02 - m00 * m12) * inv_det, (m00 * m11 - m10 * m01) * inv_det,
+			};
 			// clang-format on
 		}
 
@@ -112,9 +116,11 @@ namespace MAG_NAMESPACE
 		constexpr static Mat inverse(U x, U y, U z) noexcept
 		{
 			// clang-format off
-			return {1 / static_cast<T>(x), 0, 0,
-					0, 1 / static_cast<T>(y), 0,
-					0, 0, 1 / static_cast<T>(z)};
+			return {
+				1 / static_cast<T>(x), 0, 0,
+				0, 1 / static_cast<T>(y), 0,
+				0, 0, 1 / static_cast<T>(z),
+			};
 			// clang-format on
 		}
 
@@ -124,9 +130,11 @@ namespace MAG_NAMESPACE
 			const T c{static_cast<T>(std::cos(radians))};
 			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
-			return {1, 0, 0,
-					0, c, -s,
-					0, s, c};
+			return {
+				1, 0, 0,
+				0, c, -s,
+				0, s, c,
+			};
 			// clang-format on
 		}
 
@@ -136,9 +144,11 @@ namespace MAG_NAMESPACE
 			const T c{static_cast<T>(std::cos(radians))};
 			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
-			return {c, 0, s,
-					0, 1, 0,
-					-s, 0, c};
+			return {
+				c, 0, s,
+				0, 1, 0,
+				-s, 0, c,
+			};
 			// clang-format on
 		}
 
@@ -148,9 +158,11 @@ namespace MAG_NAMESPACE
 			const T c{static_cast<T>(std::cos(radians))};
 			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
-			return {c, -s, 0,
-					s, c, 0,
-					0, 0, 1};
+			return {
+				c, -s, 0,
+				s, c, 0,
+				0, 0, 1,
+			};
 			// clang-format on
 		}
 	};

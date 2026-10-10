@@ -17,7 +17,7 @@ export namespace MAG_NAMESPACE
 	inline constexpr T e{std::numbers::e_v<T>};
 
 	template <typename T>
-	inline constexpr T phi{static_cast<T>(1.6180339887498948482045868343656381L)};
+	inline constexpr T phi{static_cast<T>(std::numbers::phi_v<T>)};
 
 	template <typename T>
 	inline constexpr T half_pi{pi<T> / static_cast<T>(2)};

@@ -13,7 +13,10 @@ export module mag.simd:sse4_1;
 import :ops;
 export import :ssse3;
 
-// NOLINTBEGIN(portability-simd-intrinsics)
+// Suppress "TU local entity ___ is exposed" errors on some compilers. This warning can be ignored
+// since inlining the functions calling native simd functions result in the exposure.
+MAG_DIAG_PUSH
+MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
 namespace MAG_NAMESPACE::simd
 {
@@ -81,4 +84,6 @@ namespace MAG_NAMESPACE::simd
 	};
 } // namespace MAG_NAMESPACE::simd
 
-// NOLINTEND(portability-simd-intrinsics)
+
+// Restore to default state
+MAG_DIAG_POP

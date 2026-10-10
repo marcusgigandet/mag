@@ -7,6 +7,7 @@
 module;
 #include "typedefs.hpp"
 #include <cstddef>
+#include <cstdint>
 export module mag.simd:ops;
 
 export namespace MAG_NAMESPACE::simd
@@ -14,7 +15,7 @@ export namespace MAG_NAMESPACE::simd
 	/**
 	 * @brief Enum of supported/implemented simd backends.
 	 */
-	enum class simd_isa
+	enum class simd_isa : std::uint8_t
 	{
 		sse2,
 		ssse3,
@@ -37,7 +38,7 @@ export namespace MAG_NAMESPACE::simd
 	struct ops_impl;
 
 	// Conditionally select the default ISA based on the define provided to CMake
-#if defined(MAG_SIMD_BACKEND_SSE4_1)
+#ifdef MAG_SIMD_BACKEND_SSE4_1
 	constexpr auto default_isa = simd_isa::sse4_1;
 #elif defined(MAG_SIMD_BACKEND_SSSE3)
 	constexpr auto default_isa = simd_isa::ssse3;

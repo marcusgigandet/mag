@@ -94,9 +94,9 @@ namespace MAG_NAMESPACE::simd
 		MAG_INLINE friend Simd operator+(const Simd& a, T b)
 			requires supports_add<T, N, default_isa>
 		{
-			return Simd{ops_impl<T, N, default_isa>::add(
-				a.m_native,
-				ops_impl<T, N, default_isa>::splat(b))};
+			return Simd{
+				ops_impl<T, N, default_isa>::add(a.m_native, ops_impl<T, N, default_isa>::splat(b)),
+			};
 		}
 		MAG_INLINE friend Simd operator+(T a, const Simd& b)
 			requires supports_add<T, N, Isa>

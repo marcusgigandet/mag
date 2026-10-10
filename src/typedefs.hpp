@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <concepts>
+#include <type_traits>
 
 #if defined(__clang__) || defined(__GNUC__)
 #	define MAG_INLINE __attribute__((always_inline)) inline

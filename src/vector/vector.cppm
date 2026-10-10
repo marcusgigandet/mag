@@ -7,6 +7,7 @@
 module;
 #include "typedefs.hpp"
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <sstream>
@@ -418,7 +419,7 @@ namespace MAG_NAMESPACE
 	template <Numeric T, std::size_t N>
 	struct Vec : IVec<Vec<T, N>, T, N>
 	{
-		T v[N]{};
+		std::array<T, N> v{};
 
 		constexpr Vec() = default;
 
