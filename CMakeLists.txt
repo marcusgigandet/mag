@@ -227,10 +227,12 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
             FLAGS "--style=c"
             FILES ${MODULES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${HEADERS}
     )
-    add_compile_commands_copy_target()
+    add_compile_commands_copy_target(
+        TARGET ${PROJECT_NAME}
+    )
     add_clang_tidy_target(
             TARGET ${PROJECT_NAME}
-            FILES ${MODULES} ${HEADERS}
+            FILES ${MODULES}
     )
 
 endif ()
