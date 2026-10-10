@@ -17,6 +17,8 @@ export import :matrix_3x3;
 export import :matrix_4x4;
 export import :matrix_ops;
 
+export import :quat;
+
 export import :vector;
 export import :vector_2;
 export import :vector_3;
@@ -55,6 +57,9 @@ export namespace MAG_NAMESPACE
 	using Mat4x3 = Mat4x3d;
 	using Mat2x4 = Mat2x4d;
 	using Mat4x2 = Mat4x2d;
+
+	using Quatf = Quat<float>;
+	using Quatd = Quat<double>;
 
 	using Vec2d	 = Vec<double, 2>;
 	using Vec2f	 = Vec<float, 2>;
