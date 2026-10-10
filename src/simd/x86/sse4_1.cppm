@@ -1,17 +1,7 @@
 /*
- * Copyright 2026 Marcus Gigandet
+ * SPDX-FileCopyrightText: 2026 Marcus Gigandet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 module;
@@ -23,7 +13,10 @@ export module mag.simd:sse4_1;
 import :ops;
 export import :ssse3;
 
-// NOLINTBEGIN(portability-simd-intrinsics)
+// Suppress "TU local entity ___ is exposed" errors on some compilers. This warning can be ignored
+// since inlining the functions calling native simd functions result in the exposure.
+MAG_DIAG_PUSH
+MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
 namespace MAG_NAMESPACE::simd
 {
@@ -91,4 +84,6 @@ namespace MAG_NAMESPACE::simd
 	};
 } // namespace MAG_NAMESPACE::simd
 
-// NOLINTEND(portability-simd-intrinsics)
+
+// Restore to default state
+MAG_DIAG_POP

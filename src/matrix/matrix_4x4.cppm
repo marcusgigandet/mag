@@ -1,21 +1,12 @@
 /*
- * Copyright 2026 Marcus Gigandet
+ * SPDX-FileCopyrightText: 2026 Marcus Gigandet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 module;
 #include "typedefs.hpp"
+#include <array>
 #include <cmath>
 export module mag:matrix_4x4;
 
@@ -30,7 +21,7 @@ namespace MAG_NAMESPACE
 	{
 		union
 		{
-			T m[4][4];
+			std::array<std::array<T, 4>, 4> m;
 			struct
 			{
 				T m00, m01, m02, m03;
@@ -101,7 +92,8 @@ namespace MAG_NAMESPACE
 				m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z + m[3][0] * v.w,
 				m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z + m[3][1] * v.w,
 				m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z + m[3][2] * v.w,
-				m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z + m[3][3] * v.w};
+				m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z + m[3][3] * v.w,
+			};
 		}
 
 		constexpr static Mat identity() noexcept { return Mat::diagonal(1); }
@@ -125,7 +117,8 @@ namespace MAG_NAMESPACE
 				m02 * (m10 * (m21 * m33 - m23 * m31) - m11 * (m20 * m33 - m23 * m30)
 					+ m13 * (m20 * m31 - m21 * m30)) -
 				m03 * (m10 * (m21 * m32 - m22 * m31) - m11 * (m20 * m32 - m22 * m30)
-					+ m12 * (m20 * m31 - m21 * m30))};
+					+ m12 * (m20 * m31 - m21 * m30)),
+			};
 			// clang-format on
 
 			const T inv_det{1 / det};
@@ -151,7 +144,7 @@ namespace MAG_NAMESPACE
 				(m01 * (m12 * m23 - m13 * m22) - m02 * (m11 * m23 - m13 * m21) + m03 * (m11 * m22 - m12 * m21)) * -inv_det,
 				(m00 * (m12 * m23 - m13 * m22) - m02 * (m10 * m23 - m13 * m20) + m03 * (m10 * m22 - m12 * m20)) * inv_det,
 				(m00 * (m11 * m23 - m13 * m21) - m01 * (m10 * m23 - m13 * m20) + m03 * (m10 * m21 - m11 * m20)) * -inv_det,
-				(m00 * (m11 * m22 - m12 * m21) - m01 * (m10 * m22 - m12 * m20) + m02 * (m10 * m21 - m11 * m20)) * inv_det
+				(m00 * (m11 * m22 - m12 * m21) - m01 * (m10 * m22 - m12 * m20) + m02 * (m10 * m21 - m11 * m20)) * inv_det,
 			};
 			// clang-format on
 		}
@@ -160,10 +153,12 @@ namespace MAG_NAMESPACE
 		constexpr static Mat inverse(U x, U y, U z) noexcept
 		{
 			// clang-format off
-			return {1 / static_cast<T>(x), 0, 0, 0,
-					0, 1 / static_cast<T>(y), 0, 0,
-					0, 0, 1 / static_cast<T>(z), 0,
-					0, 0, 0, 1};
+			return {
+				1 / static_cast<T>(x), 0, 0, 0,
+				0, 1 / static_cast<T>(y), 0, 0,
+				0, 0, 1 / static_cast<T>(z), 0,
+				0, 0, 0, 1,
+			};
 			// clang-format on
 		}
 
@@ -171,10 +166,12 @@ namespace MAG_NAMESPACE
 		constexpr static Mat translate(U x, U y, U z) noexcept
 		{
 			// clang-format off
-			return {1, 0, 0, static_cast<T>(x),
-					0, 1, 0, static_cast<T>(y),
-					0, 0, 1, static_cast<T>(z),
-					0, 0, 0, 1};
+			return {
+				1, 0, 0, static_cast<T>(x),
+				0, 1, 0, static_cast<T>(y),
+				0, 0, 1, static_cast<T>(z),
+				0, 0, 0, 1,
+			};
 			// clang-format on
 		}
 
@@ -190,10 +187,12 @@ namespace MAG_NAMESPACE
 			const T c{static_cast<T>(std::cos(radians))};
 			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
-			return {1, 0,  0, 0,
-					0, c, -s, 0,
-					0, s,  c, 0,
-					0, 0,  0, 1};
+			return {
+				1, 0,  0, 0,
+				0, c, -s, 0,
+				0, s,  c, 0,
+				0, 0,  0, 1,
+			};
 			// clang-format on
 		}
 
@@ -203,10 +202,12 @@ namespace MAG_NAMESPACE
 			const T c{static_cast<T>(std::cos(radians))};
 			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
-			return {c, 0, s, 0,
-					0, 1, 0, 0,
-				   -s, 0, c, 0,
-					0, 0, 0, 1};
+			return {
+				c, 0, s, 0,
+				0, 1, 0, 0,
+				-s, 0, c, 0,
+				0, 0, 0, 1,
+			};
 			// clang-format on
 		}
 
@@ -216,10 +217,12 @@ namespace MAG_NAMESPACE
 			const T c{static_cast<T>(std::cos(radians))};
 			const T s{static_cast<T>(std::sin(radians))};
 			// clang-format off
-			return {c, -s, 0, 0,
-					s,  c, 0, 0,
-					0,  0, 1, 0,
-					0,  0, 0, 1};
+			return {
+				c, -s, 0, 0,
+				s,  c, 0, 0,
+				0,  0, 1, 0,
+				0,  0, 0, 1,
+			};
 			// clang-format on
 		}
 
@@ -232,10 +235,12 @@ namespace MAG_NAMESPACE
 			const Vec<U, 3> u{cross(s, f)};
 
 			// clang-format off
-			return Mat{s.x,  s.y,  s.z, -s.dot(eye),
-					   u.x,  u.y,  u.z, -u.dot(eye),
-				      -f.x, -f.y, -f.z,  f.dot(eye),
-					   0,    0,    0,    1};
+			return Mat{
+				s.x,  s.y,  s.z, -s.dot(eye),
+				u.x,  u.y,  u.z, -u.dot(eye),
+				-f.x, -f.y, -f.z,  f.dot(eye),
+				0,    0,    0,    1,
+			};
 			// clang-format on
 		}
 
@@ -248,10 +253,12 @@ namespace MAG_NAMESPACE
 			const U B{(farZ * nearZ) / (nearZ - farZ)};
 
 			// clang-format off
-			return {f / aspect, 0,  0,  0,
-					0,          f,  0,  0,
-					0,          0,  A,  B,
-					0,          0, -1,  0};
+			return {
+				f / aspect, 0,  0,  0,
+				0,          f,  0,  0,
+				0,          0,  A,  B,
+				0,          0, -1,  0,
+			};
 			// clang-format on
 		}
 	};

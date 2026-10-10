@@ -1,19 +1,8 @@
 /*
- * Copyright 2026 Marcus Gigandet
+ * SPDX-FileCopyrightText: 2026 Marcus Gigandet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * SPDX-License-Identifier: Apache-2.0
  */
-
 module;
 #include "typedefs.hpp"
 #include <cstdint>
@@ -23,7 +12,10 @@ export module mag.simd:sse2;
 
 import :ops;
 
-// NOLINTBEGIN(portability-simd-intrinsics)
+// Suppress "TU local entity ___ is exposed" errors on some compilers. This warning can be ignored
+// since inlining the functions calling native simd functions result in the exposure.
+MAG_DIAG_PUSH
+MAG_DISABLE_TU_LOCAL_ENTITY_EXPOSURE
 
 namespace MAG_NAMESPACE::simd
 {
@@ -67,7 +59,8 @@ namespace MAG_NAMESPACE::simd
 		{
 			__m128 max1{_mm_max_ps(v, _mm_movehl_ps(v, v))};
 			const __m128 max2{
-				_mm_max_ps(max1, _mm_shuffle_ps(max1, max1, _MM_SHUFFLE(1, 1, 1, 1)))};
+				_mm_max_ps(max1, _mm_shuffle_ps(max1, max1, _MM_SHUFFLE(1, 1, 1, 1))),
+			};
 			return _mm_cvtss_f32(max2);
 		}
 
@@ -75,7 +68,8 @@ namespace MAG_NAMESPACE::simd
 		{
 			__m128 min1{_mm_min_ps(v, _mm_movehl_ps(v, v))};
 			const __m128 min2{
-				_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1)))};
+				_mm_min_ps(min1, _mm_shuffle_ps(min1, min1, _MM_SHUFFLE(1, 1, 1, 1))),
+			};
 			return _mm_cvtss_f32(min2);
 		}
 
@@ -103,8 +97,8 @@ namespace MAG_NAMESPACE::simd
 
 		MAG_INLINE static float hsum(const native_t v) noexcept
 		{
-			__m128 t{_mm_add_ps(v, _mm_movehl_ps(v, v))};
-			t = _mm_add_ss(t, _mm_shuffle_ps(t, t, 1));
+			__m128 t = _mm_add_ps(v, _mm_movehl_ps(v, v));
+			t		 = _mm_add_ss(t, _mm_shuffle_ps(t, t, 1));
 			return _mm_cvtss_f32(t);
 		}
 	};
@@ -694,4 +688,5 @@ namespace MAG_NAMESPACE::simd
 	};
 } // namespace MAG_NAMESPACE::simd
 
-// NOLINTEND(portability-simd-intrinsics)
+// Restore to default state
+MAG_DIAG_POP

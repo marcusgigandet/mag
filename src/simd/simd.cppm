@@ -1,17 +1,7 @@
 /*
- * Copyright 2026 Marcus Gigandet
+ * SPDX-FileCopyrightText: 2026 Marcus Gigandet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 module;
@@ -104,9 +94,9 @@ namespace MAG_NAMESPACE::simd
 		MAG_INLINE friend Simd operator+(const Simd& a, T b)
 			requires supports_add<T, N, default_isa>
 		{
-			return Simd{ops_impl<T, N, default_isa>::add(
-				a.m_native,
-				ops_impl<T, N, default_isa>::splat(b))};
+			return Simd{
+				ops_impl<T, N, default_isa>::add(a.m_native, ops_impl<T, N, default_isa>::splat(b)),
+			};
 		}
 		MAG_INLINE friend Simd operator+(T a, const Simd& b)
 			requires supports_add<T, N, Isa>
@@ -197,7 +187,7 @@ namespace MAG_NAMESPACE::simd
 
 		MAG_INLINE void store(std::span<T, N> dst) const noexcept
 		{
-			ops_impl<T, N, Isa>::store(dst, m_native);
+			ops_impl<T, N, Isa>::store(dst.data(), m_native);
 		}
 		MAG_INLINE void store(T* dst) const noexcept { ops_impl<T, N, Isa>::store(dst, m_native); }
 	};

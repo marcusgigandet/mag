@@ -1,22 +1,13 @@
 /*
- * Copyright 2026 Marcus Gigandet
+ * SPDX-FileCopyrightText: 2026 Marcus Gigandet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 module;
 #include "typedefs.hpp"
 #include <cstddef>
+#include <cstdint>
 export module mag.simd:ops;
 
 export namespace MAG_NAMESPACE::simd
@@ -24,7 +15,7 @@ export namespace MAG_NAMESPACE::simd
 	/**
 	 * @brief Enum of supported/implemented simd backends.
 	 */
-	enum class simd_isa
+	enum class simd_isa : std::uint8_t
 	{
 		sse2,
 		ssse3,
@@ -47,7 +38,7 @@ export namespace MAG_NAMESPACE::simd
 	struct ops_impl;
 
 	// Conditionally select the default ISA based on the define provided to CMake
-#if defined(MAG_SIMD_BACKEND_SSE4_1)
+#ifdef MAG_SIMD_BACKEND_SSE4_1
 	constexpr auto default_isa = simd_isa::sse4_1;
 #elif defined(MAG_SIMD_BACKEND_SSSE3)
 	constexpr auto default_isa = simd_isa::ssse3;

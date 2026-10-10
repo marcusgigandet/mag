@@ -1,6 +1,6 @@
 [submodule "vendor/Catch2"]
     path = vendor/Catch2
     url = https://github.com/catchorg/Catch2.git
-[submodule "vendor/toolbox"]
-    path = vendor/toolbox
-    url = https://github.com/marcusgigandet/toolbox.git
+[submodule "vendor/cmake-tooling"]
+	path = vendor/cmake-tooling
+	url = git@github.com:marcusgigandet/cmake-tooling.git

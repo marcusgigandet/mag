@@ -207,34 +207,32 @@ endif ()
 #############
 
 if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
-    include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cmake-tooling/CMakeLists.txt)
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/cmake-tooling)
+    else ()
+        message(STATUS "cmake-tooling submodule not found, tooling targets are disabled.")
+    endif ()
 
     file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
     file(GLOB_RECURSE BENCHMARK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/*.cpp")
 
-    enforce_clang_format(
+    add_code_format_target(
             TARGET ${PROJECT_NAME}
             FILES ${MODULES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${HEADERS}
     )
-    enforce_copyright(
+    add_reuse_header_target(
             TARGET ${PROJECT_NAME}
-            CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/config.toml"
-            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src"
+            LICENSE "Apache-2.0"
+            USERS "Marcus Gigandet"
+            FLAGS "--style=c"
+            FILES ${MODULES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${HEADERS}
     )
-    generate_clangd_compdb(
+    add_compile_commands_copy_target(
+        TARGET ${PROJECT_NAME}
+    )
+    add_clang_tidy_target(
             TARGET ${PROJECT_NAME}
-            DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
+            FILES ${MODULES}
     )
 
-    if (MAG_CODE_ANALYSIS)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-            set_target_properties(mag PROPERTIES
-                CXX_CLANG_TIDY
-                "clang-tidy;
-                -p=${CMAKE_BINARY_DIR};
-                --system-headers=0;
-                -header-filter=^${CMAKE_SOURCE_DIR}/src/.*"
-            )
-        endif ()
-    endif ()
 endif ()

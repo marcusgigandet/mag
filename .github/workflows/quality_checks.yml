@@ -13,30 +13,17 @@ permissions:
   contents: read
 
 jobs:
-  call-verify-copyright:
-    uses: marcusgigandet/toolbox/.github/workflows/verify_copyright.yml@c47391aa0be63bad84af411903d52977f87d88d6
-    with:
-      config: "config.toml"
-      directory: "src"
-
   check-formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - name: Install clang-format
-        run: |
-          sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Checkout repository
+        uses: actions/checkout@v7
 
-      # Todo: This should probably be updated to a reusable workflow instead of directly calling clang-format
       - name: Check formatting
-        run: |
-          mapfile -d '' files < <(find src tests benchmarks \
-            \( -name "*.h" -o -name "*.hpp" -o -name "*.cppm" -o -name "*.cpp" \) \
-            -print0)
-
-          status=0
-          for file in "${files[@]}"; do
-            clang-format --dry-run --Werror "$file" || status=1
-          done
-
-          exit "$status"
+        uses: marcusgigandet/cmake-tooling/.github/actions/format-lint@92d042519e65574a245ea35797aae78ff782a38e
+        with:
+          globs: |
+            :(glob)**/*.h
+            :(glob)**/*.hpp
+            :(glob)**/*.cppm
+            :(glob)**/*.cpp
