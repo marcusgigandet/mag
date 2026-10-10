@@ -187,7 +187,7 @@ namespace MAG_NAMESPACE::simd
 
 		MAG_INLINE void store(std::span<T, N> dst) const noexcept
 		{
-			ops_impl<T, N, Isa>::store(dst, m_native);
+			ops_impl<T, N, Isa>::store(dst.data(), m_native);
 		}
 		MAG_INLINE void store(T* dst) const noexcept { ops_impl<T, N, Isa>::store(dst, m_native); }
 	};

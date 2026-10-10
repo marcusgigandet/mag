@@ -1,4 +1,8 @@
-
+/*
+ * SPDX-FileCopyrightText: 2026 Marcus Gigandet
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 module;
 #include "typedefs.hpp"
