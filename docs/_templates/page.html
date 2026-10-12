@@ -1,0 +1,104 @@
+{# Language and version switchers, rendered here so the target URLs can
+   be computed from `pagename`. Data comes from html_context in
+   docs/conf.py, overridden per build by the Makefile via -A flags; the
+   version panel lives in components/version-switcher.html. #}
+{% extends "!page.html" %}
+
+{% block announcement %}
+  {# Version notice toast: when the version being viewed is not the
+     latest release, language-switcher.js pops up this card and
+     auto-hides it. The dismissal lasts for the current stay in the
+     version; selecting it again via the switcher re-shows it. The
+     latest release renders no toast. #}
+  {# Directory depth below the site root: each non-root version and
+     each non-English language adds one level. #}
+  {%- set depth = (pagename.split('/')|length - 1)
+                  + (0 if language == 'en' else 1)
+                  + (0 if docs_version == docs_root_version else 1) -%}
+  {%- set rel = '../' * depth -%}
+  {%- set vprefix = '' if docs_version == docs_root_version else docs_version ~ '/' -%}
+  {%- set lprefix = '' if language == 'en' else language ~ '/' -%}
+  {%- set notice_texts = version_notice.get(language, version_notice['en']) -%}
+  {%- if docs_version == 'dev' -%}
+    {%- set notice = notice_texts.dev -%}
+    {%- set toast_key = 'dev' -%}
+  {%- elif docs_version != docs_latest_version -%}
+    {%- set notice = notice_texts.old -%}
+    {%- set toast_key = 'old:' ~ docs_version -%}
+  {%- else -%}
+    {%- set toast_key = none -%}
+  {%- endif -%}
+  {%- if toast_key -%}
+    <div class="docs-version-toast" role="status" hidden data-toast-key="{{ toast_key }}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <div class="docs-version-toast-body">
+        <p class="docs-version-toast-title">{{ notice.title }}</p>
+        <p>{{ notice.message.replace('{version}', docs_version) }}
+          {%- if toast_key != 'dev' %} <a href="{{ rel }}{{ lprefix }}{{ pagename }}.html">{{ notice.latest }}</a>{% endif -%}
+        </p>
+      </div>
+      <button type="button" class="docs-version-toast-close"
+              aria-label="{{ switcher_notice.get(language, switcher_notice['en']).dismiss }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+  {%- endif -%}
+  {%- set langs = docs_languages.split(',') -%}
+  {%- set lang_names = docs_language_names.split(',') -%}
+  <div class="docs-switchers">
+    <div class="docs-switcher">
+      <button type="button" class="docs-switcher-toggle"
+              aria-haspopup="true" aria-expanded="false" aria-label="Language">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.7 4 5.7 4 9s-1.5 6.3-4 9c-2.5-2.7-4-5.7-4-9s1.5-6.3 4-9Z"/></svg>
+        {%- for i in range(langs|length) -%}
+          {%- if langs[i] == language -%}<span>{{ lang_names[i] }}</span>{%- endif -%}
+        {%- endfor -%}
+        <svg class="docs-switcher-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <ul class="docs-switcher-menu" hidden>
+        {%- for i in range(langs|length) -%}
+          {%- set code = langs[i] -%}
+          <li>
+            <a class="docs-switcher-item" href="{{ rel }}{{ vprefix }}{{ '' if code == 'en' else code ~ '/' }}{{ pagename }}.html"
+               data-manifest="{{ rel }}{{ vprefix }}docs-pages.js"
+               data-version="{{ docs_version }}"
+               data-page="{{ '' if code == 'en' else code ~ '/' }}{{ pagename }}.html"
+               data-fallback="{{ rel }}{{ vprefix }}{{ '' if code == 'en' else code ~ '/' }}index.html"
+               lang="{{ code }}"{% if code == language %} aria-current="page"{% endif %}>
+              {{ lang_names[i] }}
+              {%- if code == language -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    {% include "components/version-switcher.html" %}
+  </div>
+{% endblock announcement %}
+
+{% block footer %}
+  {{ super() }}
+  {#- Runtime strings for the switcher notice, per build language
+     (gettext does not cover template/JS strings). #}
+  {%- set notice = switcher_notice.get(language, switcher_notice['en']) %}
+  <script>
+    window.docsStrings = {
+      noticeMessage: {{ notice.message | tojson }},
+      noticeHome: {{ notice.home | tojson }},
+      noticeDismiss: {{ notice.dismiss | tojson }}
+    };
+  </script>
+  {#- The 404 page: GitHub Pages serves the root 404.html for any
+     missing path, so the requested URL's version/language are only
+     known client-side. #}
+  {%- if pagename == '404' %}
+    <script>
+      window.docsMeta = {
+        versions: "{{ docs_versions }}".split(","),
+        languages: "{{ docs_languages }}".split(",")
+      };
+    </script>
+  {%- endif %}
+{% endblock footer %}

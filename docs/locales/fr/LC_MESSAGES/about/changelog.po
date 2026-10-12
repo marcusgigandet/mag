@@ -1,0 +1,82 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 22:18-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../docs/about/changelog.md:1
+msgid "Changelog"
+msgstr ""
+
+#: ../../docs/about/changelog.md:3
+msgid "Notable changes per release."
+msgstr ""
+
+#: ../../docs/about/changelog.md:5
+msgid "Unreleased"
+msgstr ""
+
+#: ../../docs/about/changelog.md:7
+msgid ""
+"Documentation migrated to a Markdown (MyST) docs site with a "
+"Doxygen/Breathe/Exhale C++ reference."
+msgstr ""
+
+#: ../../docs/about/changelog.md:9
+msgid "0.2.1 — 2026-09-12"
+msgstr ""
+
+#: ../../docs/about/changelog.md:11
+msgid "Added permissions to the CI workflows."
+msgstr ""
+
+#: ../../docs/about/changelog.md:12
+msgid "Compiler fixes and minor implementation updates."
+msgstr ""
+
+#: ../../docs/about/changelog.md:13
+msgid "Updated clang-format and docs configs."
+msgstr ""
+
+#: ../../docs/about/changelog.md:15
+msgid "0.2.0 — 2026-07-12"
+msgstr ""
+
+#: ../../docs/about/changelog.md:17
+msgid "Updated the `mag` namespace."
+msgstr ""
+
+#: ../../docs/about/changelog.md:18
+msgid "SIMD API updates."
+msgstr ""
+
+#: ../../docs/about/changelog.md:19
+msgid "Updated compile options to correctly export to consuming projects."
+msgstr ""
+
+#: ../../docs/about/changelog.md:21
+msgid "0.1.0 — 2026-06-26"
+msgstr ""
+
+#: ../../docs/about/changelog.md:23
+msgid ""
+"Initial release: the `mag` and `mag.simd` modules with vector, matrix, "
+"and SIMD math, CMake presets, and the documentation site."
+msgstr ""
+

@@ -77,7 +77,6 @@ bin/
 obj/
 lib/
 dist/
-api/
 
 # --- Package Managers ---
 # Conan
@@ -113,7 +112,7 @@ vcpkg_installed/
 coverage/
 lcov-report/
 
-# --- Documentation ---
-_build/
-pages/
-pages-local/
+# --- Documentation build output ---
+/out/
+/docs/api/
+*.mo

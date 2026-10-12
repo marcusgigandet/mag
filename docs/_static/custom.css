@@ -1,0 +1,124 @@
+/* Custom overrides for the Furo theme. Edit this file for project-wide
+   styling tweaks. */
+
+/* Exhale's api/ pages carry `.. contents::` directives, which Furo flags
+   with an error box; the right sidebar already shows the page TOC. */
+nav.contents {
+  display: none;
+}
+
+/* Sidebar brand: optional project icon (sidebar_icon in conf.py), and
+   the docs version being viewed as a pill below the project name. */
+.sidebar-brand-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.sidebar-brand-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-brand-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: none;
+}
+
+.sidebar-brand-version {
+  color: var(--color-foreground-muted);
+  font-size: var(--font-size--small, 0.875rem);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Branding: uncomment and adjust to match your project's colors
+   (Furo's accent variables; see Furo's docs for the full list).
+body {
+  --color-brand-primary: #0a4bff;
+  --color-brand-visited: #872ee0;
+}
+*/
+/* Version notice toast (rendered by page.html, popped up briefly by
+   docs/_static/language-switcher.js when the version being viewed is
+   not the latest release): a card below the top-right page header,
+   closable, auto-hidden. */
+.docs-version-toast {
+  position: fixed;
+  top: calc(var(--header-height, 4rem) + 0.75rem);
+  right: 1rem;
+  z-index: 200;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  max-width: min(24rem, calc(100vw - 2rem));
+  padding: 0.8rem 1rem;
+  background-color: var(--color-background-secondary);
+  color: var(--color-foreground-secondary);
+  border: 1px solid var(--color-background-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
+  font-size: var(--font-size--small, 0.875rem);
+  animation: docs-version-toast-in 0.2s ease-out;
+}
+
+.docs-version-toast[hidden] {
+  display: none;
+}
+
+@keyframes docs-version-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.docs-version-toast > svg {
+  flex: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--color-admonition-title--warning, #ff9100);
+}
+
+.docs-version-toast-title {
+  margin: 0 0 0.15rem;
+  color: var(--color-foreground-primary);
+  font-weight: 600;
+}
+
+.docs-version-toast-body p {
+  margin: 0;
+}
+
+.docs-version-toast a {
+  color: var(--color-link);
+}
+
+.docs-version-toast-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-foreground-muted);
+  cursor: pointer;
+}
+
+.docs-version-toast-close:hover {
+  color: var(--color-foreground-primary);
+}
+
+.docs-version-toast-close svg {
+  width: 0.9em;
+  height: 0.9em;
+}

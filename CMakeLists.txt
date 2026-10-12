@@ -234,5 +234,4 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
             TARGET ${PROJECT_NAME}
             FILES ${MODULES}
     )
-
 endif ()

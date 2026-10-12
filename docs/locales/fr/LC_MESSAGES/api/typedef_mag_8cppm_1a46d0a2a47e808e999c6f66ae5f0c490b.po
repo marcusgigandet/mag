@@ -1,0 +1,34 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 22:39-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../docs/api/typedef_mag_8cppm_1a46d0a2a47e808e999c6f66ae5f0c490b.rst:4
+msgid "Typedef MAG_NAMESPACE::Mat2d"
+msgstr ""
+
+#: ../../docs/api/typedef_mag_8cppm_1a46d0a2a47e808e999c6f66ae5f0c490b.rst:6
+msgid "Defined in :ref:`file_src_mag.cppm`"
+msgstr ""
+
+#: ../../docs/api/typedef_mag_8cppm_1a46d0a2a47e808e999c6f66ae5f0c490b.rst:10
+msgid "Typedef Documentation"
+msgstr ""
+
