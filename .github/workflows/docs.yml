@@ -1,6 +1,8 @@
 name: Docs
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     tags: ["*"]
@@ -11,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: github-pages
+  group: ${{ github.event_name == 'pull_request' && format('docs-pr-{0}', github.event.pull_request.number) || 'github-pages' }}
   cancel-in-progress: true
 
 jobs:
@@ -20,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: main
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v7
@@ -38,12 +40,14 @@ jobs:
         run: make deps pages
 
       - name: Upload artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: 'out/pages'
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pages: write
