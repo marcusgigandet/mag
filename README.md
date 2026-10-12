@@ -3,9 +3,9 @@
 **MAG** (**Mathématiques et Graphiques**) is a modern C++ math library for graphics-oriented 
 codebases. It targets **C++20+**, uses **C++ modules**, and provides optional SIMD support.
 
-[![macOS Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/macos_build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/macos_build.yml)
-[![Linux Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/linux_build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/linux_build.yml)
-[![Windows Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/windows_build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/windows_build.yml)
+[![macOS Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/macos-build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/macos-build.yml)
+[![Linux Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/linux-build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/linux-build.yml)
+[![Windows Build and Test](https://github.com/marcusgigandet/mag/actions/workflows/windows-build.yml/badge.svg)](https://github.com/marcusgigandet/mag/actions/workflows/windows-build.yml)
 
 ## Features
 
