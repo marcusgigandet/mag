@@ -4,7 +4,11 @@ Notable changes per release.
 
 ## Unreleased
 
+## 0.3.0 — 2026-10-12
+
 - Documentation migrated to a Markdown (MyST) docs site with a Doxygen/Breathe/Exhale C++ reference.
+
+- Removed older tags from docs page.
 
 ## 0.2.1 — 2026-09-12
 
