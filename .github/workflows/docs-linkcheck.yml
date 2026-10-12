@@ -1,6 +1,3 @@
-# Scheduled check for broken external links in the documentation
-# (make linkcheck exits non-zero on broken links). Runs weekly and on
-# demand; the Docs workflow (docs.yml) builds and deploys the site.
 name: Docs linkcheck
 
 on:
