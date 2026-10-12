@@ -1,0 +1,36 @@
+# Scheduled check for broken external links in the documentation
+# (make linkcheck exits non-zero on broken links). Runs weekly and on
+# demand; the Docs workflow (docs.yml) builds and deploys the site.
+name: Docs linkcheck
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-linkcheck
+  cancel-in-progress: true
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+
+      - name: Install Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen
+
+      - name: Check links
+        run: make linkcheck

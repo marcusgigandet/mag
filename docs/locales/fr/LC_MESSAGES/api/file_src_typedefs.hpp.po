@@ -1,0 +1,146 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 22:39-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:5
+msgid "File typedefs.hpp"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:7
+msgid "|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:14
+msgid "Contents"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:17
+msgid "Definition (``src/typedefs.hpp``)"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:30
+msgid "Includes"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:33
+msgid "``type_traits``"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:38
+msgid "Included By"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:41
+msgid ":ref:`file_src_constants.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:43
+msgid ":ref:`file_src_mag.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:45
+msgid ":ref:`file_src_matrix_matrix.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:47
+msgid ":ref:`file_src_matrix_matrix_3x3.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:49
+msgid ":ref:`file_src_matrix_matrix_4x4.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:51
+msgid ":ref:`file_src_matrix_matrix_ops.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:53
+msgid ":ref:`file_src_simd_mag_simd.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:55
+msgid ":ref:`file_src_simd_simd.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:57
+msgid ":ref:`file_src_simd_simd_abi.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:59
+msgid ":ref:`file_src_simd_simd_concepts.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:61
+msgid ":ref:`file_src_simd_simd_ops.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:63
+msgid ":ref:`file_src_vector_vector.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:65
+msgid ":ref:`file_src_vector_vector_2.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:67
+msgid ":ref:`file_src_vector_vector_3.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:69
+msgid ":ref:`file_src_vector_vector_4.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:71
+msgid ":ref:`file_src_vector_vector_ops.cppm`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:77
+msgid "Namespaces"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:80
+msgid ":ref:`namespace_MAG_NAMESPACE`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:84
+msgid "Defines"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:87
+msgid ":ref:`exhale_define_typedefs_8hpp_1ae3f63f576b75d20460ddc4add7a30351`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:89
+msgid ":ref:`exhale_define_typedefs_8hpp_1a1fda3d5f43de51647cd6a0ac972346ee`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:91
+msgid ":ref:`exhale_define_typedefs_8hpp_1ad368d9b63bafe18b90b35462329ad404`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:93
+msgid ":ref:`exhale_define_typedefs_8hpp_1a99c0cab26176cf4a48c761b36f2fb076`"
+msgstr ""
+
+#: ../../docs/api/file_src_typedefs.hpp.rst:95
+msgid ":ref:`exhale_define_typedefs_8hpp_1a2276a9d63e4bbf889047c9aadb109376`"
+msgstr ""
+

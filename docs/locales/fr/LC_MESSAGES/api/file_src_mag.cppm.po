@@ -1,0 +1,258 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 22:39-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../docs/api/file_src_mag.cppm.rst:5
+msgid "File mag.cppm"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:7
+msgid "|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:14
+msgid "Contents"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:17
+msgid "Definition (``src/mag.cppm``)"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:30
+msgid "Includes"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:33
+msgid "``cstdint``"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:35
+msgid "``mag:vector_ops``"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:37
+msgid "``typedefs.hpp`` (:ref:`file_src_typedefs.hpp`)"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:45
+msgid "Namespaces"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:48
+msgid ":ref:`namespace_MAG_NAMESPACE`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:52
+msgid "Typedefs"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:55
+msgid ":ref:`exhale_typedef_mag_8cppm_1aa09d0939c7dab8c31e32eb60b1ae3ae0`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:57
+msgid ":ref:`exhale_typedef_mag_8cppm_1a46d0a2a47e808e999c6f66ae5f0c490b`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:59
+msgid ":ref:`exhale_typedef_mag_8cppm_1a5098282a8e69b37cfe1dadfbe42eae10`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:61
+msgid ":ref:`exhale_typedef_mag_8cppm_1ac7c70d0a249232a2e0623ae0a5d2f482`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:63
+msgid ":ref:`exhale_typedef_mag_8cppm_1aa57fccb9e1e32d864584f5843b123983`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:65
+msgid ":ref:`exhale_typedef_mag_8cppm_1a8cc2bbf56c0bcf27926e38330a7fc063`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:67
+msgid ":ref:`exhale_typedef_mag_8cppm_1a23fed623298fa585edd69563180158e0`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:69
+msgid ":ref:`exhale_typedef_mag_8cppm_1a8c21b6f4c6c58295f783aee0a0437b9b`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:71
+msgid ":ref:`exhale_typedef_mag_8cppm_1a73574460f9e257507c1284313fd25cd0`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:73
+msgid ":ref:`exhale_typedef_mag_8cppm_1a0d3300ed503f72e6843efc6107c6c099`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:75
+msgid ":ref:`exhale_typedef_mag_8cppm_1a0aa772ae7156ea37b347355ab2c684fe`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:77
+msgid ":ref:`exhale_typedef_mag_8cppm_1a6152abcc2e9ced13ef0a140fdd9bce0e`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:79
+msgid ":ref:`exhale_typedef_mag_8cppm_1aa28259211fcdbc31fe00fc6bf7652819`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:81
+msgid ":ref:`exhale_typedef_mag_8cppm_1a7416360dbe01c1216d16954518d41cf8`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:83
+msgid ":ref:`exhale_typedef_mag_8cppm_1a571f650dabdc97dca14d0e1550d81bc3`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:85
+msgid ":ref:`exhale_typedef_mag_8cppm_1afc17eb626769624309b4ed75f67f9d7f`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:87
+msgid ":ref:`exhale_typedef_mag_8cppm_1add0bf85c692e49e897881d71fde5c393`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:89
+msgid ":ref:`exhale_typedef_mag_8cppm_1a6d9aeae5457c1b11e7b31528cc041c95`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:91
+msgid ":ref:`exhale_typedef_mag_8cppm_1ae155f9c54fb651f78d5d2a497405210f`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:93
+msgid ":ref:`exhale_typedef_mag_8cppm_1aacfbccbbdf471fa5a3bdbbf0309a3173`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:95
+msgid ":ref:`exhale_typedef_mag_8cppm_1a8c8f01ae2d16e991797faf10bf1c11dc`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:97
+msgid ":ref:`exhale_typedef_mag_8cppm_1abd59590afeac89ad1de9d200acce252b`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:99
+msgid ":ref:`exhale_typedef_mag_8cppm_1ab16d6d1fd235ac7bb6f3e1f7b8977d12`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:101
+msgid ":ref:`exhale_typedef_mag_8cppm_1ac282284c3cfce217c2f3ce3ae3b0cbe3`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:103
+msgid ":ref:`exhale_typedef_mag_8cppm_1adda6018db62730393990ce25823bbb1c`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:105
+msgid ":ref:`exhale_typedef_mag_8cppm_1aaff1c3a78377b3e8d2e7ae5106493872`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:107
+msgid ":ref:`exhale_typedef_mag_8cppm_1a22c23242fd3728215a25a0f88eb1f288`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:109
+msgid ":ref:`exhale_typedef_mag_8cppm_1a19bc10961b6c40448a38e195a9a68594`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:111
+msgid ":ref:`exhale_typedef_mag_8cppm_1a2652407e19d1c7bb11e7e598b31d0c00`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:113
+msgid ":ref:`exhale_typedef_mag_8cppm_1addc5051ca8dcb7f3840c85b1625178c3`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:115
+msgid ":ref:`exhale_typedef_mag_8cppm_1a6e532883f2525a75981896ae5ae7cf84`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:117
+msgid ":ref:`exhale_typedef_mag_8cppm_1a87b40ed9862e914d558d605625f1bfb5`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:119
+msgid ":ref:`exhale_typedef_mag_8cppm_1a73d8fbeaee5750cc08334a876d99ba98`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:121
+msgid ":ref:`exhale_typedef_mag_8cppm_1a2aaeb1ca0af9b268b8d4bf29b9a0f731`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:123
+msgid ":ref:`exhale_typedef_mag_8cppm_1a1c3137ba7c4e79faff6ee5563bb61d1b`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:125
+msgid ":ref:`exhale_typedef_mag_8cppm_1a895e09a547760fbecdc875875f387395`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:127
+msgid ":ref:`exhale_typedef_mag_8cppm_1a211d45aec621d91b3dd2faa5bb2af908`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:129
+msgid ":ref:`exhale_typedef_mag_8cppm_1aeecf12328ad809834eead0ccfd558050`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:131
+msgid ":ref:`exhale_typedef_mag_8cppm_1abe9b304a0b512f85cb6b65e29baccf92`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:133
+msgid ":ref:`exhale_typedef_mag_8cppm_1a03ab81d06ba1f639bd84913ff451aff7`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:135
+msgid ":ref:`exhale_typedef_mag_8cppm_1ad9b6b4b01f4c181334cd9ca00b86722d`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:137
+msgid ":ref:`exhale_typedef_mag_8cppm_1a4bf3ebeef62de50911ade3c48bc3a0fd`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:139
+msgid ":ref:`exhale_typedef_mag_8cppm_1ae011141d6693f5e0c2eec6f2d85213ba`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:141
+msgid ":ref:`exhale_typedef_mag_8cppm_1a74d43b175c458625d0230d3aeae75574`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:143
+msgid ":ref:`exhale_typedef_mag_8cppm_1adae923fe0ea619a1f543e72ecaac22e8`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:145
+msgid ":ref:`exhale_typedef_mag_8cppm_1ae8d4011586ab40e832b43ccd27587f81`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:147
+msgid ":ref:`exhale_typedef_mag_8cppm_1a2092fc550bb93e1f15fbe4fc93539d63`"
+msgstr ""
+
+#: ../../docs/api/file_src_mag.cppm.rst:149
+msgid ":ref:`exhale_typedef_mag_8cppm_1a09d40a39fcf3d2811573dfc1ac05e9e0`"
+msgstr ""
+

@@ -1,0 +1,238 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 22:39-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:5
+msgid "Namespace MAG_NAMESPACE::simd"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:14
+msgid "Contents"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:17
+msgid "Classes"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:20
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1abi__lanes`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:22
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1abi__lanes_3_01_t_00_01fixed__abi_3_01_n_01_4_01_4`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:24
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1abi__lanes_3_01_t_00_01native__abi_01_4`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:26
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1abi__lanes_3_01_t_00_01scalar__abi_01_4`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:28
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1fixed__abi`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:30
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1native__abi`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:32
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1ops__impl`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:34
+msgid ":ref:`exhale_struct_struct_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1scalar__abi`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:36
+msgid ":ref:`exhale_class_class_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1_simd`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:40
+msgid "Enums"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:43
+msgid ":ref:`exhale_enum_simd__ops_8cppm_1a7f9e2fab9f7fce1dd6ac811eb1790ed5`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:47
+msgid "Functions"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:50
+msgid ":ref:`exhale_function_simd_8cppm_1abd260b64cc67b2166b3a9ad420df04ab`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:52
+msgid ":ref:`exhale_function_simd__abi_8cppm_1a6306a5a5c44f135c884ddaf6bab7f0db`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:54
+msgid ":ref:`exhale_function_simd_8cppm_1aa5780266fb600b71c9cfcfce408f2755`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:56
+msgid ":ref:`exhale_function_simd_8cppm_1a21de79235977f8630060c974c651f1f9`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:58
+msgid ":ref:`exhale_function_simd_8cppm_1a1bb3dfc18fd279650708a1deff0b99b2`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:60
+msgid ":ref:`exhale_function_simd_8cppm_1a8544f990660d37ace3637ac2ad7f1bb9`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:62
+msgid ":ref:`exhale_function_simd_8cppm_1a60a051b71182669a0137db24ca046e3f`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:64
+msgid ":ref:`exhale_function_simd_8cppm_1a9643e7cf89c2c0774c75cd16b0be59be`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:66
+msgid ":ref:`exhale_function_simd__abi_8cppm_1af7443e885070ff3f1897b2f90f6125c2`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:68
+msgid ":ref:`exhale_function_simd_8cppm_1afc42086f92b9417f113aa312aa251be3`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:70
+msgid ":ref:`exhale_function_simd_8cppm_1ae17216f0b4f224b23272dfc5da100615`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:72
+msgid ":ref:`exhale_function_simd_8cppm_1af8be6bcb5081c851dc05c4168582bb02`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:76
+msgid "Typedefs"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:79
+msgid ":ref:`exhale_typedef_simd_8cppm_1acec3e4a8a985eba649cfc5154e8986e5`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:81
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a9f22473b8e70f57bd959471c3d558f31`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:83
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a3fd4bd7521f6b15b8293c92167d959e5`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:85
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a099897e702838f6dab716e156875e762`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:87
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a5a3e96e46330f1f36aea95ae49d6aff2`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:89
+msgid ":ref:`exhale_typedef_simd_8cppm_1ac4bed4bccfc30514034bb88991713352`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:91
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a886c52a07996a909c6b3e570484a684b`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:93
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a1c2cc9fa6f8e5a5b7baeece03dfca6e8`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:95
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a4ff95776c19ea1d2777dd657445059d2`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:97
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a9411062fd7922dbb22b46df65d1bb899`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:99
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a0f39bd43a996582a3d9299c1ce478bfe`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:101
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1ad6c74b02bb00d84eb0dc8009fc8d0e41`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:103
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a062ea8ac6f24fc4e591f50c1a2eababd`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:105
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a17b3a0259f3f0e61d38932e3118599ae`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:107
+msgid ":ref:`exhale_typedef_simd_8cppm_1ad6b8abfcf1c8b4005211a73130eab836`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:109
+msgid ":ref:`exhale_typedef_simd_8cppm_1a2f4fc43aff2091e95ca5d6f94c5c71bb`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:111
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1ae691fcb4a54484579f773d840b9b4b9f`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:113
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1aad3ecec1c0439c5e599e4ecb3ed1486a`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:115
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1ab2f78dce9ba8dc2ec425c4fac4c9ac5a`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:117
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a9d547ffb13cad1e9bfae2c97e09c6c1b`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:119
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a848616eae7b966a9b840a1385e18ccde`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:121
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a22a55a744bdb741d4223d599fa80389c`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:123
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1af655441f8810362c62ed10dd90b7601a`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:125
+msgid ":ref:`exhale_typedef_mag__simd_8cppm_1a24a2c62393e6b9115f6d6bf45a606349`"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:129
+msgid "Variables"
+msgstr ""
+
+#: ../../docs/api/namespace_MAG_NAMESPACE__simd.rst:132
+msgid ":ref:`exhale_variable_simd__abi_8cppm_1a195f37e30261125fe43edb426e5ac277`"
+msgstr ""
+

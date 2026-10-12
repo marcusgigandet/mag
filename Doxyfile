@@ -1,0 +1,46 @@
+PROJECT_NAME     = "MAG"
+# Where Doxygen looks for C/C++ sources.
+INPUT            = src
+INPUT_ENCODING   = UTF-8
+RECURSIVE        = YES
+
+# C++ module interface units (.cppm) are not in Doxygen's default
+# file patterns; map them to the C++ parser.
+FILE_PATTERNS    = *.cppm *.hpp *.h *.cpp *.hxx *.cxx
+EXTENSION_MAPPING = cppm=C++
+
+# Expand declaration macros that Breathe cannot parse (MAG_INLINE is
+# __attribute__((always_inline)) inline); otherwise they appear
+# verbatim in the XML and break the C++ declaration parser.
+MACRO_EXPANSION     = YES
+EXPAND_ONLY_PREDEF = YES
+PREDEFINED          = MAG_INLINE=
+
+EXCLUDE_PATTERNS = */src/simd/x86/* \
+                   */src/simd/neon/*
+
+# Exclude the std namespace pulled in through includes, and the
+# anonymous unions/structs inside Vec/Mat: Doxygen turns those into
+# separate compounds whose placeholder names ("[union].__unnamed0__")
+# Breathe cannot parse, and whose members collide across template
+# instantiations (duplicate "T m00" declarations). The members are
+# still documented on the Vec/Mat class pages.
+EXCLUDE_SYMBOLS  = std std::* *__unnamed*
+
+EXTRACT_PRIVATE = NO
+EXTRACT_STATIC  = NO
+EXTRACT_ALL      = NO
+HIDE_UNDOC_MEMBERS = NO
+HIDE_UNDOC_CLASSES = NO
+
+VERBATIM_HEADERS = NO
+INLINE_SOURCES    = NO
+
+REFERENCED_BY_RELATION = NO
+REFERENCES_RELATION     = NO
+SHOW_INCLUDE_FILES     = NO
+
+GENERATE_XML     = YES
+XML_OUTPUT       = out/doxygen-xml
+GENERATE_HTML    = NO
+GENERATE_LATEX   = NO

@@ -1,0 +1,55 @@
+{# Version switcher panel (included from page.html; data from
+   html_context, overridden per build by the Makefile). Listed newest
+   first, filterable past 8 versions; the current version carries a
+   checkmark and the latest release (docs_latest_version) a badge — it
+   also serves at the site root (docs_root_version). #}
+{%- set versions = docs_versions.split(',') -%}
+{%- set labels = version_labels.get(language, version_labels['en']) -%}
+{%- if versions|length > 1 -%}
+  {%- set released = versions | reject('equalto', 'dev') | list -%}
+  {%- set ordered = (['dev'] + (released | reverse | list)) if 'dev' in versions else (released | reverse | list) -%}
+  <div class="docs-switcher docs-switcher--version">
+    <button type="button" class="docs-switcher-toggle"
+            aria-haspopup="true" aria-expanded="false" aria-label="Version">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7l10-5Z"/><path d="m2 12 10 5 10-5"/><path d="m2 17 10 5 10-5"/></svg>
+      <span>{{ docs_version }}</span>
+      {%- if docs_version == docs_latest_version -%}
+        <span class="docs-switcher-badge">{{ labels.latest }}</span>
+      {%- endif -%}
+      <svg class="docs-switcher-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="docs-switcher-menu docs-switcher-menu--version" hidden>
+      {%- if versions|length > 8 -%}
+        <input class="docs-switcher-filter" type="search"
+               placeholder="{{ labels.filter }}" aria-label="{{ labels.filter }}"
+               autocomplete="off">
+      {%- endif -%}
+      <ul class="docs-switcher-version-list">
+        {%- for v in ordered -%}
+          {#- The root version's pages sit at the site root; every
+             other version ("dev", older tags) in its own
+             subdirectory. #}
+          {%- set vlink = '' if v == docs_root_version else v ~ '/' -%}
+          <li>
+            <a class="docs-switcher-item" href="{{ rel }}{{ vlink }}{{ lprefix }}{{ pagename }}.html"
+               data-manifest="{{ rel }}{{ vlink }}docs-pages.js"
+               data-version="{{ v }}"
+               data-page="{{ lprefix }}{{ pagename }}.html"
+               data-fallback="{{ rel }}{{ vlink }}{{ lprefix }}index.html"
+               {% if v == docs_version %}aria-current="page"{% endif %}>
+              <span>{{ v }}</span>
+              <span class="docs-switcher-item-meta">
+                {%- if v == docs_latest_version -%}
+                  <span class="docs-switcher-badge">{{ labels.latest }}</span>
+                {%- endif -%}
+                {%- if v == docs_version -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+                {%- endif -%}
+              </span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{%- endif -%}

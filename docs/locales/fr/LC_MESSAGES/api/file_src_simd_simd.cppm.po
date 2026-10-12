@@ -1,0 +1,142 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 22:39-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:5
+msgid "File simd.cppm"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:7
+msgid "|exhale_lsh| :ref:`Parent directory <dir_src_simd>` (``src/simd``)"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:14
+msgid "Contents"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:17
+msgid "Definition (``src/simd/simd.cppm``)"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:30
+msgid "Includes"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:33
+msgid "``cstdint``"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:35
+msgid "``mag.simd:ops``"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:37
+msgid "``span``"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:39
+msgid "``typedefs.hpp`` (:ref:`file_src_typedefs.hpp`)"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:47
+msgid "Namespaces"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:50
+msgid ":ref:`namespace_MAG_NAMESPACE`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:52
+msgid ":ref:`namespace_MAG_NAMESPACE__simd`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:56
+msgid "Classes"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:59
+msgid ":ref:`exhale_class_class_m_a_g___n_a_m_e_s_p_a_c_e_1_1simd_1_1_simd`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:63
+msgid "Functions"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:66
+msgid ":ref:`exhale_function_simd_8cppm_1abd260b64cc67b2166b3a9ad420df04ab`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:68
+msgid ":ref:`exhale_function_simd_8cppm_1aa5780266fb600b71c9cfcfce408f2755`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:70
+msgid ":ref:`exhale_function_simd_8cppm_1a21de79235977f8630060c974c651f1f9`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:72
+msgid ":ref:`exhale_function_simd_8cppm_1a1bb3dfc18fd279650708a1deff0b99b2`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:74
+msgid ":ref:`exhale_function_simd_8cppm_1a8544f990660d37ace3637ac2ad7f1bb9`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:76
+msgid ":ref:`exhale_function_simd_8cppm_1a60a051b71182669a0137db24ca046e3f`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:78
+msgid ":ref:`exhale_function_simd_8cppm_1a9643e7cf89c2c0774c75cd16b0be59be`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:80
+msgid ":ref:`exhale_function_simd_8cppm_1afc42086f92b9417f113aa312aa251be3`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:82
+msgid ":ref:`exhale_function_simd_8cppm_1ae17216f0b4f224b23272dfc5da100615`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:84
+msgid ":ref:`exhale_function_simd_8cppm_1af8be6bcb5081c851dc05c4168582bb02`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:88
+msgid "Typedefs"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:91
+msgid ":ref:`exhale_typedef_simd_8cppm_1acec3e4a8a985eba649cfc5154e8986e5`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:93
+msgid ":ref:`exhale_typedef_simd_8cppm_1ac4bed4bccfc30514034bb88991713352`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:95
+msgid ":ref:`exhale_typedef_simd_8cppm_1ad6b8abfcf1c8b4005211a73130eab836`"
+msgstr ""
+
+#: ../../docs/api/file_src_simd_simd.cppm.rst:97
+msgid ":ref:`exhale_typedef_simd_8cppm_1a2f4fc43aff2091e95ca5d6f94c5c71bb`"
+msgstr ""
+

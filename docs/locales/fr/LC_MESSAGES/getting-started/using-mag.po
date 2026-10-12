@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Marcus Gigandet
+# This file is distributed under the same license as the MAG - Mathématiques
+# et Graphiques package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MAG - Mathématiques et Graphiques \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 22:18-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../docs/getting-started/using-mag.md:1
+msgid "Using MAG"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:3
+msgid "MAG is designed around a single module import:"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:10
+msgid "The examples below show the main workflows exposed by the public API."
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:12
+msgid "Vector math"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:30
+msgid ""
+"Vectors support component aliases where they make sense. For example, 4D "
+"vectors expose both `x/y/z/w` and `r/g/b/a` accessors."
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:33
+msgid ""
+"Matrices also support component aliases for specific implementations such"
+" as 3x3 and 4x4 matrices."
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:35
+msgid "Matrix math"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:37
+msgid ""
+"Matrices are structured into column major 2D arrays meaning that data is "
+"stored into columns, rows in the array."
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:54
+msgid "SIMD helpers"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:56
+msgid ""
+"When `MAG_ENABLE_SIMD` is enabled and the target architecture supports "
+"it, `mag.simd` will export SIMD functionality in a separate namespace, "
+"`mag::simd`:"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:85
+msgid ""
+"The SIMD API supports arithmetic, reductions, load/store helpers, fixed-"
+"width ABI types, and native ABI aliases where available."
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:88
+msgid "You can choose the SIMD backend at configure time with `MAG_SIMD_BACKEND`:"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:94
+msgid "Supported values are:"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:96
+msgid "`AUTO` (default)"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:97
+msgid "`SSE2`, `SSSE3`, `SSE4_1` on x86/x64"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:98
+msgid "`NEON` on ARM/ARM64"
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:100
+msgid "When set to auto, it will select `SSE4_1` on x86/x64 and `NEON` on ARM."
+msgstr ""
+
+#: ../../docs/getting-started/using-mag.md:102
+msgid "**Note**: The SIMD API is subject to changes as it is still a WIP."
+msgstr ""
+
