@@ -28,7 +28,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         )
     endif ()
 elseif (MSVC)
-    if (MSVC_VERSION LESS 1940) # I think that this is the minimum required?
+    if (MSVC_VERSION LESS 1940)
         message(FATAL_ERROR
                 "MSVC >= 19.40 (Visual Studio 2022 17.10) is required. "
                 "Detected version: ${MSVC_VERSION}"
@@ -57,11 +57,11 @@ set_property(CACHE MAG_SIMD_BACKEND PROPERTY STRINGS AUTO SSE2 SSSE3 SSE4_1 NEON
 # Set constants #
 #################
 
-file(GLOB_RECURSE MODULES
+file(GLOB_RECURSE MODULES CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
-file(GLOB_RECURSE HEADERS
+file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
 )
 
@@ -213,8 +213,8 @@ if (PROJECT_IS_TOP_LEVEL AND NOT ${MAG_NO_DEV_TOOLS})
         message(STATUS "cmake-tooling submodule not found, tooling targets are disabled.")
     endif ()
 
-    file(GLOB_RECURSE TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
-    file(GLOB_RECURSE BENCHMARK_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/*.cpp")
+    file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+    file(GLOB_RECURSE BENCHMARK_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/*.cpp")
 
     add_code_format_target(
             TARGET ${PROJECT_NAME}

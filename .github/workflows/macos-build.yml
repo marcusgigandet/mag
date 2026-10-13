@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/macos_build.yml'
+      - '.github/workflows/macos-build.yml'
       - 'benchmarks/**'
       - 'src/**'
       - 'tests/**'
