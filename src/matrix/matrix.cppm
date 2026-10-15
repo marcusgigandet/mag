@@ -114,13 +114,14 @@ namespace MAG_NAMESPACE
 		constexpr std::reverse_iterator<const T*> crbegin() const noexcept { return rbegin(); }
 		constexpr std::reverse_iterator<const T*> crend() const noexcept { return rend(); }
 
-		// clang-format off
-		constexpr std::span<T, R> operator[](std::size_t i) noexcept { return std::span<T, R>(derived().m[i]); }
-		constexpr std::span<const T, R> operator[](std::size_t i) const noexcept { return derived().m[i]; }
-
-		constexpr T& operator()(std::size_t c, std::size_t r) noexcept { return derived().m[c][r]; }
-		constexpr const T& operator()(std::size_t c, std::size_t r) const noexcept { return derived().m[c][r]; }
-		// clang-format on
+		constexpr std::span<T, R> operator[](std::size_t i) noexcept
+		{
+			return std::span<T, R>(derived().m[i]);
+		}
+		constexpr std::span<const T, R> operator[](std::size_t i) const noexcept
+		{
+			return derived().m[i];
+		}
 
 		constexpr T* data() noexcept { return &derived().m[0][0]; }
 		constexpr const T* data() const noexcept { return &derived().m[0][0]; }
@@ -146,7 +147,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) += val;
+					derived()[c][r] += val;
 				}
 			}
 			return derived();
@@ -173,7 +174,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) -= val;
+					derived()[c][r] -= val;
 				}
 			}
 			return derived();
@@ -200,7 +201,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) *= val;
+					derived()[c][r] *= val;
 				}
 			}
 			return derived();
@@ -227,7 +228,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) /= val;
+					derived()[c][r] /= val;
 				}
 			}
 			return derived();
@@ -254,7 +255,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) += rhs(c, r);
+					derived()[c][r] += rhs[c][r];
 				}
 			}
 			return derived();
@@ -281,7 +282,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) -= rhs(c, r);
+					derived()[c][r] -= rhs[c][r];
 				}
 			}
 			return derived();
@@ -308,7 +309,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) *= rhs(c, r);
+					derived()[c][r] *= rhs[c][r];
 				}
 			}
 			return derived();
@@ -329,7 +330,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					result(r, c) = derived()(c, r);
+					result[r][c] = derived()[c][r];
 				}
 			}
 			return result;
@@ -341,7 +342,7 @@ namespace MAG_NAMESPACE
 		 * Initializes a matrix with all elements set to zero except for the main diagonal,
 		 * which is populated using the provided value.
 		 *
-		 * For non-square matrices, values are written up to `min(C, R)`.
+		 * For non-square matrices, values are written up to `min[c][r]`.
 		 *
 		 * @param val Diagonal value.
 		 * @return  A matrix with the specified diagonal values.
@@ -352,7 +353,7 @@ namespace MAG_NAMESPACE
 			const std::size_t limit{R < C ? R : C};
 			for (std::size_t i = 0; i < limit; ++i)
 			{
-				result(i, i) = val;
+				result[i][i] = val;
 			}
 			return result;
 		}
@@ -363,7 +364,7 @@ namespace MAG_NAMESPACE
 		 * Initializes a matrix with all elements set to zero except for the main diagonal,
 		 * which is populated using the values from the given vector.
 		 *
-		 * For non-square matrices, values are written up to `min(C, R)`.
+		 * For non-square matrices, values are written up to `min[c][r]`.
 		 *
 		 * @param diag_vals Vector containing the diagonal values.
 		 *
@@ -375,7 +376,7 @@ namespace MAG_NAMESPACE
 			const std::size_t limit{R < C ? R : C};
 			for (std::size_t i = 0; i < limit; ++i)
 			{
-				result(i, i) = diag_vals[i];
+				result[i][i] = diag_vals[i];
 			}
 			return result;
 		}
@@ -430,7 +431,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					m(c, r) = static_cast<T>(0);
+					m[c][r] = static_cast<T>(0);
 				}
 			}
 		}
@@ -442,7 +443,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					m(c, r) = static_cast<T>(val);
+					m[c][r] = static_cast<T>(val);
 				}
 			}
 		}

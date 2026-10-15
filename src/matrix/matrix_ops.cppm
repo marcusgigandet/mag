@@ -21,7 +21,7 @@ export namespace MAG_NAMESPACE
 		{
 			for (std::size_t r = 0; r < R; ++r)
 			{
-				if (lhs(c, r) != rhs(c, r))
+				if (lhs[c][r] != rhs[c][r])
 				{
 					return false;
 				}
@@ -44,7 +44,7 @@ export namespace MAG_NAMESPACE
 		{
 			for (std::size_t r = 0; r < R; ++r)
 			{
-				ret(c, r) = a(c, r) + static_cast<T>(val);
+				ret[c][r] = a[c][r] + static_cast<T>(val);
 			}
 		}
 		return ret;
@@ -58,7 +58,7 @@ export namespace MAG_NAMESPACE
 		{
 			for (std::size_t r = 0; r < R; ++r)
 			{
-				ret(c, r) = a(c, r) - static_cast<T>(val);
+				ret[c][r] = a[c][r] - static_cast<T>(val);
 			}
 		}
 		return ret;
@@ -72,7 +72,7 @@ export namespace MAG_NAMESPACE
 		{
 			for (std::size_t r = 0; r < R; ++r)
 			{
-				ret(c, r) = a(c, r) * static_cast<T>(val);
+				ret[c][r] = a[c][r] * static_cast<T>(val);
 			}
 		}
 		return ret;
@@ -86,7 +86,7 @@ export namespace MAG_NAMESPACE
 		{
 			for (std::size_t r = 0; r < R; ++r)
 			{
-				ret(c, r) = a(c, r) / static_cast<T>(val);
+				ret[c][r] = a[c][r] / static_cast<T>(val);
 			}
 		}
 		return ret;
@@ -100,7 +100,7 @@ export namespace MAG_NAMESPACE
 		{
 			for (std::size_t r = 0; r < R; ++r)
 			{
-				ret(c, r) = lhs(c, r) + static_cast<T>(rhs(c, r));
+				ret[c][r] = lhs[c][r] + static_cast<T>(rhs[c][r]);
 			}
 		}
 		return ret;
@@ -114,7 +114,7 @@ export namespace MAG_NAMESPACE
 		{
 			for (std::size_t r = 0; r < R; ++r)
 			{
-				ret(c, r) = lhs(c, r) - static_cast<T>(rhs(c, r));
+				ret[c][r] = lhs[c][r] - static_cast<T>(rhs[c][r]);
 			}
 		}
 		return ret;
@@ -130,7 +130,7 @@ export namespace MAG_NAMESPACE
 			{
 				for (std::size_t k = 0; k < K; ++k)
 				{
-					result(c, r) += lhs(k, r) * rhs(c, k);
+					result[c][r] += lhs[k][r] * rhs[c][k];
 				}
 			}
 		}
