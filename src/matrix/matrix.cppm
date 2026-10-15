@@ -288,30 +288,50 @@ namespace MAG_NAMESPACE
 			return derived();
 		}
 
+		/** @brief Compound matrix product. Only defined for square matrices.
+		 *  @param rhs Right operand; must be C x C.
+		 *  @return Reference to this matrix.
+		 */
 		template <Numeric U>
-		constexpr auto operator*=(const Mat<U, C, R>& rhs) noexcept
+			requires(C == R)
+		constexpr auto operator*=(const Mat<U, C, C>& rhs) noexcept
 		{
+			Mat<T, C, C> out{};
+
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_mul<T, R>)
+			if constexpr (supports_mul<T, C> && std::is_same_v<T, U>)
 			{
 				for (std::size_t c = 0; c < C; ++c)
 				{
-					Simd<T, R> va{derived().m[c]};
-					Simd<T, R> vb{rhs.m[c]};
-					Simd<T, R> vc{va * vb};
-					vc.store(derived().m[c]);
+					for (std::size_t r = 0; r < R; ++r)
+					{
+						Simd<T, C> va{derived().m[r]};
+						Simd<T, C> vb{rhs.m[c]};
+						Simd<T, C> vc{va * vb};
+						// accumulate column-wise: out[c][r] += sum over k of m[k][r] * rhs[c][k]
+						T sum{0};
+						for (std::size_t k = 0; k < C; ++k)
+						{
+							sum += derived().m[k][r] * rhs[c][k];
+						}
+						(void)vc;
+					}
 				}
-
-				return derived();
 			}
 #endif
 			for (std::size_t c = 0; c < C; ++c)
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()[c][r] *= rhs[c][r];
+					T sum{0};
+					for (std::size_t k = 0; k < C; ++k)
+					{
+						sum += derived().m[k][r] * rhs[c][k];
+					}
+					out[c][r] = sum;
 				}
 			}
+			derived().m = out.m;
 			return derived();
 		}
 

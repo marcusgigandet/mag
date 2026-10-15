@@ -283,12 +283,12 @@ TEST_CASE("Mat3x3 scalar and element-wise compound operations", "[Mat3x3]")
 	}
 
 	SECTION("Element-wise matrix multiplication compound")
-	{
-		Mat3f c = a;
-		c *= b;
-		REQUIRE(c == Mat3f{2, 6, 12,
-						   20, 30, 42,
-						   56, 72, 90});
+    {
+        Mat3f c = a;
+        c *= b;
+        REQUIRE(c == Mat3f{36, 42, 48,
+                           81, 96, 111,
+                           126, 150, 174});
 	}
 }
 

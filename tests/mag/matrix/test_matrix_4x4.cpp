@@ -305,11 +305,12 @@ TEST_CASE("Mat4x4 scalar, diagonal, and iterator utilities", "[Mat4x4]")
 
 	SECTION("Element-wise matrix multiplication compound")
 	{
-		Mat4f c = a;
-		c *= b;
-		REQUIRE(c[0][0] == Catch::Approx(2.0f));
-		REQUIRE(c[1][1] == Catch::Approx(42.0f));
-		REQUIRE(c[3][3] == Catch::Approx(272.0f));
+        Mat4f c = a;
+        c *= b;
+		REQUIRE(c == Mat4f{100, 110, 120, 130,
+						   228, 254, 280, 306,
+						   356, 398, 440, 482,
+						   484, 542, 600, 658});
 	}
 
 	SECTION("Diagonal vector helper")
