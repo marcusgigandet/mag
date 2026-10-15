@@ -365,11 +365,11 @@ namespace MAG_NAMESPACE
 		 *
 		 * For non-square matrices, values are written up to `min(C, R)`.
 		 *
-		 * @param diagVals Vector containing the diagonal values.
+		 * @param diag_vals Vector containing the diagonal values.
 		 *
 		 * @return A matrix with the specified diagonal values.
 		 */
-		static constexpr Derived diagonal(const Vec<T, R> diagVals) noexcept
+		static constexpr Derived diagonal(const Vec<T, R> diag_vals) noexcept
 		{
 			Derived result;
 			const std::size_t limit{R < C ? R : C};

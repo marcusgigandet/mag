@@ -52,8 +52,14 @@ namespace MAG_NAMESPACE
 	export template <Numeric T, std::size_t N>
 	constexpr Vec<T, N> normalize(Vec<T, N> v)
 	{
-		float length{std::sqrt(v.x * v.x + v.y * v.y)};
-		return (length > 0.0f) ? Vec<T, N>{v.x / length, v.y / length} : Vec<T, N>{0.0f, 0.0f};
+		T sum{0};
+		for (std::size_t i = 0; i < N; ++i)
+		{
+			sum += v[i] * v[i];
+		}
+
+		const T length{std::sqrt(sum)};
+		return (length > T{0}) ? v / length : Vec<T, N>{};
 	}
 
 	export template <Numeric T, Numeric U, std::size_t N>
