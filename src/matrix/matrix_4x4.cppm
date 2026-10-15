@@ -63,10 +63,10 @@ namespace MAG_NAMESPACE
 					  U4 i10, U5 i11, U6 i12, U7 i13,
 					  U8 i20, U9 i21, U10 i22, U11 i23,
 					  U12 i30, U13 i31, U14 i32, U15 i33) noexcept :
-			m00(static_cast<T>(i00)), m01(static_cast<T>(i10)), m02(static_cast<T>(i20)), m03(static_cast<T>(i30)),
-			m10(static_cast<T>(i01)), m11(static_cast<T>(i11)), m12(static_cast<T>(i21)), m13(static_cast<T>(i31)),
-			m20(static_cast<T>(i02)), m21(static_cast<T>(i12)), m22(static_cast<T>(i22)), m23(static_cast<T>(i32)),
-			m30(static_cast<T>(i03)), m31(static_cast<T>(i13)), m32(static_cast<T>(i23)), m33(static_cast<T>(i33))
+			m00(i00), m01(i10), m02(i20), m03(i30),
+			m10(i01), m11(i11), m12(i21), m13(i31),
+			m20(i02), m21(i12), m22(i22), m23(i32),
+			m30(i03), m31(i13), m32(i23), m33(i33)
 		{
 		}
 		// clang-format on
@@ -77,10 +77,10 @@ namespace MAG_NAMESPACE
 					  const Vec<U, 4>& col1,
 					  const Vec<U, 4>& col2,
 					  const Vec<U, 4>& col3) noexcept :
-			m00(static_cast<T>(col0.x)), m01(static_cast<T>(col0.y)), m02(static_cast<T>(col0.z)), m03(static_cast<T>(col0.w)),
-			m10(static_cast<T>(col1.x)), m11(static_cast<T>(col1.y)), m12(static_cast<T>(col1.z)), m13(static_cast<T>(col1.w)),
-			m20(static_cast<T>(col2.x)), m21(static_cast<T>(col2.y)), m22(static_cast<T>(col2.z)), m23(static_cast<T>(col2.w)),
-			m30(static_cast<T>(col3.x)), m31(static_cast<T>(col3.y)), m32(static_cast<T>(col3.z)), m33(static_cast<T>(col3.w))
+			m00(col0.x), m01(col0.y), m02(col0.z), m03(col0.w),
+			m10(col1.x), m11(col1.y), m12(col1.z), m13(col1.w),
+			m20(col2.x), m21(col2.y), m22(col2.z), m23(col2.w),
+			m30(col3.x), m31(col3.y), m32(col3.z), m33(col3.w)
 		// clang-format on
 		{
 		}
