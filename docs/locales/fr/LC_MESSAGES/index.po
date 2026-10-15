@@ -50,11 +50,11 @@ msgstr "Fonctionnalités"
 
 #: ../../docs/index.md:9
 msgid "A single public module import: `import mag;`"
-msgstr ""
+msgstr "Une seule importation de module public : `import mag;`"
 
 #: ../../docs/index.md:10
 msgid "Vector types for 2D, 3D, and 4D math"
-msgstr ""
+msgstr "Types de vecteurs pour les mathématiques en 2D, 3D et 4D"
 
 #: ../../docs/index.md:11
 msgid "Matrix types and transform helpers for graphics workflows"

@@ -70,7 +70,7 @@ msgstr ""
 
 #: ../../docs/getting-started/overview.md
 msgid "Tool"
-msgstr ""
+msgstr "Outil"
 
 #: ../../docs/getting-started/overview.md
 msgid "Minimum version"

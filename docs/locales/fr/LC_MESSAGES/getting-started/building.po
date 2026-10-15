@@ -84,7 +84,7 @@ msgstr ""
 
 #: ../../docs/getting-started/building.md
 msgid "Typical use"
-msgstr ""
+msgstr "Usage courant"
 
 #: ../../docs/getting-started/building.md
 msgid "clang-debug"
@@ -289,7 +289,7 @@ msgstr ""
 
 #: ../../docs/getting-started/building.md:74
 msgid "Next step"
-msgstr ""
+msgstr "Étape suivante"
 
 #: ../../docs/getting-started/building.md:76
 msgid ""
