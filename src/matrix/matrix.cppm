@@ -307,14 +307,12 @@ namespace MAG_NAMESPACE
 					{
 						Simd<T, C> va{derived().m[r]};
 						Simd<T, C> vb{rhs.m[c]};
-						Simd<T, C> vc{va * vb};
-						// accumulate column-wise: out[c][r] += sum over k of m[k][r] * rhs[c][k]
+
 						T sum{0};
 						for (std::size_t k = 0; k < C; ++k)
 						{
 							sum += derived().m[k][r] * rhs[c][k];
 						}
-						(void)vc;
 					}
 				}
 			}
