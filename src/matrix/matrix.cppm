@@ -291,7 +291,7 @@ namespace MAG_NAMESPACE
 		constexpr auto operator*=(const Mat<U, C, R>& rhs) noexcept
 		{
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_sub<T, R>)
+			if constexpr (supports_mul<T, R>)
 			{
 				for (std::size_t c = 0; c < C; ++c)
 				{
