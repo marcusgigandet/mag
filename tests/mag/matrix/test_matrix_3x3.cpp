@@ -248,7 +248,7 @@ TEST_CASE("Mat3x3 inverse", "[Mat3x3]")
     }
 }
 
-TEST_CASE("Mat3x3 scalar and element-wise compound operations", "[Mat3x3]")
+TEST_CASE("Mat3x3 scalar and matrix compound operations", "[Mat3x3]")
 {
 	Mat3f a{1, 2, 3,
 			4, 5, 6,
@@ -282,13 +282,13 @@ TEST_CASE("Mat3x3 scalar and element-wise compound operations", "[Mat3x3]")
 		REQUIRE(c == a);
 	}
 
-	SECTION("Element-wise matrix multiplication compound")
-    {
-        Mat3f c = a;
-        c *= b;
-        REQUIRE(c == Mat3f{36, 42, 48,
-                           81, 96, 111,
-                           126, 150, 174});
+	SECTION("Compound matrix multiplication")
+	{
+		Mat3f c = a;
+		c *= b;
+		REQUIRE(c == Mat3f{36, 42, 48,
+						   81, 96, 111,
+						   126, 150, 174});
 	}
 }
 

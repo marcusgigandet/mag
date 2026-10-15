@@ -296,25 +296,25 @@ namespace MAG_NAMESPACE
 			requires(C == R)
 		constexpr auto operator*=(const Mat<U, C, C>& rhs) noexcept
 		{
-			Mat<T, C, C> out{};
+			Mat<T, C, C> result{};
 
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_mul<T, C> && std::is_same_v<T, U>)
+			if constexpr (
+				supports_add<T, R> && supports_mul<T, R> && supports_splat<T, R> &&
+				std::is_same_v<T, U>)
 			{
 				for (std::size_t c = 0; c < C; ++c)
 				{
-					for (std::size_t r = 0; r < R; ++r)
+					Simd<T, R> acc{static_cast<T>(0)};
+					for (std::size_t k = 0; k < C; ++k)
 					{
-						Simd<T, C> va{derived().m[r]};
-						Simd<T, C> vb{rhs.m[c]};
-
-						T sum{0};
-						for (std::size_t k = 0; k < C; ++k)
-						{
-							sum += derived().m[k][r] * rhs[c][k];
-						}
+						acc += Simd<T, R>{derived().m[k]} * static_cast<T>(rhs.m[c][k]);
 					}
+					acc.store(result.m[c]);
 				}
+
+				derived().m = result.m;
+				return derived();
 			}
 #endif
 			for (std::size_t c = 0; c < C; ++c)
@@ -326,10 +326,10 @@ namespace MAG_NAMESPACE
 					{
 						sum += derived().m[k][r] * rhs[c][k];
 					}
-					out[c][r] = sum;
+					result[c][r] = sum;
 				}
 			}
-			derived().m = out.m;
+			derived().m = result.m;
 			return derived();
 		}
 
@@ -360,7 +360,7 @@ namespace MAG_NAMESPACE
 		 * Initializes a matrix with all elements set to zero except for the main diagonal,
 		 * which is populated using the provided value.
 		 *
-		 * For non-square matrices, values are written up to `min[c][r]`.
+		 * For non-square matrices, values are written up to `min(C, R)`.
 		 *
 		 * @param val Diagonal value.
 		 * @return  A matrix with the specified diagonal values.
@@ -382,7 +382,7 @@ namespace MAG_NAMESPACE
 		 * Initializes a matrix with all elements set to zero except for the main diagonal,
 		 * which is populated using the values from the given vector.
 		 *
-		 * For non-square matrices, values are written up to `min[c][r]`.
+		 * For non-square matrices, values are written up to `min(C, R)`.
 		 *
 		 * @param diag_vals Vector containing the diagonal values.
 		 *
