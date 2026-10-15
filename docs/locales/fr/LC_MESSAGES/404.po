@@ -22,7 +22,7 @@ msgstr ""
 
 #: ../../docs/404.md:4
 msgid "Page Not Found"
-msgstr ""
+msgstr "Cette page est introuvable"
 
 #: ../../docs/404.md:6
 msgid ""

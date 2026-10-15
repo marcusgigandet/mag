@@ -63,6 +63,18 @@ TEST_CASE("Mat4x4 construction and access", "[Mat4x4]")
 		REQUIRE(data[1] == 5.0f);
 		REQUIRE(data[15] == 16.0f);
 	}
+
+	SECTION("Column-vector constructor")
+	{
+		Mat4f m(Vec<float, 4>{1, 5, 9, 13},
+				Vec<float, 4>{2, 6, 10, 14},
+				Vec<float, 4>{3, 7, 11, 15},
+				Vec<float, 4>{4, 8, 12, 16});
+		REQUIRE(m == Mat4f(1, 2, 3, 4,
+						  5, 6, 7, 8,
+						  9, 10, 11, 12,
+						  13, 14, 15, 16));
+	}
 }
 
 TEST_CASE("Mat4x4 arithmetic operations", "[Mat4x4]")
@@ -303,13 +315,22 @@ TEST_CASE("Mat4x4 scalar, diagonal, and iterator utilities", "[Mat4x4]")
 		REQUIRE(c == a);
 	}
 
-	SECTION("Element-wise matrix multiplication compound")
+	SECTION("Compound matrix multiplication")
 	{
+		const Mat4f expected{100, 110, 120, 130,
+							228, 254, 280, 306,
+							356, 398, 440, 482,
+							484, 542, 600, 658};
+
 		Mat4f c = a;
 		c *= b;
-		REQUIRE(c[0][0] == Catch::Approx(2.0f));
-		REQUIRE(c[1][1] == Catch::Approx(42.0f));
-		REQUIRE(c[3][3] == Catch::Approx(272.0f));
+		REQUIRE(c == expected);
+
+		REQUIRE((a * b) == expected);
+		REQUIRE(a == Mat4f(1, 2, 3, 4,
+						  5, 6, 7, 8,
+						  9, 10, 11, 12,
+						  13, 14, 15, 16));
 	}
 
 	SECTION("Diagonal vector helper")
@@ -321,13 +342,13 @@ TEST_CASE("Mat4x4 scalar, diagonal, and iterator utilities", "[Mat4x4]")
 		REQUIRE(d[3][3] == Catch::Approx(5.0f));
 	}
 
-	SECTION("Iterator traversal and toString formatting")
+	SECTION("Iterator traversal and to_string formatting")
 	{
 		float sum = 0.0f;
 		for (float v : a)
 			sum += v;
 		REQUIRE(sum == Catch::Approx(136.0f));
-		REQUIRE(a.toString().find("Mat4x4(") == 0);
+		REQUIRE(a.to_string().find("Mat4x4(") == 0);
 	}
 }
 
@@ -340,6 +361,33 @@ TEST_CASE("Mat4x4 inverse and transform overloads", "[Mat4x4]")
 				5, 6, 0, 1,
 				0, 0, 0, 1};
 		REQUIRE(m.inverse() == Mat4f::inverse(m));
+
+		// Exact inverse (determinant is 1); verified against an
+		// independent Gauss-Jordan elimination.
+		Mat4f expected{-24, 18, 5, 55,
+					  20, -15, -4, -46,
+					  -5, 4, 1, 11,
+					  0, 0, 0, 1};
+		const auto inv = Mat4f::inverse(m);
+		for (int c = 0; c < 4; ++c)
+			for (int r = 0; r < 4; ++r)
+				REQUIRE(inv[c][r] == Catch::Approx(expected[c][r]).margin(1e-4f));
+
+		const auto product = m * inv;
+		for (int c = 0; c < 4; ++c)
+			for (int r = 0; r < 4; ++r)
+				REQUIRE(product[c][r] == Catch::Approx(c == r ? 1.0f : 0.0f).margin(1e-4f));
+	}
+
+	SECTION("Scaling inverse overload")
+	{
+		auto s = Mat4f::diagonal(Vec<float, 4>{2.0f, 4.0f, 8.0f, 1.0f});
+		auto inv = Mat4f::inverse(2.0f, 4.0f, 8.0f);
+		REQUIRE(inv[0][0] == Catch::Approx(0.5f));
+		REQUIRE(inv[1][1] == Catch::Approx(0.25f));
+		REQUIRE(inv[2][2] == Catch::Approx(0.125f));
+		REQUIRE(inv[3][3] == Catch::Approx(1.0f));
+		REQUIRE((s * inv) == Mat4f::identity());
 	}
 
 	SECTION("Inverse of transform matrix composes to identity")

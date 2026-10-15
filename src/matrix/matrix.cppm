@@ -114,13 +114,14 @@ namespace MAG_NAMESPACE
 		constexpr std::reverse_iterator<const T*> crbegin() const noexcept { return rbegin(); }
 		constexpr std::reverse_iterator<const T*> crend() const noexcept { return rend(); }
 
-		// clang-format off
-		constexpr std::span<T, R> operator[](std::size_t i) noexcept { return std::span<T, R>(derived().m[i]); }
-		constexpr std::span<const T, R> operator[](std::size_t i) const noexcept { return derived().m[i]; }
-
-		constexpr T& operator()(std::size_t c, std::size_t r) noexcept { return derived().m[c][r]; }
-		constexpr const T& operator()(std::size_t c, std::size_t r) const noexcept { return derived().m[c][r]; }
-		// clang-format on
+		constexpr std::span<T, R> operator[](std::size_t i) noexcept
+		{
+			return std::span<T, R>(derived().m[i]);
+		}
+		constexpr std::span<const T, R> operator[](std::size_t i) const noexcept
+		{
+			return derived().m[i];
+		}
 
 		constexpr T* data() noexcept { return &derived().m[0][0]; }
 		constexpr const T* data() const noexcept { return &derived().m[0][0]; }
@@ -146,7 +147,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) += val;
+					derived()[c][r] += val;
 				}
 			}
 			return derived();
@@ -173,7 +174,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) -= val;
+					derived()[c][r] -= val;
 				}
 			}
 			return derived();
@@ -200,7 +201,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) *= val;
+					derived()[c][r] *= val;
 				}
 			}
 			return derived();
@@ -227,7 +228,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) /= val;
+					derived()[c][r] /= val;
 				}
 			}
 			return derived();
@@ -254,7 +255,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) += rhs(c, r);
+					derived()[c][r] += rhs[c][r];
 				}
 			}
 			return derived();
@@ -281,26 +282,38 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) -= rhs(c, r);
+					derived()[c][r] -= rhs[c][r];
 				}
 			}
 			return derived();
 		}
 
+		/** @brief Compound matrix product. Only defined for square matrices.
+		 *  @param rhs Right operand; must be C x C.
+		 *  @return Reference to this matrix.
+		 */
 		template <Numeric U>
-		constexpr auto operator*=(const Mat<U, C, R>& rhs) noexcept
+			requires(C == R)
+		constexpr auto operator*=(const Mat<U, C, C>& rhs) noexcept
 		{
+			Mat<T, C, C> result{};
+
 #ifdef MAG_ENABLE_SIMD
-			if constexpr (supports_sub<T, R>)
+			if constexpr (
+				supports_add<T, R> && supports_mul<T, R> && supports_splat<T, R> &&
+				std::is_same_v<T, U>)
 			{
 				for (std::size_t c = 0; c < C; ++c)
 				{
-					Simd<T, R> va{derived().m[c]};
-					Simd<T, R> vb{rhs.m[c]};
-					Simd<T, R> vc{va * vb};
-					vc.store(derived().m[c]);
+					Simd<T, R> acc{static_cast<T>(0)};
+					for (std::size_t k = 0; k < C; ++k)
+					{
+						acc += Simd<T, R>{derived().m[k]} * static_cast<T>(rhs.m[c][k]);
+					}
+					acc.store(result.m[c]);
 				}
 
+				derived().m = result.m;
 				return derived();
 			}
 #endif
@@ -308,9 +321,15 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					derived()(c, r) *= rhs(c, r);
+					T sum{0};
+					for (std::size_t k = 0; k < C; ++k)
+					{
+						sum += derived().m[k][r] * rhs[c][k];
+					}
+					result[c][r] = sum;
 				}
 			}
+			derived().m = result.m;
 			return derived();
 		}
 
@@ -329,7 +348,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					result(r, c) = derived()(c, r);
+					result[r][c] = derived()[c][r];
 				}
 			}
 			return result;
@@ -352,7 +371,7 @@ namespace MAG_NAMESPACE
 			const std::size_t limit{R < C ? R : C};
 			for (std::size_t i = 0; i < limit; ++i)
 			{
-				result(i, i) = val;
+				result[i][i] = val;
 			}
 			return result;
 		}
@@ -365,17 +384,17 @@ namespace MAG_NAMESPACE
 		 *
 		 * For non-square matrices, values are written up to `min(C, R)`.
 		 *
-		 * @param diagVals Vector containing the diagonal values.
+		 * @param diag_vals Vector containing the diagonal values.
 		 *
 		 * @return A matrix with the specified diagonal values.
 		 */
-		static constexpr Derived diagonal(const Vec<T, R> diagVals) noexcept
+		static constexpr Derived diagonal(const Vec<T, R> diag_vals) noexcept
 		{
 			Derived result;
 			const std::size_t limit{R < C ? R : C};
 			for (std::size_t i = 0; i < limit; ++i)
 			{
-				result(i, i) = diagVals[i];
+				result[i][i] = diag_vals[i];
 			}
 			return result;
 		}
@@ -384,13 +403,12 @@ namespace MAG_NAMESPACE
 		 * @brief Returns the matrix as a formatted string.
 		 *
 		 * The resulting string contains the matrix width, height dimensions and all component
-		 * values, e.g. ```Mat3x3( [1, 2, 3], [4, 5, 6], [7, 8, 9]
-		 *		 )```.
+		 * values, e.g. ```Mat3x3([1, 2, 3], [4, 5, 6], [7, 8, 9])```.
 		 * Where column 0, row 1 is 4.
 		 *
 		 * @return A string in the form `MatNxM(...)`.
 		 */
-		[[nodiscard]] std::string toString() const noexcept
+		[[nodiscard]] std::string to_string() const noexcept
 		{
 			std::ostringstream oss;
 			const auto& m{derived()};
@@ -431,7 +449,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					m(c, r) = static_cast<T>(0);
+					m[c][r] = static_cast<T>(0);
 				}
 			}
 		}
@@ -443,7 +461,7 @@ namespace MAG_NAMESPACE
 			{
 				for (std::size_t r = 0; r < R; ++r)
 				{
-					m(c, r) = static_cast<T>(val);
+					m[c][r] = static_cast<T>(val);
 				}
 			}
 		}

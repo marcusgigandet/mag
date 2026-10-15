@@ -165,7 +165,7 @@ export namespace MAG_NAMESPACE
 		Vec<R, N> ret;
 
 #ifdef MAG_ENABLE_SIMD
-		if constexpr (std::is_same_v<T, U> && supports_mul<T, N> && supports_splat<T, N>)
+		if constexpr (std::is_same_v<T, U> && supports_add<T, N> && supports_splat<T, N>)
 		{
 			Simd<T, N> va{a.v};
 			Simd<T, N> vb{s};

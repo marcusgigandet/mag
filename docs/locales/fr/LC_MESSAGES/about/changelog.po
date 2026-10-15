@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAG - Mathématiques et Graphiques \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 22:18-0400\n"
+"POT-Creation-Date: 2026-10-12 16:16-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -33,48 +33,56 @@ msgid "Unreleased"
 msgstr ""
 
 #: ../../docs/about/changelog.md:7
+msgid "0.3.0 — 2026-10-12"
+msgstr ""
+
+#: ../../docs/about/changelog.md:9
 msgid ""
 "Documentation migrated to a Markdown (MyST) docs site with a "
 "Doxygen/Breathe/Exhale C++ reference."
 msgstr ""
 
-#: ../../docs/about/changelog.md:9
-msgid "0.2.1 — 2026-09-12"
-msgstr ""
-
 #: ../../docs/about/changelog.md:11
-msgid "Added permissions to the CI workflows."
-msgstr ""
-
-#: ../../docs/about/changelog.md:12
-msgid "Compiler fixes and minor implementation updates."
+msgid "Removed older tags from docs page."
 msgstr ""
 
 #: ../../docs/about/changelog.md:13
-msgid "Updated clang-format and docs configs."
+msgid "0.2.1 — 2026-09-12"
 msgstr ""
 
 #: ../../docs/about/changelog.md:15
-msgid "0.2.0 — 2026-07-12"
+msgid "Added permissions to the CI workflows."
+msgstr ""
+
+#: ../../docs/about/changelog.md:16
+msgid "Compiler fixes and minor implementation updates."
 msgstr ""
 
 #: ../../docs/about/changelog.md:17
-msgid "Updated the `mag` namespace."
-msgstr ""
-
-#: ../../docs/about/changelog.md:18
-msgid "SIMD API updates."
+msgid "Updated clang-format and docs configs."
 msgstr ""
 
 #: ../../docs/about/changelog.md:19
-msgid "Updated compile options to correctly export to consuming projects."
+msgid "0.2.0 — 2026-07-12"
 msgstr ""
 
 #: ../../docs/about/changelog.md:21
-msgid "0.1.0 — 2026-06-26"
+msgid "Updated the `mag` namespace."
+msgstr ""
+
+#: ../../docs/about/changelog.md:22
+msgid "SIMD API updates."
 msgstr ""
 
 #: ../../docs/about/changelog.md:23
+msgid "Updated compile options to correctly export to consuming projects."
+msgstr ""
+
+#: ../../docs/about/changelog.md:25
+msgid "0.1.0 — 2026-06-26"
+msgstr ""
+
+#: ../../docs/about/changelog.md:27
 msgid ""
 "Initial release: the `mag` and `mag.simd` modules with vector, matrix, "
 "and SIMD math, CMake presets, and the documentation site."

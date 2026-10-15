@@ -59,9 +59,9 @@ namespace MAG_NAMESPACE
 		constexpr Mat(U0 i00, U1 i01, U2 i02,
 					  U3 i10, U4 i11, U5 i12,
 					  U6 i20, U7 i21, U8 i22) noexcept :
-			m00(static_cast<T>(i00)), m01(static_cast<T>(i10)), m02(static_cast<T>(i20)),
-			m10(static_cast<T>(i01)), m11(static_cast<T>(i11)), m12(static_cast<T>(i21)),
-			m20(static_cast<T>(i02)), m21(static_cast<T>(i12)), m22(static_cast<T>(i22))
+			m00(i00), m01(i10), m02(i20),
+			m10(i01), m11(i11), m12(i21),
+			m20(i02), m21(i12), m22(i22)
 		// clang-format on
 		{
 		}
@@ -69,9 +69,9 @@ namespace MAG_NAMESPACE
 		// clang-format off
 		template <Numeric U>
 		constexpr explicit Mat(const Mat<U, 4, 4>& o) noexcept :
-			m00(static_cast<T>(o[0][0])), m01(o[0][1]), m02(o[0][2]),
-			m10(static_cast<T>(o[1][0])), m11(o[1][1]), m12(o[1][2]),
-			m20(static_cast<T>(o[2][0])), m21(o[2][1]), m22(o[2][2])
+			m00(o[0][0]), m01(o[0][1]), m02(o[0][2]),
+			m10(o[1][0]), m11(o[1][1]), m12(o[1][2]),
+			m20(o[2][0]), m21(o[2][1]), m22(o[2][2])
 		// clang-format on
 		{
 		}

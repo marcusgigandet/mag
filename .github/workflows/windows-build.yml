@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/linux_build.yml'
+      - '.github/workflows/windows-build.yml'
       - 'benchmarks/**'
       - 'src/**'
       - 'tests/**'
