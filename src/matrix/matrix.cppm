@@ -375,7 +375,7 @@ namespace MAG_NAMESPACE
 			const std::size_t limit{R < C ? R : C};
 			for (std::size_t i = 0; i < limit; ++i)
 			{
-				result(i, i) = diagVals[i];
+				result(i, i) = diag_vals[i];
 			}
 			return result;
 		}
