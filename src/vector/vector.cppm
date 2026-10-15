@@ -396,7 +396,7 @@ namespace MAG_NAMESPACE
 		 * e.g. `Vec3(1, 2, 3)`.
 		 * @return A string in the form `VecN(...)`.
 		 */
-		[[nodiscard]] std::string toString() const noexcept
+		[[nodiscard]] std::string to_string() const noexcept
 		{
 			std::ostringstream oss;
 			oss << "Vec" << N << "(";
